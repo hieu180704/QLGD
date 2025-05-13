@@ -3,9 +3,11 @@ package View;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLightLaf;
-
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+
+
 
 public class LoginView extends javax.swing.JFrame {
 
@@ -13,7 +15,7 @@ public class LoginView extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -199,6 +201,7 @@ public class LoginView extends javax.swing.JFrame {
                 new LoginView().setVisible(true);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
