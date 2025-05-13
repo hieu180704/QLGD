@@ -3,9 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/C:/Users/ADMIN/Downloads/QLGD/src/View/LoginView.java</file>
+            <file>file:/C:/Users/ADMIN/Downloads/QLGD/nbproject/private/private.properties</file>
+            <file>file:/C:/Users/ADMIN/Downloads/QLGD/nbproject/private/private.xml</file>
+=======
             <file>file:/C:/Users/dinht/Desktop/Java%20Swing/QuanLyGiaiDau/src/View/LoginView.java</file>
             <file>file:/C:/Users/dinht/Desktop/Java%20Swing/QuanLyGiaiDau/src/Main/MainProject.java</file>
             <file>file:/C:/Users/dinht/Desktop/Java%20Swing/QuanLyGiaiDau/.gitignore</file>
+>>>>>>> baf8fa2d8fef18041ba19eba7619fd7f57a94e24
         </group>
     </open-files>
 </project-private>
