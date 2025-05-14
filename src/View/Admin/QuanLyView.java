@@ -3,7 +3,9 @@ package View.Admin;
 import Controller.QuanLyController;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
 public class QuanLyView extends javax.swing.JFrame {
@@ -17,7 +19,9 @@ public class QuanLyView extends javax.swing.JFrame {
 
     public QuanLyView() {
         initComponents();
-        this.setSize(1000, 600);
+        
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        
         QuanLyController quanLyController = new QuanLyController(this);
         btnTrangChu.addActionListener(quanLyController);
         btnQuanLyGiaiDau.addActionListener(quanLyController);
