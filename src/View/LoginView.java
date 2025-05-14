@@ -68,7 +68,7 @@ public class LoginView extends javax.swing.JFrame {
         Username.setPreferredSize(new java.awt.Dimension(250, 100));
 
         lbUsername.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lbUsername.setText("Username");
+        lbUsername.setText("Usernames");
 
         javax.swing.GroupLayout UsernameLayout = new javax.swing.GroupLayout(Username);
         Username.setLayout(UsernameLayout);
