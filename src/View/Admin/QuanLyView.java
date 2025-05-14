@@ -6,6 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingConstants;
 
 public class QuanLyView extends javax.swing.JFrame {
+
     private TrangChuPanel trangChuPanel = new TrangChuPanel();
     private QuanLyGiaiDauPanel quanLyGiaiDauPanel = new QuanLyGiaiDauPanel();
 
@@ -18,7 +19,7 @@ public class QuanLyView extends javax.swing.JFrame {
 
         LayerPanel.add(trangChuPanel);
         LayerPanel.add(quanLyGiaiDauPanel);
-        
+
     }
 
     @SuppressWarnings("unchecked")
