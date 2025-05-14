@@ -7,6 +7,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LoginView extends javax.swing.JFrame {
+private RegisterView registerView;
 
     public LoginView() {
         initComponents();
@@ -206,6 +207,7 @@ public class LoginView extends javax.swing.JFrame {
 
     private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
         // TODO add your handling code here:
+        this.setVisible(false);
         new RegisterView().setVisible(true);
         dispose();
     }//GEN-LAST:event_lbRegisterMouseClicked
