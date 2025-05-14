@@ -25,6 +25,8 @@ replay_pid*
 
 /build/
 nbproject/private/
+private.properties
+private.xml
 
 
 
