@@ -55,7 +55,6 @@ public class TrangChuPanel extends javax.swing.JPanel {
         add(panelGiaiDau);
     }// </editor-fold>//GEN-END:initComponents
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel panelGiaiDau;
     // End of variables declaration//GEN-END:variables

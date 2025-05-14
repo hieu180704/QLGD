@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingConstants;
 
 public class QuanLyView extends javax.swing.JFrame {
+
     private TrangChuPanel trangChuPanel = new TrangChuPanel();
     private QuanLyGiaiDauPanel quanLyGiaiDauPanel = new QuanLyGiaiDauPanel();
     private DanhSachDoiBongPanel danhSachDoiBongPanel = new DanhSachDoiBongPanel();
@@ -32,6 +33,9 @@ public class QuanLyView extends javax.swing.JFrame {
         btnDanhSachTrongTai.addActionListener(quanLyController);
         btnQuanLyTaiKhoan.addActionListener(quanLyController);
 
+
+
+
         // Sử dụng CardLayout để quản lý các panel
         CardLayout cardLayout = (CardLayout) LayerPanel.getLayout();
         
@@ -45,6 +49,7 @@ public class QuanLyView extends javax.swing.JFrame {
 
         // Hiển thị trang chủ mặc định
         cardLayout.show(LayerPanel, "TrangChuPanel");
+
     }
 
     @SuppressWarnings("unchecked")
