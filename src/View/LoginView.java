@@ -1,12 +1,19 @@
 package View;
 
+import View.Admin.QuanLyView;
+import javax.swing.JOptionPane;
+
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 public class LoginView extends javax.swing.JFrame {
+private RegisterView registerView;
 
     public LoginView() {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -25,7 +32,7 @@ public class LoginView extends javax.swing.JFrame {
         lbPassword = new javax.swing.JLabel();
         txtPassword = new javax.swing.JTextField();
         btnDangnhap = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        lbRegister = new javax.swing.JLabel();
         ImagePanel = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
 
@@ -65,7 +72,7 @@ public class LoginView extends javax.swing.JFrame {
         Username.setPreferredSize(new java.awt.Dimension(250, 100));
 
         lbUsername.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        lbUsername.setText("Username");
+        lbUsername.setText("Usernames");
 
         javax.swing.GroupLayout UsernameLayout = new javax.swing.GroupLayout(Username);
         Username.setLayout(UsernameLayout);
@@ -134,11 +141,21 @@ public class LoginView extends javax.swing.JFrame {
         LoginBot.add(Password, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 230, 60));
 
         btnDangnhap.setText("Đăng Nhập");
+        btnDangnhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDangnhapActionPerformed(evt);
+            }
+        });
         LoginBot.add(btnDangnhap, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 190, 210, 30));
 
-        jLabel3.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel3.setText("Chưa có tài khoản? Đăng ký");
-        LoginBot.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, -1, -1));
+        lbRegister.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lbRegister.setText("Chưa có tài khoản? Đăng ký");
+        lbRegister.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbRegisterMouseClicked(evt);
+            }
+        });
+        LoginBot.add(lbRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, -1, 20));
 
         LoginPanel.add(LoginBot, java.awt.BorderLayout.CENTER);
 
@@ -175,18 +192,30 @@ public class LoginView extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btnDangnhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangnhapActionPerformed
+        // TODO add your handling code here:
+        String username = txtUsername.getText();
+        String password = txtPassword.getText();
+
+        if (username.equals("admin") && password.equals("123456")) {
+            new View.Admin.QuanLyView().setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showConfirmDialog(this, "Tên đăng nhập sai hoặc mật khẩu sai");
+        }
+    }//GEN-LAST:event_btnDangnhapActionPerformed
+
+    private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
+        // TODO add your handling code here:
+        this.setVisible(false);
+        new RegisterView().setVisible(true);
+        dispose();
+    }//GEN-LAST:event_lbRegisterMouseClicked
+
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -200,14 +229,13 @@ public class LoginView extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new LoginView().setVisible(true);
             }
         });
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -222,9 +250,9 @@ public class LoginView extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lbPassword;
+    private javax.swing.JLabel lbRegister;
     private javax.swing.JLabel lbUsername;
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtUsername;
