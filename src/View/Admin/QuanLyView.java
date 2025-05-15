@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingConstants;
+import View.CustomButton.RoundBorder;
+import java.awt.Color;
 
 public class QuanLyView extends javax.swing.JFrame {
 
@@ -25,6 +27,10 @@ public class QuanLyView extends javax.swing.JFrame {
         
         QuanLyController quanLyController = new QuanLyController(this);
         btnTrangChu.addActionListener(quanLyController);
+            btnTrangChu.setBorder(new RoundBorder(15));  // bo tròn bán kính 15 px
+            btnTrangChu.setContentAreaFilled(false);     // để nút không bị nền mặc định che mất viền bo
+            btnTrangChu.setFocusPainted(false);
+            btnTrangChu.setForeground(Color.WHITE);
         btnQuanLyGiaiDau.addActionListener(quanLyController);
         btnDangXuat.addActionListener(quanLyController);
         btnDanhSachCauThu.addActionListener(quanLyController);
@@ -72,7 +78,7 @@ public class QuanLyView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(21, 78, 128));
+        jPanel1.setBackground(new java.awt.Color(0, 51, 102));
         jPanel1.setPreferredSize(new java.awt.Dimension(230, 600));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -150,7 +156,7 @@ public class QuanLyView extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.WEST);
 
-        jPanel2.setBackground(new java.awt.Color(34, 91, 144));
+        jPanel2.setBackground(new java.awt.Color(0, 51, 102));
         jPanel2.setPreferredSize(new java.awt.Dimension(770, 80));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
