@@ -5,10 +5,8 @@ import Model.GiaiDauModel;
 import View.CustomPanel.GiaiDauPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.List;
-import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -32,7 +30,6 @@ public class TrangChuPanel extends javax.swing.JPanel {
 
         // Tạo panel hiển thị bảng dữ liệu
         GiaiDauPanel giaiDauPanel = new GiaiDauPanel(giaiDauList);
-
         // Cho scroll pane để nếu dữ liệu dài sẽ có thanh cuộn
         JScrollPane scrollPane = new JScrollPane(giaiDauPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -49,7 +46,7 @@ public class TrangChuPanel extends javax.swing.JPanel {
         setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         panelGiaiDau.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Danh Sách Các Giải Đấu Hiện Tại", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
-        panelGiaiDau.setPreferredSize(new java.awt.Dimension(500, 150));
+        panelGiaiDau.setPreferredSize(new java.awt.Dimension(300, 150));
         panelGiaiDau.setRequestFocusEnabled(false);
         panelGiaiDau.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
         add(panelGiaiDau);
