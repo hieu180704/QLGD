@@ -1,29 +1,51 @@
 package View.CustomButton;
 
-import javax.swing.border.AbstractBorder;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class RoundBorder extends AbstractBorder {
-    private int radius;
-    private Color borderColor;  // Màu của viền
+public class RoundBorder {
 
-    // Constructor nhận 2 tham số: bán kính và màu viền
-    public RoundBorder(int radius, Color borderColor) {
-        this.radius = radius;
-        this.borderColor = borderColor;
-    }
+    public JButton createSidebarButton(String text, int radius, Color bgDefault, Color bgHover) {
+    JButton btn = new JButton(text) {
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth(), getHeight(), radius, radius);
+            g2.dispose();
+            super.paintComponent(g);
+        }
+    };
+    btn.setContentAreaFilled(false);
+    btn.setOpaque(false);
+    btn.setForeground(Color.WHITE);
+    btn.setBackground(bgDefault);
+    btn.setFocusPainted(false);
+    btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+    btn.setBorder(new EmptyBorder(5, 15, 5, 15));
+    btn.setPreferredSize(new Dimension(200, 50));
+    btn.setMaximumSize(new Dimension(200, 50));
+    btn.setMinimumSize(new Dimension(200, 50));
+    btn.setHorizontalAlignment(SwingConstants.CENTER);
+    btn.setAlignmentX(Component.CENTER_ALIGNMENT); 
 
-    @Override
-    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setColor(borderColor);  // Sử dụng màu viền được truyền vào
-        g2.setStroke(new BasicStroke(2));  // Độ dày viền
-        g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);  // Vẽ viền bo tròn
-        g2.dispose();
-    }
+    btn.addMouseListener(new MouseAdapter() {
+        public void mouseEntered(MouseEvent e) {
+            btn.setBackground(bgHover);
+            btn.repaint();
+        }
+        public void mouseExited(MouseEvent e) {
+            btn.setBackground(bgDefault);
+            btn.repaint();
+        }
+    });
 
-    @Override
-    public Insets getBorderInsets(Component c) {
-        return new Insets(4, 8, 4, 8);  // Kích thước padding cho viền
-    }
+    return btn;
+}
+
 }
