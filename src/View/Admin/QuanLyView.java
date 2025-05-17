@@ -2,11 +2,7 @@ package View.Admin;
 
 import Controller.QuanLyController;
 import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.SwingConstants;
 import View.CustomButton.RoundBorder;
 import java.awt.Color;
 
@@ -22,29 +18,28 @@ public class QuanLyView extends javax.swing.JFrame {
 
     public QuanLyView() {
         initComponents();
-        
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
+
         QuanLyController quanLyController = new QuanLyController(this);
-        btnTrangChu.addActionListener(quanLyController);
-            btnTrangChu.setBorder(new RoundBorder(15));  // bo tròn bán kính 15 px
-            btnTrangChu.setContentAreaFilled(false);     // để nút không bị nền mặc định che mất viền bo
-            btnTrangChu.setFocusPainted(false);
-            btnTrangChu.setForeground(Color.WHITE);
-        btnQuanLyGiaiDau.addActionListener(quanLyController);
+
+        // Set style cho các nút
+        addSidebarButtonStyle(btnTrangChu, quanLyController);
+        addSidebarButtonStyle(btnQuanLyGiaiDau, quanLyController);
+        addSidebarButtonStyle(btnDanhSachDoiBong, quanLyController);
+        addSidebarButtonStyle(btnDanhSachCauThu, quanLyController);
+        addSidebarButtonStyle(btnDanhSachTrongTai, quanLyController);
+        addSidebarButtonStyle(btnDanhSachHLV, quanLyController);
+        addSidebarButtonStyle(btnQuanLyTaiKhoan, quanLyController);
+
+        // Nút đăng xuất
         btnDangXuat.addActionListener(quanLyController);
-        btnDanhSachCauThu.addActionListener(quanLyController);
-        btnDanhSachDoiBong.addActionListener(quanLyController);
-        btnDanhSachHLV.addActionListener(quanLyController);
-        btnDanhSachTrongTai.addActionListener(quanLyController);
-        btnQuanLyTaiKhoan.addActionListener(quanLyController);
+        btnDangXuat.setBackground(new Color(255, 77, 77)); // Màu đỏ cho nút đăng xuất
+        btnDangXuat.setForeground(Color.RED);
+        btnDangXuat.setFocusPainted(false);
+        btnDangXuat.setBorder(new RoundBorder(20, btnDangXuat.getBackground()));
 
-
-
-
-        // Sử dụng CardLayout để quản lý các panel
+        // CardLayout cho các panel
         CardLayout cardLayout = (CardLayout) LayerPanel.getLayout();
-        
         LayerPanel.add(trangChuPanel, "TrangChuPanel");
         LayerPanel.add(quanLyGiaiDauPanel, "QuanLyGiaiDauPanel");
         LayerPanel.add(danhSachDoiBongPanel, "DanhSachDoiBongPanel");
@@ -53,10 +48,56 @@ public class QuanLyView extends javax.swing.JFrame {
         LayerPanel.add(danhSachTrongTaiPanel, "DanhSachTrongTaiPanel");
         LayerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
 
-        // Hiển thị trang chủ mặc định
         cardLayout.show(LayerPanel, "TrangChuPanel");
 
+        // Hiển thị thông tin người đăng nhập
+    //    jLabel2.setText("User: " + getCurrentUsername());  // Thay thế bằng tên người dùng thực tế
+
+        // Set màu nền của sidebar (jPanel1)
+        jPanel1.setBackground(new java.awt.Color(0, 51, 102));  // Màu xanh đậm giống bên trái
+
+        // Set màu cho các nút
+        btnTrangChu.setBackground(new java.awt.Color(0, 51, 102));
+        btnQuanLyGiaiDau.setBackground(new java.awt.Color(0, 51, 102));
+        btnDanhSachDoiBong.setBackground(new java.awt.Color(0, 51, 102));
+        btnDanhSachCauThu.setBackground(new java.awt.Color(0, 51, 102));
+        btnDanhSachTrongTai.setBackground(new java.awt.Color(0, 51, 102));
+        btnDanhSachHLV.setBackground(new java.awt.Color(0, 51, 102));
+        btnQuanLyTaiKhoan.setBackground(new java.awt.Color(0, 51, 102));
+
+        // Hiển thị thông tin người dùng ở phía dưới
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
     }
+
+    private void addSidebarButtonStyle(javax.swing.JButton button, java.awt.event.ActionListener listener) {
+    button.addActionListener(listener);
+
+    Color buttonColor = button.getBackground();  // Màu nền của button
+    button.setBorder(new RoundBorder(20, buttonColor));  // Truyền bán kính và màu border
+
+    button.setContentAreaFilled(true);  // Đảm bảo button có nền
+    button.setFocusPainted(false);  // Không có viền focus
+    button.setForeground(Color.WHITE);  // Màu chữ trắng
+    button.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 15));  // Font chữ đậm
+    button.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);  // Canh trái
+    button.setIconTextGap(15);  // Khoảng cách giữa icon và chữ
+    button.setBackground(new Color(0, 51, 102));  // Màu nền mặc định (xanh đậm)
+    button.setOpaque(true);  // Bật nền cho button để có thể hiển thị màu nền
+
+    // Thêm MouseListener để thay đổi màu khi di chuột vào
+    button.addMouseListener(new java.awt.event.MouseAdapter() {
+        @Override
+        public void mouseEntered(java.awt.event.MouseEvent evt) {
+            button.setBackground(new Color(0, 102, 204));  // Màu nền khi di chuột vào
+        }
+
+        @Override
+        public void mouseExited(java.awt.event.MouseEvent evt) {
+            button.setBackground(new Color(0, 51, 102));  // Màu nền khi chuột rời đi
+        }
+    });
+}
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -218,7 +259,7 @@ public class QuanLyView extends javax.swing.JFrame {
         showPanel("DanhSachDoiBongPanel");
     }
 
-    public void openDanhSachCauThu() {
+    public void openDanhSachCauThu() { 
         showPanel("DanhSachCauThuPanel");
     }
 
