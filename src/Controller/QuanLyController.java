@@ -1,8 +1,10 @@
 package Controller;
 
 import View.Admin.QuanLyView;
+import View.LoginView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
 
 public class QuanLyController implements ActionListener {
 
@@ -30,7 +32,12 @@ public class QuanLyController implements ActionListener {
             QuanLyView.openQuanLyTaiKhoan();
         } else if (button.equals("Danh Sách Trọng Tài")) {
             QuanLyView.openDanhSachTrongTai();
+        }else if(button.equals("Đăng Xuất")){
+              int result = JOptionPane.showConfirmDialog(QuanLyView, "Bạn có chắc chắn muốn đăng xuất không?", "Xác nhận đăng xuất", JOptionPane.YES_NO_OPTION);
+              if (result == JOptionPane.YES_OPTION) {
+                QuanLyView.dispose(); // đóng frame hiện tại
+                new LoginView().setVisible(true); // mở lại LoginView
+            }        
         }
     }
-
 }

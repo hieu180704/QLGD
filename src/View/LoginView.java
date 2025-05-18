@@ -74,6 +74,12 @@ private RegisterView registerView;
         lbUsername.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbUsername.setText("Usernames");
 
+        txtUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsernameActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout UsernameLayout = new javax.swing.GroupLayout(Username);
         Username.setLayout(UsernameLayout);
         UsernameLayout.setHorizontalGroup(
@@ -211,6 +217,10 @@ private RegisterView registerView;
         new RegisterView().setVisible(true);
         dispose();
     }//GEN-LAST:event_lbRegisterMouseClicked
+
+    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsernameActionPerformed
 
     public static void main(String args[]) {
         try {

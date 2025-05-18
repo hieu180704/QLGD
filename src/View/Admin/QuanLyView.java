@@ -17,6 +17,7 @@ public class QuanLyView extends javax.swing.JFrame {
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
     private DanhSachTrongTaiPanel danhSachTrongTaiPanel = new DanhSachTrongTaiPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
+  
 
     public QuanLyView() {
         initComponents();
@@ -26,13 +27,12 @@ public class QuanLyView extends javax.swing.JFrame {
         QuanLyController quanLyController = new QuanLyController(this);
         btnTrangChu.addActionListener(quanLyController);
         btnQuanLyGiaiDau.addActionListener(quanLyController);
-        btnDangXuat.addActionListener(quanLyController);
         btnDanhSachCauThu.addActionListener(quanLyController);
         btnDanhSachDoiBong.addActionListener(quanLyController);
         btnDanhSachHLV.addActionListener(quanLyController);
         btnDanhSachTrongTai.addActionListener(quanLyController);
         btnQuanLyTaiKhoan.addActionListener(quanLyController);
-
+        btnDangXuat.addActionListener(quanLyController);
 
 
 
@@ -92,6 +92,11 @@ public class QuanLyView extends javax.swing.JFrame {
         btnDangXuat.setBorder(null);
         btnDangXuat.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnDangXuat.setPreferredSize(new java.awt.Dimension(100, 20));
+        btnDangXuat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDangXuatActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnDangXuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 230, 57));
 
         btnQuanLyGiaiDau.setBackground(new java.awt.Color(21, 78, 128));
@@ -173,6 +178,12 @@ public class QuanLyView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    
+    
+    private void btnDangXuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangXuatActionPerformed
+        // TODO add your handling code here:   
+    }//GEN-LAST:event_btnDangXuatActionPerformed
 
     public static void main(String args[]) {
         try {
