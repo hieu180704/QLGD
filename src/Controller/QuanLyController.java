@@ -6,31 +6,44 @@ import java.awt.event.ActionListener;
 
 public class QuanLyController implements ActionListener {
 
-    private QuanLyView QuanLyView;
+    // Tên biến nên viết thường theo chuẩn Java
+    private QuanLyView quanLyView;
 
-    public QuanLyController(QuanLyView QuanLyView) {
-        this.QuanLyView = QuanLyView;
+    // Constructor
+    public QuanLyController(QuanLyView quanLyView) {
+        this.quanLyView = quanLyView;
+        
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String button = e.getActionCommand();
-        if (button.equals("Trang Chủ")) {
-            QuanLyView.openTrangChu();
 
-        } else if (button.equals("Quản Lý Giải Đấu")) {
-            QuanLyView.openQuanLyGiaiDauPanel();
-        } else if (button.equals("Danh Sách Cầu Thủ")) {
-            QuanLyView.openDanhSachCauThu();
-        } else if (button.equals("Danh Sách Đội Bóng")) {
-            QuanLyView.openDanhSachDoiBong();
-        } else if (button.equals("Danh Sách HLV")) {
-            QuanLyView.openDanhSachHLV();
-        } else if (button.equals("Quản Lý Tài Khoản")) {
-            QuanLyView.openQuanLyTaiKhoan();
-        } else if (button.equals("Danh Sách Trọng Tài")) {
-            QuanLyView.openDanhSachTrongTai();
+        switch (button) {
+            case "Trang Chủ":
+                quanLyView.openTrangChu();
+                break;
+            case "Quản Lý Giải Đấu":
+                quanLyView.openQuanLyGiaiDauPanel();
+                break;
+            case "Danh Sách Cầu Thủ":
+                quanLyView.openDanhSachCauThu();
+                break;
+            case "Danh Sách Đội Bóng":
+                quanLyView.openDanhSachDoiBong();
+                break;
+            case "Danh Sách HLV":
+                quanLyView.openDanhSachHLV();
+                break;
+            case "Quản Lý Tài Khoản":
+                quanLyView.openQuanLyTaiKhoan();
+                break;
+            case "Danh Sách Trọng Tài":
+                quanLyView.openDanhSachTrongTai();
+                break;
+            default:
+                // Có thể log hoặc xử lý nút không nhận diện được
+                break;
         }
     }
-
 }
