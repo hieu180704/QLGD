@@ -2,12 +2,10 @@ package View.Admin;
 
 import Controller.QuanLyController;
 import View.CustomButton.RoundBorder;
-import javax.swing.border.EmptyBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.border.Border;
 
 public class QuanLyView extends JFrame {
 
@@ -70,9 +68,6 @@ public class QuanLyView extends JFrame {
 
         // Thiết lập màu nền sidebar
         sidebarPanel.setBackground(new Color(0, 51, 102));
-        
-        JButton[] sidebarButtons = {btnTrangChu, btnQuanLyGiaiDau, btnDanhSachDoiBong, btnDanhSachCauThu,
-                btnDanhSachTrongTai, btnDanhSachHLV, btnQuanLyTaiKhoan};
 
         // Hiển thị username ở header (nếu cần)
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
@@ -118,19 +113,54 @@ public class QuanLyView extends JFrame {
         Color logoutHover = new Color(255, 102, 102);
 
         btnTrangChu = rou.createSidebarButton("Trang Chủ", 20, sidebarBg, sidebarHover);
+        ImageIcon anhTC1 = new ImageIcon(getClass().getResource("/Resources/home.png"));
+        Image anhTC2 = anhTC1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhTC3 = new ImageIcon(anhTC2);
+        btnTrangChu.setIcon(anhTC3);
+        btnTrangChu.setIconTextGap(5);
         btnQuanLyGiaiDau = rou.createSidebarButton("Quản Lý Giải Đấu", 20, sidebarBg, sidebarHover);
+        ImageIcon anhGD1 = new ImageIcon(getClass().getResource("/Resources/tournament.png"));
+        Image anhGD2 = anhGD1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhGD3 = new ImageIcon(anhGD2);
+        btnQuanLyGiaiDau.setIcon(anhGD3);
+        btnQuanLyGiaiDau.setIconTextGap(5);
         btnDanhSachDoiBong = rou.createSidebarButton("Danh Sách Đội Bóng", 20, sidebarBg, sidebarHover);
+        ImageIcon anhDB1 = new ImageIcon(getClass().getResource("/Resources/football-club.png"));
+        Image anhDB2 = anhDB1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhDB3 = new ImageIcon(anhDB2);
+        btnDanhSachDoiBong.setIcon(anhDB3);
+        btnDanhSachDoiBong.setIconTextGap(5);
         btnDanhSachCauThu = rou.createSidebarButton("Danh Sách Cầu Thủ", 20, sidebarBg, sidebarHover);
+        ImageIcon anhCT1 = new ImageIcon(getClass().getResource("/Resources/soccer-player.png"));
+        Image anhCT2 = anhCT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhCT3 = new ImageIcon(anhCT2);
+        btnDanhSachCauThu.setIcon(anhCT3);
+        btnDanhSachCauThu.setIconTextGap(5);
         btnDanhSachTrongTai = rou.createSidebarButton("Danh Sách Trọng Tài", 20, sidebarBg, sidebarHover);
+        ImageIcon anhTT1 = new ImageIcon(getClass().getResource("/Resources/referee.png"));
+        Image anhTT2 = anhTT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhTT3 = new ImageIcon(anhTT2);
+        btnDanhSachTrongTai.setIcon(anhTT3);
+        btnDanhSachTrongTai.setIconTextGap(5);
         btnDanhSachHLV = rou.createSidebarButton("Danh Sách HLV", 20, sidebarBg, sidebarHover);
+        ImageIcon anhHLV1 = new ImageIcon(getClass().getResource("/Resources/manager.png"));
+        Image anhHLV2 = anhHLV1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhHLV3 = new ImageIcon(anhHLV2);
+        btnDanhSachHLV.setIcon(anhHLV3);
+        btnDanhSachHLV.setIconTextGap(5);
         btnQuanLyTaiKhoan = rou.createSidebarButton("Quản Lý Tài Khoản", 20, sidebarBg, sidebarHover);
+        ImageIcon anhTK1 = new ImageIcon(getClass().getResource("/Resources/user.png"));
+        Image anhTK2 = anhTK1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhTK3 = new ImageIcon(anhTK2);
+        btnQuanLyTaiKhoan.setIcon(anhTK3);
+        btnQuanLyTaiKhoan.setIconTextGap(5);
 
         btnDangXuat = rou.createSidebarButton("Đăng Xuất", 20, logoutBg, logoutHover);
 
         sidebarPanel = new JPanel();
         sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
         sidebarPanel.setBackground(sidebarBg);
-        sidebarPanel.setPreferredSize(new Dimension(230, 600));
+        sidebarPanel.setPreferredSize(new Dimension(260, 600));
 
         sidebarPanel.add(Box.createVerticalStrut(20));
         sidebarPanel.add(btnTrangChu);

@@ -28,9 +28,9 @@ public class RoundBorder {
     btn.setFocusPainted(false);
     btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
     btn.setBorder(new EmptyBorder(5, 15, 5, 15));
-    btn.setPreferredSize(new Dimension(200, 50));
-    btn.setMaximumSize(new Dimension(200, 50));
-    btn.setMinimumSize(new Dimension(200, 50));
+    btn.setPreferredSize(new Dimension(230, 50));
+    btn.setMaximumSize(new Dimension(230, 50));
+    btn.setMinimumSize(new Dimension(230, 50));
     btn.setHorizontalAlignment(SwingConstants.CENTER);
     btn.setAlignmentX(Component.CENTER_ALIGNMENT); 
 
