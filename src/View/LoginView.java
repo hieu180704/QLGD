@@ -8,6 +8,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class LoginView extends javax.swing.JFrame {
 private RegisterView registerView;
+private QuanLyView quanLyView;
 
     public LoginView() {
         initComponents();
@@ -203,11 +204,14 @@ private RegisterView registerView;
         String username = txtUsername.getText();
         String password = txtPassword.getText();
 
-        if (username.equals("admin") && password.equals("123456")) {
-            new View.Admin.QuanLyView().setVisible(true);
+        if (username.equals("Duong") && password.equals("123456")) {
+            new View.Admin.QuanLyView(username).setVisible(true);
             this.dispose();
         } else {
-            JOptionPane.showConfirmDialog(this, "Tên đăng nhập sai hoặc mật khẩu sai");
+            JOptionPane.showMessageDialog(null, 
+            "Tên đăng nhập hoặc mật khẩu không đúng!", 
+            "Lỗi đăng nhập", 
+            JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnDangnhapActionPerformed
 

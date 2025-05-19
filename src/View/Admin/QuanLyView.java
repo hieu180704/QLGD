@@ -19,6 +19,7 @@ public class QuanLyView extends JFrame {
     private DanhSachTrongTaiPanel danhSachTrongTaiPanel = new DanhSachTrongTaiPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
   
+    private String user;
 
     private JLayeredPane layerPanel;
     private JButton btnTrangChu;
@@ -39,16 +40,7 @@ public class QuanLyView extends JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         QuanLyController quanLyController = new QuanLyController(this);
-<<<<<<< HEAD
-        btnTrangChu.addActionListener(quanLyController);
-        btnQuanLyGiaiDau.addActionListener(quanLyController);
-        btnDanhSachCauThu.addActionListener(quanLyController);
-        btnDanhSachDoiBong.addActionListener(quanLyController);
-        btnDanhSachHLV.addActionListener(quanLyController);
-        btnDanhSachTrongTai.addActionListener(quanLyController);
-        btnQuanLyTaiKhoan.addActionListener(quanLyController);
-        btnDangXuat.addActionListener(quanLyController);
-=======
+
 
         // Gán event và style cho các nút sidebar
         addSidebarButtonStyle(btnTrangChu, quanLyController);
@@ -76,7 +68,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(danhSachHLVPanel, "DanhSachHLVPanel");
         layerPanel.add(danhSachTrongTaiPanel, "DanhSachTrongTaiPanel");
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
->>>>>>> 23dff2e4baefdf7effe1273813f2ed33a4599cd1
+
 
         cardLayout.show(layerPanel, "TrangChuPanel");
 
@@ -89,6 +81,14 @@ public class QuanLyView extends JFrame {
         // Hiển thị username ở header (nếu cần)
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
     }
+    
+    public QuanLyView(String username){
+        this();
+        this.user = username;
+        jLabel2.setText(user);
+         
+    }
+    
 
     private void addSidebarButtonStyle(JButton button, java.awt.event.ActionListener listener) {
         button.addActionListener(listener);
@@ -102,12 +102,12 @@ public class QuanLyView extends JFrame {
         button.setBackground(new Color(0, 51, 102));
         button.setOpaque(false);
 
-<<<<<<< HEAD
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(21, 78, 128));
-        jPanel1.setPreferredSize(new java.awt.Dimension(230, 600));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        sidebarPanel.setBackground(new java.awt.Color(21, 78, 128));
+        sidebarPanel.setPreferredSize(new java.awt.Dimension(230, 600));
+        sidebarPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnTrangChu.setBackground(new java.awt.Color(21, 78, 128));
         btnTrangChu.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -116,7 +116,7 @@ public class QuanLyView extends JFrame {
         btnTrangChu.setBorder(null);
         btnTrangChu.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         btnTrangChu.setPreferredSize(new java.awt.Dimension(100, 20));
-        jPanel1.add(btnTrangChu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 57));
+        sidebarPanel.add(btnTrangChu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 57));
 
         btnDangXuat.setBackground(new java.awt.Color(255, 51, 51));
         btnDangXuat.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -130,7 +130,7 @@ public class QuanLyView extends JFrame {
                 btnDangXuatActionPerformed(evt);
             }
         });
-        jPanel1.add(btnDangXuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 230, 57));
+        sidebarPanel.add(btnDangXuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 230, 57));
 
         btnQuanLyGiaiDau.setBackground(new java.awt.Color(21, 78, 128));
         btnQuanLyGiaiDau.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -139,7 +139,7 @@ public class QuanLyView extends JFrame {
         btnQuanLyGiaiDau.setBorder(null);
         btnQuanLyGiaiDau.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnQuanLyGiaiDau.setPreferredSize(new java.awt.Dimension(100, 20));
-        jPanel1.add(btnQuanLyGiaiDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 230, 57));
+        sidebarPanel.add(btnQuanLyGiaiDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 230, 57));
 
         btnDanhSachDoiBong.setBackground(new java.awt.Color(21, 78, 128));
         btnDanhSachDoiBong.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -148,7 +148,7 @@ public class QuanLyView extends JFrame {
         btnDanhSachDoiBong.setBorder(null);
         btnDanhSachDoiBong.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnDanhSachDoiBong.setPreferredSize(new java.awt.Dimension(100, 20));
-        jPanel1.add(btnDanhSachDoiBong, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 230, 57));
+        sidebarPanel.add(btnDanhSachDoiBong, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 230, 57));
 
         btnDanhSachCauThu.setBackground(new java.awt.Color(21, 78, 128));
         btnDanhSachCauThu.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -157,7 +157,7 @@ public class QuanLyView extends JFrame {
         btnDanhSachCauThu.setBorder(null);
         btnDanhSachCauThu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnDanhSachCauThu.setPreferredSize(new java.awt.Dimension(100, 20));
-        jPanel1.add(btnDanhSachCauThu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 230, 57));
+        sidebarPanel.add(btnDanhSachCauThu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 230, 57));
 
         btnDanhSachTrongTai.setBackground(new java.awt.Color(21, 78, 128));
         btnDanhSachTrongTai.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -166,7 +166,7 @@ public class QuanLyView extends JFrame {
         btnDanhSachTrongTai.setBorder(null);
         btnDanhSachTrongTai.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnDanhSachTrongTai.setPreferredSize(new java.awt.Dimension(100, 20));
-        jPanel1.add(btnDanhSachTrongTai, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 230, 57));
+        sidebarPanel.add(btnDanhSachTrongTai, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 230, 57));
 
         btnDanhSachHLV.setBackground(new java.awt.Color(21, 78, 128));
         btnDanhSachHLV.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -175,7 +175,7 @@ public class QuanLyView extends JFrame {
         btnDanhSachHLV.setBorder(null);
         btnDanhSachHLV.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnDanhSachHLV.setPreferredSize(new java.awt.Dimension(100, 20));
-        jPanel1.add(btnDanhSachHLV, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 230, 57));
+        sidebarPanel.add(btnDanhSachHLV, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 230, 57));
 
         btnQuanLyTaiKhoan.setBackground(new java.awt.Color(21, 78, 128));
         btnQuanLyTaiKhoan.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -184,33 +184,33 @@ public class QuanLyView extends JFrame {
         btnQuanLyTaiKhoan.setBorder(null);
         btnQuanLyTaiKhoan.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnQuanLyTaiKhoan.setPreferredSize(new java.awt.Dimension(100, 20));
-        jPanel1.add(btnQuanLyTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 230, 57));
+        sidebarPanel.add(btnQuanLyTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 230, 57));
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.WEST);
+        getContentPane().add(sidebarPanel, java.awt.BorderLayout.WEST);
 
-        jPanel2.setBackground(new java.awt.Color(34, 91, 144));
-        jPanel2.setPreferredSize(new java.awt.Dimension(770, 80));
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        headerPanel.setBackground(new java.awt.Color(34, 91, 144));
+        headerPanel.setPreferredSize(new java.awt.Dimension(770, 80));
+        headerPanel.setLayout(new java.awt.BorderLayout());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("    Quản Lý Giải Đấu Bóng Đá");
-        jPanel2.add(jLabel1, java.awt.BorderLayout.WEST);
+        headerPanel.add(jLabel1, java.awt.BorderLayout.WEST);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Username          ");
-        jPanel2.add(jLabel2, java.awt.BorderLayout.EAST);
+        headerPanel.add(jLabel2, java.awt.BorderLayout.EAST);
         jLabel2.getAccessibleContext().setAccessibleName("lblUsername");
 
-        getContentPane().add(jPanel2, java.awt.BorderLayout.NORTH);
+        getContentPane().add(headerPanel, java.awt.BorderLayout.NORTH);
 
-        LayerPanel.setLayout(new java.awt.CardLayout());
-        getContentPane().add(LayerPanel, java.awt.BorderLayout.CENTER);
+        layerPanel.setLayout(new java.awt.CardLayout());
+        getContentPane().add(layerPanel, java.awt.BorderLayout.CENTER);
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }// </editor-fold>                        
     
     
     
@@ -218,27 +218,7 @@ public class QuanLyView extends JFrame {
         // TODO add your handling code here:   
     }//GEN-LAST:event_btnDangXuatActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-=======
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(0, 102, 204));
->>>>>>> 23dff2e4baefdf7effe1273813f2ed33a4599cd1
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(0, 51, 102));
-            }
-        });
-    }
+   
     
     private RoundBorder rou = new RoundBorder();
 
@@ -310,6 +290,7 @@ public class QuanLyView extends JFrame {
         jLabel2.setForeground(Color.WHITE);
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        jLabel2.setText(user);
         headerPanel.add(jLabel2, BorderLayout.EAST);
 
         getContentPane().add(headerPanel, BorderLayout.NORTH);
