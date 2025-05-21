@@ -1,13 +1,17 @@
-package View;
+package ViewMain;
 
-import View.Admin.QuanLyView;
+import Api.ApiClient;
+import Model.TaiKhoan;
+import java.io.IOException;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class LoginView extends javax.swing.JFrame {
-private RegisterView registerView;
+
+    private RegisterView registerView;
 
     public LoginView() {
         initComponents();
@@ -38,7 +42,6 @@ private RegisterView registerView;
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Phần Mềm Quản Lý Giải Đấu Bóng Đá");
-        setPreferredSize(new java.awt.Dimension(700, 400));
 
         LoginPanel.setPreferredSize(new java.awt.Dimension(350, 400));
         LoginPanel.setLayout(new java.awt.BorderLayout());
@@ -193,15 +196,38 @@ private RegisterView registerView;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDangnhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangnhapActionPerformed
-        // TODO add your handling code here:
         String username = txtUsername.getText();
         String password = txtPassword.getText();
 
-        if (username.equals("admin") && password.equals("123456")) {
-            new View.Admin.QuanLyView().setVisible(true);
-            this.dispose();
-        } else {
-            JOptionPane.showConfirmDialog(this, "Tên đăng nhập sai hoặc mật khẩu sai");
+        try {
+            // Gọi API GET lấy danh sách tài khoản (mảng JSON)
+            String jsonResponse = ApiClient.read("http://26.65.1.52:8080/api/taikhoan");
+
+            // Parse mảng JSON thành mảng các đối tượng TaiKhoan (hoặc TaiKhoan)
+            TaiKhoan[] accounts = ApiClient.parseJson(jsonResponse, TaiKhoan[].class);
+
+            boolean found = false;
+            for (TaiKhoan account : accounts) {
+                if (username.equals(account.getTendangnhap()) && password.equals(account.getMatkhau())) {
+                    found = true;
+                    // Kiểm tra loại tài khoản để chuyển View
+                    if (account.getLoaitaikhoan() == 1) {
+                        new View.Admin.QuanLyView().setVisible(true);
+                    } else {
+                        new View.Admin.QuanLyView().setVisible(true);
+                    }
+                    this.dispose();
+                    break;
+                }
+            }
+
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!");
+            }
+
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Lỗi kết nối tới dịch vụ đăng nhập");
+            ex.printStackTrace();
         }
     }//GEN-LAST:event_btnDangnhapActionPerformed
 
