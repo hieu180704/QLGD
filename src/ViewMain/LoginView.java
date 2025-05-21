@@ -1,6 +1,5 @@
 package ViewMain;
 
-import Api.ApiClient;
 import Model.TaiKhoan;
 import java.io.IOException;
 import javax.swing.JDialog;
@@ -198,37 +197,6 @@ public class LoginView extends javax.swing.JFrame {
     private void btnDangnhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangnhapActionPerformed
         String username = txtUsername.getText();
         String password = txtPassword.getText();
-
-        try {
-            // Gọi API GET lấy danh sách tài khoản (mảng JSON)
-            String jsonResponse = ApiClient.read("http://26.65.1.52:8080/api/taikhoan");
-
-            // Parse mảng JSON thành mảng các đối tượng TaiKhoan (hoặc TaiKhoan)
-            TaiKhoan[] accounts = ApiClient.parseJson(jsonResponse, TaiKhoan[].class);
-
-            boolean found = false;
-            for (TaiKhoan account : accounts) {
-                if (username.equals(account.getTendangnhap()) && password.equals(account.getMatkhau())) {
-                    found = true;
-                    // Kiểm tra loại tài khoản để chuyển View
-                    if (account.getLoaitaikhoan() == 1) {
-                        new View.Admin.QuanLyView().setVisible(true);
-                    } else {
-                        new View.Admin.QuanLyView().setVisible(true);
-                    }
-                    this.dispose();
-                    break;
-                }
-            }
-
-            if (!found) {
-                JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không đúng!");
-            }
-
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Lỗi kết nối tới dịch vụ đăng nhập");
-            ex.printStackTrace();
-        }
     }//GEN-LAST:event_btnDangnhapActionPerformed
 
     private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
