@@ -1,7 +1,9 @@
 package View;
 
+import Model.UserModel;
 import View.Admin.QuanLyView;
 import javax.swing.JOptionPane;
+
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -9,6 +11,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class LoginView extends javax.swing.JFrame {
 private RegisterView registerView;
 private QuanLyView quanLyView;
+private UserModel user;
 
     public LoginView() {
         initComponents();
@@ -205,7 +208,10 @@ private QuanLyView quanLyView;
         String password = txtPassword.getText();
 
         if (username.equals("Duong") && password.equals("123456")) {
-            new View.Admin.QuanLyView(username).setVisible(true);
+            user = new UserModel();
+            user.setUsername(username);
+            user.setEmail("");
+            new View.Admin.QuanLyView(user).setVisible(true);
             this.dispose();
         } else {
             JOptionPane.showMessageDialog(null, 

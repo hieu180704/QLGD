@@ -1,15 +1,11 @@
 package View.Admin;
 
 import Controller.QuanLyController;
-import Model.UserModel;
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
-import Controller.UserController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class QuanLyView extends JFrame {
 
@@ -20,10 +16,8 @@ public class QuanLyView extends JFrame {
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
     private DanhSachTrongTaiPanel danhSachTrongTaiPanel = new DanhSachTrongTaiPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
-
-    private UserModel usercurrent;
-    private UserEditPanel userEditPanel;
-    private UserController userController;
+  
+    private String user;
 
     private JLayeredPane layerPanel;
     private JButton btnTrangChu;
@@ -44,6 +38,7 @@ public class QuanLyView extends JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         QuanLyController quanLyController = new QuanLyController(this);
+
 
         // Gán event và style cho các nút sidebar
         addSidebarButtonStyle(btnTrangChu, quanLyController);
@@ -72,6 +67,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(danhSachTrongTaiPanel, "DanhSachTrongTaiPanel");
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
 
+
         cardLayout.show(layerPanel, "TrangChuPanel");
 
         // Thiết lập màu nền sidebar
@@ -80,32 +76,14 @@ public class QuanLyView extends JFrame {
         // Hiển thị username ở header (nếu cần)
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
     }
-
-    public QuanLyView(UserModel username) {
-        this();
-        this.usercurrent = username;
-        this.userController = new UserController(this, this.usercurrent);
-        // Thêm sự kiện click cho jLabel2
-        jLabel2.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                userController.openUserEditPanel();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jLabel2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                jLabel2.setForeground(new Color(135, 206, 235));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jLabel2.setForeground(Color.WHITE);
-            }
-        });
-
-        jLabel2.setText(usercurrent.getUsername());
-    }
+    
+//    public QuanLyView(String username){
+//        this();
+//        this.user = username;
+//        jLabel2.setText(user);
+//         
+//    }
+    
 
     private void addSidebarButtonStyle(JButton button, java.awt.event.ActionListener listener) {
         button.addActionListener(listener);
@@ -119,28 +97,134 @@ public class QuanLyView extends JFrame {
         button.setBackground(new Color(0, 51, 102));
         button.setOpaque(false);
 
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(0, 102, 204));
-            }
 
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(new Color(0, 51, 102));
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        sidebarPanel.setBackground(new java.awt.Color(21, 78, 128));
+        sidebarPanel.setPreferredSize(new java.awt.Dimension(230, 600));
+        sidebarPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        btnTrangChu.setBackground(new java.awt.Color(21, 78, 128));
+        btnTrangChu.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnTrangChu.setForeground(new java.awt.Color(255, 255, 255));
+        btnTrangChu.setText("Trang Chủ");
+        btnTrangChu.setBorder(null);
+        btnTrangChu.setIconTextGap(15);
+        btnTrangChu.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        btnTrangChu.setPreferredSize(new java.awt.Dimension(260, 50));
+        sidebarPanel.add(btnTrangChu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 230, 57));
+
+        btnDangXuat.setBackground(new java.awt.Color(255, 51, 51));
+        btnDangXuat.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnDangXuat.setForeground(new java.awt.Color(255, 255, 255));
+        btnDangXuat.setText("Đăng Xuất");
+        btnDangXuat.setBorder(null);
+        btnDangXuat.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDangXuat.setPreferredSize(new java.awt.Dimension(100, 20));
+        btnDangXuat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDangXuatActionPerformed(evt);
             }
         });
-    }
+        sidebarPanel.add(btnDangXuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 230, 57));
 
+        btnQuanLyGiaiDau.setBackground(new java.awt.Color(21, 78, 128));
+        btnQuanLyGiaiDau.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnQuanLyGiaiDau.setForeground(new java.awt.Color(255, 255, 255));
+        btnQuanLyGiaiDau.setText("Quản Lý Giải Đấu");
+        btnQuanLyGiaiDau.setBorder(null);
+        btnQuanLyGiaiDau.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnQuanLyGiaiDau.setPreferredSize(new java.awt.Dimension(100, 20));
+        sidebarPanel.add(btnQuanLyGiaiDau, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 230, 57));
+
+        btnDanhSachDoiBong.setBackground(new java.awt.Color(21, 78, 128));
+        btnDanhSachDoiBong.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnDanhSachDoiBong.setForeground(new java.awt.Color(255, 255, 255));
+        btnDanhSachDoiBong.setText("Danh Sách Đội Bóng");
+        btnDanhSachDoiBong.setBorder(null);
+        btnDanhSachDoiBong.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDanhSachDoiBong.setPreferredSize(new java.awt.Dimension(100, 20));
+        sidebarPanel.add(btnDanhSachDoiBong, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 230, 57));
+
+        btnDanhSachCauThu.setBackground(new java.awt.Color(21, 78, 128));
+        btnDanhSachCauThu.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnDanhSachCauThu.setForeground(new java.awt.Color(255, 255, 255));
+        btnDanhSachCauThu.setText("Danh Sách Cầu Thủ");
+        btnDanhSachCauThu.setBorder(null);
+        btnDanhSachCauThu.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDanhSachCauThu.setPreferredSize(new java.awt.Dimension(100, 20));
+        sidebarPanel.add(btnDanhSachCauThu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 230, 57));
+
+        btnDanhSachTrongTai.setBackground(new java.awt.Color(21, 78, 128));
+        btnDanhSachTrongTai.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnDanhSachTrongTai.setForeground(new java.awt.Color(255, 255, 255));
+        btnDanhSachTrongTai.setText("Danh Sách Trọng Tài");
+        btnDanhSachTrongTai.setBorder(null);
+        btnDanhSachTrongTai.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDanhSachTrongTai.setPreferredSize(new java.awt.Dimension(100, 20));
+        sidebarPanel.add(btnDanhSachTrongTai, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 230, 57));
+
+        btnDanhSachHLV.setBackground(new java.awt.Color(21, 78, 128));
+        btnDanhSachHLV.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnDanhSachHLV.setForeground(new java.awt.Color(255, 255, 255));
+        btnDanhSachHLV.setText("Danh Sách HLV");
+        btnDanhSachHLV.setBorder(null);
+        btnDanhSachHLV.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDanhSachHLV.setPreferredSize(new java.awt.Dimension(100, 20));
+        sidebarPanel.add(btnDanhSachHLV, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 230, 57));
+
+        btnQuanLyTaiKhoan.setBackground(new java.awt.Color(21, 78, 128));
+        btnQuanLyTaiKhoan.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        btnQuanLyTaiKhoan.setForeground(new java.awt.Color(255, 255, 255));
+        btnQuanLyTaiKhoan.setText("Quản Lý Tài Khoản");
+        btnQuanLyTaiKhoan.setBorder(null);
+        btnQuanLyTaiKhoan.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnQuanLyTaiKhoan.setPreferredSize(new java.awt.Dimension(100, 20));
+        sidebarPanel.add(btnQuanLyTaiKhoan, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 230, 57));
+
+        getContentPane().add(sidebarPanel, java.awt.BorderLayout.WEST);
+
+        headerPanel.setBackground(new java.awt.Color(34, 91, 144));
+        headerPanel.setPreferredSize(new java.awt.Dimension(770, 80));
+        headerPanel.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("    Quản Lý Giải Đấu Bóng Đá");
+        headerPanel.add(jLabel1, java.awt.BorderLayout.WEST);
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Username          ");
+        headerPanel.add(jLabel2, java.awt.BorderLayout.EAST);
+        jLabel2.getAccessibleContext().setAccessibleName("lblUsername");
+
+        getContentPane().add(headerPanel, java.awt.BorderLayout.NORTH);
+
+        layerPanel.setLayout(new java.awt.CardLayout());
+        getContentPane().add(layerPanel, java.awt.BorderLayout.CENTER);
+
+        pack();
+    }// </editor-fold>                        
+    
+    
+    
+    private void btnDangXuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangXuatActionPerformed
+        // TODO add your handling code here:   
+    }//GEN-LAST:event_btnDangXuatActionPerformed
+
+   
+    
     private RoundBorder rou = new RoundBorder();
 
     private void initComponents() {
-
+        
         jLabel1 = new JLabel("    Quản Lý Giải Đấu Bóng Đá");
         jLabel2 = new JLabel("Username          ");
         layerPanel = new JLayeredPane();
         layerPanel.setLayout(new CardLayout());
-
+        
         Color sidebarBg = new Color(0, 51, 102);
         Color sidebarHover = new Color(0, 102, 204);
         Color logoutBg = new Color(255, 77, 77);
@@ -215,7 +299,7 @@ public class QuanLyView extends JFrame {
 
         sidebarPanel.add(btnDangXuat);
         sidebarPanel.add(Box.createVerticalStrut(20));
-
+        
         // Màu riêng cho btnDangXuat
         btnDangXuat.setBackground(new Color(255, 51, 51));
 
@@ -237,6 +321,7 @@ public class QuanLyView extends JFrame {
         jLabel2.setForeground(Color.WHITE);
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
         jLabel2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        jLabel2.setText(user);
         headerPanel.add(jLabel2, BorderLayout.EAST);
 
         getContentPane().add(headerPanel, BorderLayout.NORTH);
@@ -244,34 +329,7 @@ public class QuanLyView extends JFrame {
         // Thêm layerPanel vào center
         getContentPane().add(layerPanel, BorderLayout.CENTER);
 
-        userEditPanel = new UserEditPanel();
-        //userEditPanel.setPreferredSize(new Dimension(250, 150));
-        userEditPanel.setVisible(false); // ẩn panel lúc đầu
-
-// Bạn có thể chọn vị trí hiển thị, ví dụ thêm vào layerPanel hoặc tạo 1 panel riêng ở BorderLayout.EAST
-        getContentPane().add(userEditPanel, BorderLayout.EAST);
-// Hoặc bạn tạo một panel chứa layerPanel và userEditPanel để bố trí hợp lý hơn
-
-        
-
         pack();
-    }
-
-   // Cập nhật label hiển thị tên người dùng
-    public void updateUserInfoDisplay() {
-        jLabel2.setText(usercurrent.getUsername());
-    }
-
-    // Cho phép Controller show hoặc ẩn panel chỉnh sửa
-    public void showUserEditPanel(boolean visible) {
-        userEditPanel.setVisible(visible);
-        revalidate();
-        repaint();
-    }
-
-    // Lấy panel edit để Controller đăng ký event hoặc lấy dữ liệu
-    public UserEditPanel getUserEditPanel() {
-        return userEditPanel;
     }
 
     // Các hàm mở panel
