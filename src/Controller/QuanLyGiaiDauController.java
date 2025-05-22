@@ -6,6 +6,7 @@ import View.Admin.QuanLyView;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class QuanLyGiaiDauController implements ActionListener {
@@ -20,11 +21,15 @@ public class QuanLyGiaiDauController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String src = e.getActionCommand();
         if (src.equals("Thêm giải đấu")) {
-            // Lấy parent từ panel UI, không phải từ controller
-            Component parent = SwingUtilities.getWindowAncestor(QuanLyGiaiDauPanel);
-            if (parent instanceof QuanLyView) {
-                ((QuanLyView) parent).openThemGiaiDauPanel();
-            }
+            ThemGiaiDauPanel themPanel = new ThemGiaiDauPanel(QuanLyGiaiDauPanel); // Truyền chính panel quản lý vào để làm mới
+            // controller đã được tạo trong ThemGiaiDauPanel constructor rồi, không cần tạo lại ở đây
+
+            JFrame frame = new JFrame("Thêm Giải Đấu");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setContentPane(themPanel);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
         }
     }
 

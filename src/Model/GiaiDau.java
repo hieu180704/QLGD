@@ -25,7 +25,6 @@ public class GiaiDau {
         this.maTheThuc = maTheThuc;
         this.ngayTaoGiai = ngayTaoGiai;
         this.ngayBatDau = ngayBatDau;
-
     }
 
     public int getMaGiaiDau() {

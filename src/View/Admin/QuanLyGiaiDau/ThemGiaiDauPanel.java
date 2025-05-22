@@ -1,23 +1,16 @@
 package View.Admin.QuanLyGiaiDau;
 
-import DAO.GiaiDauDAO;
+import Controller.ThemGiaiDauController;
 import DAO.NhaTaiTroDAO;
 import DAO.TheThucDAO;
-import Model.GiaiDau;
 import Model.NhaTaiTro;
 import Model.TheThuc;
-import View.Admin.QuanLyView;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 public class ThemGiaiDauPanel extends JPanel {
 
@@ -27,18 +20,46 @@ public class ThemGiaiDauPanel extends JPanel {
     private JSpinner spNgayTao, spNgayBatDau;
     private JLabel lblPreview;
     private byte[] anhGiaiDau;
+    private ThemGiaiDauController controller;  // Bỏ tạo cứng ở đây
 
+    private JButton btnLuu, btnHuy, btnQuayLai, btnChonAnh;
+
+    // Thêm constructor nhận QuanLyGiaiDauPanel để truyền vào controller
+    public ThemGiaiDauPanel(View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel quanLyGiaiDauPanel) {
+        designThemGiaiDauPanel();
+        // Tạo controller, truyền this + quanLyGiaiDauPanel
+        controller = new ThemGiaiDauController(this, quanLyGiaiDauPanel);
+        registerListeners();
+    }
+
+    // Nếu cần có constructor mặc định (không dùng refresh), thì tạo riêng
     public ThemGiaiDauPanel() {
+        designThemGiaiDauPanel();
+        // Tạo controller mặc định, không có quanLyGiaiDauPanel (có thể truyền null)
+        controller = new ThemGiaiDauController(this, null);
+        registerListeners();
+    }
+
+    private void registerListeners() {
+        btnHuy.addActionListener(controller);
+        btnChonAnh.addActionListener(controller);
+        btnLuu.addActionListener(controller);
+        btnQuayLai.addActionListener(controller);
+    }
+
+    public void designThemGiaiDauPanel() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 255));
         setBorder(new EmptyBorder(20, 60, 20, 60));
 
+        // Tiêu đề
         JLabel lblTitle = new JLabel("THÊM GIẢI ĐẤU MỚI");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
         lblTitle.setForeground(new Color(40, 40, 100));
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblTitle, BorderLayout.NORTH);
 
+        // Form chính
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -47,7 +68,7 @@ public class ThemGiaiDauPanel extends JPanel {
 
         int row = 0;
 
-        // Tên giải
+        // Tên giải đấu
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Tên giải đấu:"), gbc);
@@ -100,8 +121,7 @@ public class ThemGiaiDauPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Logo giải đấu:"), gbc);
-        JButton btnChonAnh = new JButton("Chọn ảnh...");
-        btnChonAnh.addActionListener(this::chonAnh);
+        btnChonAnh = new JButton("Chọn ảnh...");
         gbc.gridx = 1;
         gbc.gridy = row++;
         formPanel.add(btnChonAnh, gbc);
@@ -117,109 +137,114 @@ public class ThemGiaiDauPanel extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Nút
+        // Panel nút dưới
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
 
-        JButton btnLuu = new JButton("Lưu");
+        btnLuu = new JButton("Lưu");
         btnLuu.setPreferredSize(new Dimension(100, 40));
         btnLuu.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnLuu.setBackground(new Color(50, 160, 90));
         btnLuu.setForeground(Color.WHITE);
-        btnLuu.addActionListener(e -> themGiaiDau());
         bottomPanel.add(btnLuu);
 
-        JButton btnHuy = new JButton("Hủy");
+        btnHuy = new JButton("Hủy");
         btnHuy.setPreferredSize(new Dimension(100, 40));
         btnHuy.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnHuy.addActionListener(e -> clearForm());
         bottomPanel.add(btnHuy);
 
-        JButton btnQuayLai = new JButton("Quay lại");
+        btnQuayLai = new JButton("Quay lại");
         btnQuayLai.setPreferredSize(new Dimension(100, 40));
         btnQuayLai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnQuayLai.addActionListener(e -> {
-            Component parent = SwingUtilities.getWindowAncestor(this);
-            if (parent instanceof QuanLyView) {
-                QuanLyView view = (QuanLyView) parent;
-                view.openQuanLyGiaiDauPanel();
-                view.openQuanLyGiaiDauPanel();
-                view.getQuanLyGiaiDauPanel().loadData();
-            }
-        });
         bottomPanel.add(btnQuayLai);
 
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    private void chonAnh(ActionEvent e) {
-        JFileChooser chooser = new JFileChooser();
-        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            try {
-                anhGiaiDau = Files.readAllBytes(file.toPath());
-                BufferedImage img = ImageIO.read(file);
-                Image scaled = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
-                lblPreview.setIcon(new ImageIcon(scaled));
-                lblPreview.setText("");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Không thể đọc ảnh!");
-            }
-        }
-    }
-
-    private void themGiaiDau() {
-        String ten = txtTenGiaiDau.getText().trim();
-        NhaTaiTro ntt = (NhaTaiTro) cbNhaTaiTro.getSelectedItem();
-        TheThuc tt = (TheThuc) cbTheThuc.getSelectedItem();
-        Date ngayTao = (Date) spNgayTao.getValue();
-        Date ngayBatDau = (Date) spNgayBatDau.getValue();
-
-        if (ten.isEmpty() || ntt == null || tt == null || anhGiaiDau == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
-            return;
-        }
-
-        GiaiDau gd = new GiaiDau();
-        gd.setTenGiaiDau(ten);
-        gd.setAnhGiaiDau(anhGiaiDau);
-        gd.setMaNTT(ntt.getMaNTT());
-        gd.setMaTheThuc(tt.getMaTheThuc());
-        gd.setNgayTaoGiai(ngayTao);
-        gd.setNgayBatDau(ngayBatDau);
-
-        GiaiDauDAO giaiDauDAO = new GiaiDauDAO();
-        boolean ok = giaiDauDAO.insert(gd);
-        if (ok) {
-            JOptionPane.showMessageDialog(this, "Thêm giải đấu thành công!");
-            clearForm();
-
-        } else {
-            JOptionPane.showMessageDialog(this, "Thêm giải đấu thất bại!");
-        }
-    }
-
-    private void clearForm() {
-        txtTenGiaiDau.setText("");
-        cbNhaTaiTro.setSelectedIndex(0);
-        cbTheThuc.setSelectedIndex(0);
-        anhGiaiDau = null;
-        lblPreview.setIcon(null);
-        lblPreview.setText("Chưa có ảnh");
-    }
-
+    // Load danh sách Nhà tài trợ vào combobox
     private void loadNhaTaiTro() {
         List<NhaTaiTro> list = new NhaTaiTroDAO().findAll();
+        cbNhaTaiTro.removeAllItems();
         for (NhaTaiTro ntt : list) {
             cbNhaTaiTro.addItem(ntt);
         }
     }
 
+    // Load danh sách Thể thức vào combobox
     private void loadTheThuc() {
         List<TheThuc> list = new TheThucDAO().findAll();
+        cbTheThuc.removeAllItems();
         for (TheThuc tt : list) {
             cbTheThuc.addItem(tt);
         }
+    }
+
+    // Getter cho các button để controller đăng ký sự kiện
+    public JButton getBtnLuu() {
+        return btnLuu;
+    }
+
+    public JButton getBtnHuy() {
+        return btnHuy;
+    }
+
+    public JButton getBtnQuayLai() {
+        return btnQuayLai;
+    }
+
+    public JButton getBtnChonAnh() {
+        return btnChonAnh;
+    }
+
+    // Getter dữ liệu form cho controller dùng
+    public String getTenGiaiDau() {
+        return txtTenGiaiDau.getText().trim();
+    }
+
+    public NhaTaiTro getNhaTaiTro() {
+        return (NhaTaiTro) cbNhaTaiTro.getSelectedItem();
+    }
+
+    public TheThuc getTheThuc() {
+        return (TheThuc) cbTheThuc.getSelectedItem();
+    }
+
+    public Date getNgayTao() {
+        return (Date) spNgayTao.getValue();
+    }
+
+    public Date getNgayBatDau() {
+        return (Date) spNgayBatDau.getValue();
+    }
+
+    public byte[] getAnhGiaiDau() {
+        return anhGiaiDau;
+    }
+
+    // Setter ảnh logo
+    public void setAnhGiaiDau(byte[] anh) {
+        this.anhGiaiDau = anh;
+    }
+
+    // Hiển thị ảnh preview
+    public void setPreviewImage(Image image) {
+        Image scaled = image.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        lblPreview.setIcon(new ImageIcon(scaled));
+        lblPreview.setText("");
+    }
+
+    // Xóa form
+    public void clearForm() {
+        txtTenGiaiDau.setText("");
+        if (cbNhaTaiTro.getItemCount() > 0) {
+            cbNhaTaiTro.setSelectedIndex(0);
+        }
+        if (cbTheThuc.getItemCount() > 0) {
+            cbTheThuc.setSelectedIndex(0);
+        }
+        anhGiaiDau = null;
+        lblPreview.setIcon(null);
+        lblPreview.setText("Chưa có ảnh");
     }
 }

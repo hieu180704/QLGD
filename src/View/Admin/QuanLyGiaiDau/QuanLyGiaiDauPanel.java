@@ -1,30 +1,26 @@
 package View.Admin.QuanLyGiaiDau;
 
+import Controller.DetailGiaiDauController;
 import Controller.QuanLyGiaiDauController;
 import DAO.GiaiDauDAO;
 import Model.GiaiDau;
-import View.Admin.QuanLyView;
 import View.CustomPanel.ItemGiaiDau;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.GridLayout;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class QuanLyGiaiDauPanel extends JPanel {
 
@@ -32,8 +28,14 @@ public class QuanLyGiaiDauPanel extends JPanel {
     private JPanel panelItems;
     private JTextField txtTimKiem;
     private QuanLyGiaiDauController quanLyGiaiDauController = new QuanLyGiaiDauController(this);
+    private GiaiDauDAO giaiDauDAO;
 
     public QuanLyGiaiDauPanel() {
+        designPanel();
+        loadData();
+    }
+
+    public void designPanel() {
         setLayout(new BorderLayout());
         setBackground(new Color(18, 30, 50));
 
@@ -63,7 +65,6 @@ public class QuanLyGiaiDauPanel extends JPanel {
         txtTimKiem.setCaretColor(Color.WHITE);
         txtTimKiem.putClientProperty("JTextField.placeholderText", "Tìm kiếm giải đấu...");
 
-
         searchPanel.add(txtTimKiem, BorderLayout.CENTER);
 
         // ======= Thêm mới =========
@@ -86,50 +87,98 @@ public class QuanLyGiaiDauPanel extends JPanel {
         // ========== Danh sách Item ==========
         panelItems = new JPanel();
         panelItems.setBackground(new Color(18, 30, 50));
-        panelItems.setLayout(new FlowLayout(FlowLayout.LEFT, 16, 16));
+        panelItems.setLayout(new GridLayout(0, 4, 16, 16));
 
         add(panelItems, BorderLayout.CENTER);
 
         setPreferredSize(new Dimension(1000, 700));
 
-        // Load data ngay khi khởi tạo
-        loadData();
+        txtTimKiem.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterList();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterList();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                filterList();
+            }
+
+            private void filterList() {
+                String keyword = txtTimKiem.getText().trim().toLowerCase();
+                panelItems.removeAll();
+                if (keyword.isEmpty()) {
+                    // Hiển thị toàn bộ danh sách gốc
+                    for (GiaiDau gd : danhSachGiaiDau) {
+                        addItemGiaiDau(gd);
+                    }
+                } else {
+                    // Lọc theo tên giải đấu
+                    for (GiaiDau gd : danhSachGiaiDau) {
+                        if (gd.getTenGiaiDau().toLowerCase().contains(keyword)) {
+                            addItemGiaiDau(gd);
+                        }
+                    }
+                }
+                panelItems.revalidate();
+                panelItems.repaint();
+            }
+        });
+
     }
 
     public void loadData() {
-        GiaiDauDAO giaiDauDAO = new GiaiDauDAO();
-        danhSachGiaiDau = giaiDauDAO.findAll();
-        hienThiDanhSach(danhSachGiaiDau);
-    }
-
-    private void hienThiDanhSach(List<GiaiDau> danhSach) {
         panelItems.removeAll();
-
-        if (danhSach != null && !danhSach.isEmpty()) {
-            for (GiaiDau gd : danhSach) {
-                ItemGiaiDau item = new ItemGiaiDau(gd);
-                // Thêm listener hoặc callback cho item, nếu cần, ví dụ:
-                item.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        Component parent = SwingUtilities.getWindowAncestor(QuanLyGiaiDauPanel.this);
-                        if (parent instanceof QuanLyView) {
-                            ((QuanLyView) parent).openDetailGiaiDauPanel(gd);
-                        }
-                    }
-                });
-                item.setPreferredSize(new Dimension(320, 180));
-                panelItems.add(item);
+        giaiDauDAO = new GiaiDauDAO();
+        danhSachGiaiDau = giaiDauDAO.findAll();
+        if (danhSachGiaiDau != null && !danhSachGiaiDau.isEmpty()) {
+            for (GiaiDau gd : danhSachGiaiDau) {
+                addItemGiaiDau(gd);
             }
         } else {
             JLabel lblNoData = new JLabel("Không có dữ liệu giải đấu");
-            lblNoData.setForeground(Color.GRAY);
+            lblNoData.setForeground(Color.RED);
             panelItems.add(lblNoData);
         }
         panelItems.revalidate();
         panelItems.repaint();
     }
 
+    private void addItemGiaiDau(GiaiDau gd) {
+        ItemGiaiDau item = new ItemGiaiDau(gd);
+        item.setPreferredSize(new Dimension(320, 180));
+        item.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
+
+                // Thiết lập dữ liệu hiện tại
+                detailGiaiDauPanel.setCurrentGiaiDau(gd);
+                detailGiaiDauPanel.setTenGiaiDau(gd.getTenGiaiDau());
+                detailGiaiDauPanel.setNhaTaiTro(gd.getNhaTaiTro());
+                detailGiaiDauPanel.setTheThuc(gd.getTheThuc());
+                detailGiaiDauPanel.setNgayTao(gd.getNgayTaoGiai());
+                detailGiaiDauPanel.setNgayBatDau(gd.getNgayBatDau());
+                detailGiaiDauPanel.setAnhGiaiDau(gd.getAnhGiaiDau());
+
+                // Tạo controller, đăng ký sự kiện
+                DetailGiaiDauController controller = new DetailGiaiDauController(detailGiaiDauPanel, QuanLyGiaiDauPanel.this);
+
+                JFrame frame = new JFrame("Chi tiết Giải Đấu");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                frame.getContentPane().add(detailGiaiDauPanel);
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+        });
+        panelItems.add(item);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
