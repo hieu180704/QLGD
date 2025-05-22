@@ -1,6 +1,6 @@
 package Main;
 
-import View.LoginView;
+import ViewMain.LoginView;
 
 public class MainProject {
 

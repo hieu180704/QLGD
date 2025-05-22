@@ -1,7 +1,7 @@
 package Controller;
 
 import View.Admin.QuanLyView;
-import View.LoginView;
+import ViewMain.LoginView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;

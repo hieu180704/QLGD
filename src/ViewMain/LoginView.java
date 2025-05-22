@@ -1,24 +1,34 @@
-package View;
+package ViewMain;
 
 import Model.UserModel;
 import View.Admin.QuanLyView;
 import javax.swing.JOptionPane;
-
+import Model.TaiKhoan;
+import java.io.IOException;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LoginView extends javax.swing.JFrame {
-private RegisterView registerView;
-private QuanLyView quanLyView;
-private UserModel user;
 
-    public LoginView() {
-        initComponents();
-        this.setLocationRelativeTo(null);
-    }
+    private QuanLyView quanLyView;
+    private UserModel user;
 
-    @SuppressWarnings("unchecked")
+    public class LoginView extends javax.swing.JFrame {
+
+        private RegisterView registerView;
+
+        public LoginView() {
+            initComponents();
+            this.setLocationRelativeTo(null);
+        }
+
+        @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -42,7 +52,6 @@ private UserModel user;
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Phần Mềm Quản Lý Giải Đấu Bóng Đá");
-        setPreferredSize(new java.awt.Dimension(700, 400));
 
         LoginPanel.setPreferredSize(new java.awt.Dimension(350, 400));
         LoginPanel.setLayout(new java.awt.BorderLayout());
@@ -203,7 +212,6 @@ private UserModel user;
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDangnhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangnhapActionPerformed
-        // TODO add your handling code here:
         String username = txtUsername.getText();
         String password = txtPassword.getText();
 
@@ -214,11 +222,12 @@ private UserModel user;
             new View.Admin.QuanLyView(user).setVisible(true);
             this.dispose();
         } else {
-            JOptionPane.showMessageDialog(null, 
-            "Tên đăng nhập hoặc mật khẩu không đúng!", 
-            "Lỗi đăng nhập", 
-            JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null,
+                    "Tên đăng nhập hoặc mật khẩu không đúng!",
+                    "Lỗi đăng nhập",
+                    JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnDangnhapActionPerformed
 
     private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
@@ -232,31 +241,31 @@ private UserModel user;
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsernameActionPerformed
 
-    public static void main(String args[]) {
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+        public static void main(String args[]) {
+            try {
+                for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                    if ("Windows".equals(info.getName())) {
+                        javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                        break;
+                    }
                 }
+            } catch (ClassNotFoundException ex) {
+                java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (InstantiationException ex) {
+                java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+                java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new LoginView().setVisible(true);
+                }
+            });
+
         }
-
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginView().setVisible(true);
-            }
-        });
-
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ImagePanel;
