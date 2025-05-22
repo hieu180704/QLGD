@@ -133,7 +133,7 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
         LoginBot.add(lbRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 230, -1, 20));
-        LoginBot.add(txtUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 210, 25));
+        LoginBot.add(txtUsername, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 210, 25));
 
         lbUsername.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbUsername.setText("Usernames");
