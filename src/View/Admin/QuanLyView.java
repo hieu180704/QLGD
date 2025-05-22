@@ -1,6 +1,10 @@
 package View.Admin;
 
+import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
+import Model.GiaiDau;
+import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
+import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -16,6 +20,8 @@ public class QuanLyView extends JFrame {
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
     private DanhSachTrongTaiPanel danhSachTrongTaiPanel = new DanhSachTrongTaiPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
+    private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
+    private RoundBorder rou = new RoundBorder();
 
     private JLayeredPane layerPanel;
     private JButton btnTrangChu;
@@ -32,8 +38,9 @@ public class QuanLyView extends JFrame {
     private JPanel headerPanel;
 
     public QuanLyView() {
-        initComponents();
+        designView();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         QuanLyController quanLyController = new QuanLyController(this);
 
@@ -97,16 +104,15 @@ public class QuanLyView extends JFrame {
             }
         });
     }
-    
-    private RoundBorder rou = new RoundBorder();
 
-    private void initComponents() {
-        
+    private void designView() {
+
         jLabel1 = new JLabel("    Quản Lý Giải Đấu Bóng Đá");
         jLabel2 = new JLabel("Username          ");
         layerPanel = new JLayeredPane();
         layerPanel.setLayout(new CardLayout());
-        
+        layerPanel.add(detailGiaiDauPanel, "DetailGiaiDauPanel");
+
         Color sidebarBg = new Color(0, 51, 102);
         Color sidebarHover = new Color(0, 102, 204);
         Color logoutBg = new Color(255, 77, 77);
@@ -181,7 +187,7 @@ public class QuanLyView extends JFrame {
 
         sidebarPanel.add(btnDangXuat);
         sidebarPanel.add(Box.createVerticalStrut(20));
-        
+
         // Màu riêng cho btnDangXuat
         btnDangXuat.setBackground(new Color(255, 51, 51));
 
@@ -219,7 +225,9 @@ public class QuanLyView extends JFrame {
     }
 
     public void openQuanLyGiaiDauPanel() {
-        showPanel("QuanLyGiaiDauPanel");
+        quanLyGiaiDauPanel.loadData(); //Load dữ liệu trước khi gọi panel
+        CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
+        cardLayout.show(layerPanel, "QuanLyGiaiDauPanel");
     }
 
     public void openDanhSachDoiBong() {
@@ -242,6 +250,10 @@ public class QuanLyView extends JFrame {
         showPanel("QuanLyTaiKhoanPanel");
     }
 
+    public void openThemGiaiDauPanel() {
+        showPanel("ThemGiaiDauPanel");
+    }
+
     private void showPanel(String panelName) {
         CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
         cardLayout.show(layerPanel, panelName);
@@ -258,4 +270,5 @@ public class QuanLyView extends JFrame {
             new QuanLyView().setVisible(true);
         });
     }
+
 }

@@ -1,39 +1,12 @@
 package View.Admin;
 
-import Model.GiaiDauData;
-import Model.GiaiDauModel;
-import View.CustomPanel.GiaiDauPanel;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 
 
 public class TrangChuPanel extends javax.swing.JPanel {
 
     public TrangChuPanel() {
         initComponents();
-        setLayout(new BorderLayout());
-        setBackground(Color.WHITE);
 
-        JLabel titleLabel = new JLabel("Danh Sách Mùa Giải Hiện Tại", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        add(titleLabel, BorderLayout.NORTH);
-
-        // Lấy dữ liệu
-        List<GiaiDauModel> giaiDauList = GiaiDauData.getData();
-
-        // Tạo panel hiển thị bảng dữ liệu
-        GiaiDauPanel giaiDauPanel = new GiaiDauPanel(giaiDauList);
-        // Cho scroll pane để nếu dữ liệu dài sẽ có thanh cuộn
-        JScrollPane scrollPane = new JScrollPane(giaiDauPanel);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        add(scrollPane, BorderLayout.CENTER);
     }
 
     @SuppressWarnings("unchecked")
