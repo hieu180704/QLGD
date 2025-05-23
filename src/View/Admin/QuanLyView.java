@@ -272,8 +272,8 @@ public class QuanLyView extends JFrame {
     }
 
    // Cập nhật label hiển thị tên người dùng
-    public void updateUserInfoDisplay() {
-        jLabel2.setText(usercurrent.getUsername());
+    public void updateUserInfoDisplay(UserModel user) {
+        jLabel2.setText(user.getUsername());
     }
 
     // Cho phép Controller show hoặc ẩn panel chỉnh sửa

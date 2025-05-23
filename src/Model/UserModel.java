@@ -11,6 +11,7 @@ package Model;
 public class UserModel {
      private String username;
      private String email;
+     private String oldname;
      
      public UserModel(){
          this.username = "";
@@ -27,5 +28,13 @@ public class UserModel {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+
+    public String getOldname() {
+        return oldname;
+    }
+
+    public void setOldname(String oldname) {
+        this.oldname = oldname;
+    }
 
 }
