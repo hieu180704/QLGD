@@ -1,16 +1,16 @@
 package View.Admin.QuanLyGiaiDau;
 
-import Controller.DetailGiaiDauController;
-import Controller.QuanLyGiaiDauController;
+import Controller.giaidaucontroller.DetailGiaiDauController;
 import DAO.GiaiDauDAO;
+import DAO.NhaTaiTroDAO;
 import Model.GiaiDau;
 import View.CustomPanel.ItemGiaiDau;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -27,10 +27,13 @@ public class QuanLyGiaiDauPanel extends JPanel {
     private List<GiaiDau> danhSachGiaiDau;
     private JPanel panelItems;
     private JTextField txtTimKiem;
-    private QuanLyGiaiDauController quanLyGiaiDauController = new QuanLyGiaiDauController(this);
+
     private GiaiDauDAO giaiDauDAO;
+    private NhaTaiTroDAO nhaTaiTroDAO;
 
     public QuanLyGiaiDauPanel() {
+        giaiDauDAO = new GiaiDauDAO();
+        nhaTaiTroDAO = new NhaTaiTroDAO();
         designPanel();
         loadData();
     }
@@ -77,7 +80,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
         btnThem.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         btnThem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThem.setOpaque(true);
-        btnThem.addActionListener(quanLyGiaiDauController);
+        btnThem.addActionListener(new Controller.giaidaucontroller.QuanLyGiaiDauController(this));
 
         headerPanel.add(lblTitle, BorderLayout.WEST);
         headerPanel.add(searchPanel, BorderLayout.CENTER);
@@ -87,7 +90,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
         // ========== Danh sách Item ==========
         panelItems = new JPanel();
         panelItems.setBackground(new Color(18, 30, 50));
-        panelItems.setLayout(new GridLayout(0, 4, 16, 16));
+        panelItems.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
 
         add(panelItems, BorderLayout.CENTER);
 
@@ -150,33 +153,24 @@ public class QuanLyGiaiDauPanel extends JPanel {
     }
 
     private void addItemGiaiDau(GiaiDau gd) {
-        ItemGiaiDau item = new ItemGiaiDau(gd);
-        item.setPreferredSize(new Dimension(320, 180));
-        item.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
+        ItemGiaiDau item = new ItemGiaiDau(gd, g -> {
+            JFrame detailFrame = new JFrame("Chi tiết giải đấu - " + g.getTenGiaiDau());
+            detailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                // Thiết lập dữ liệu hiện tại
-                detailGiaiDauPanel.setCurrentGiaiDau(gd);
-                detailGiaiDauPanel.setTenGiaiDau(gd.getTenGiaiDau());
-                detailGiaiDauPanel.setNhaTaiTro(gd.getNhaTaiTro());
-                detailGiaiDauPanel.setTheThuc(gd.getTheThuc());
-                detailGiaiDauPanel.setNgayTao(gd.getNgayTaoGiai());
-                detailGiaiDauPanel.setNgayBatDau(gd.getNgayBatDau());
-                detailGiaiDauPanel.setAnhGiaiDau(gd.getAnhGiaiDau());
+            DetailGiaiDauPanel detailPanel = new DetailGiaiDauPanel();
 
-                // Tạo controller, đăng ký sự kiện
-                DetailGiaiDauController controller = new DetailGiaiDauController(detailGiaiDauPanel, QuanLyGiaiDauPanel.this);
+            // Set dữ liệu hiện tại lên panel detail
+            detailPanel.setCurrentGiaiDau(g);
 
-                JFrame frame = new JFrame("Chi tiết Giải Đấu");
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                frame.getContentPane().add(detailGiaiDauPanel);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            }
+            // Tạo controller chi tiết, truyền panel quản lý để reload dữ liệu sau khi sửa/xóa
+            new Controller.giaidaucontroller.DetailGiaiDauController(detailPanel, this);
+
+            detailFrame.setContentPane(detailPanel);
+            detailFrame.pack();
+            detailFrame.setLocationRelativeTo(null);
+            detailFrame.setVisible(true);
         });
+        item.setPreferredSize(new Dimension(320, 180));
         panelItems.add(item);
     }
 

@@ -1,6 +1,11 @@
 package ViewMain;
 
+import DAO.TaiKhoanDAO;
+import View.Admin.QuanLyView;
+import javax.swing.JOptionPane;
 import Model.TaiKhoan;
+import com.formdev.flatlaf.FlatLightLaf;
+import controller.LoginController;
 import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -8,13 +13,22 @@ import javax.swing.JOptionPane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 public class LoginView extends javax.swing.JFrame {
+
+    // private javax.swing.JPasswordField txtPassword;
+    private QuanLyView quanLyView;
+    private TaiKhoan taiKhoan;
+    private LoginController controller;
 
     private RegisterView registerView;
 
     public LoginView() {
         initComponents();
         this.setLocationRelativeTo(null);
+        controller = new LoginController(new TaiKhoanDAO());
     }
 
     @SuppressWarnings("unchecked")
@@ -33,10 +47,10 @@ public class LoginView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         Password = new javax.swing.JPanel();
         lbPassword = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JTextField();
+        txtPassword = new javax.swing.JPasswordField();
         btnDangnhap = new javax.swing.JButton();
         lbRegister = new javax.swing.JLabel();
-        ImagePanel = new javax.swing.JPanel();
+        ImagePanel1 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -75,6 +89,12 @@ public class LoginView extends javax.swing.JFrame {
 
         lbUsername.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbUsername.setText("Usernames");
+
+        txtUsername.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUsernameActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout UsernameLayout = new javax.swing.GroupLayout(Username);
         Username.setLayout(UsernameLayout);
@@ -119,16 +139,24 @@ public class LoginView extends javax.swing.JFrame {
         lbPassword.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbPassword.setText("Password:");
 
+        txtPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPasswordActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PasswordLayout = new javax.swing.GroupLayout(Password);
         Password.setLayout(PasswordLayout);
         PasswordLayout.setHorizontalGroup(
             PasswordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PasswordLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(PasswordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbPassword)
-                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37))
+                .addComponent(lbPassword)
+                .addGap(180, 180, 180))
+            .addGroup(PasswordLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PasswordLayout.setVerticalGroup(
             PasswordLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -136,8 +164,7 @@ public class LoginView extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lbPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(txtPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
         );
 
         LoginBot.add(Password, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 80, 230, 60));
@@ -163,40 +190,60 @@ public class LoginView extends javax.swing.JFrame {
 
         getContentPane().add(LoginPanel, java.awt.BorderLayout.WEST);
 
-        ImagePanel.setBackground(new java.awt.Color(255, 255, 255));
-        ImagePanel.setPreferredSize(new java.awt.Dimension(400, 400));
+        ImagePanel1.setBackground(new java.awt.Color(255, 255, 255));
+        ImagePanel1.setPreferredSize(new java.awt.Dimension(400, 400));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/Icon_Ball.png"))); // NOI18N
 
-        javax.swing.GroupLayout ImagePanelLayout = new javax.swing.GroupLayout(ImagePanel);
-        ImagePanel.setLayout(ImagePanelLayout);
-        ImagePanelLayout.setHorizontalGroup(
-            ImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout ImagePanel1Layout = new javax.swing.GroupLayout(ImagePanel1);
+        ImagePanel1.setLayout(ImagePanel1Layout);
+        ImagePanel1Layout.setHorizontalGroup(
+            ImagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
-            .addGroup(ImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(ImagePanelLayout.createSequentialGroup()
+            .addGroup(ImagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ImagePanel1Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(jLabel4)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
-        ImagePanelLayout.setVerticalGroup(
-            ImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        ImagePanel1Layout.setVerticalGroup(
+            ImagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
-            .addGroup(ImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(ImagePanelLayout.createSequentialGroup()
+            .addGroup(ImagePanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(ImagePanel1Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
                     .addComponent(jLabel4)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
 
-        getContentPane().add(ImagePanel, java.awt.BorderLayout.CENTER);
+        getContentPane().add(ImagePanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDangnhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangnhapActionPerformed
         String username = txtUsername.getText();
-        String password = txtPassword.getText();
+        String password = new String(txtPassword.getPassword());
+
+        TaiKhoan userAccount = controller.login(username, password);
+        if (userAccount != null) {
+            if (userAccount.getLoaitaikhoan() == 1) {
+                int maTaiKhoan = userAccount.getMataikhoan();
+                QuanLyView quanLyView = new QuanLyView();
+                quanLyView.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Bạn không có quyền truy cập hệ thống quản lý.",
+                        "Thông báo",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Tên đăng nhập hoặc mật khẩu không đúng.",
+                    "Lỗi đăng nhập",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnDangnhapActionPerformed
 
     private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
@@ -206,34 +253,28 @@ public class LoginView extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_lbRegisterMouseClicked
 
+    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsernameActionPerformed
+
+    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPasswordActionPerformed
+
     public static void main(String args[]) {
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Windows".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new LoginView().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new LoginView().setVisible(true);
         });
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel ImagePanel;
+    private javax.swing.JPanel ImagePanel1;
     private javax.swing.JPanel LoginBot;
     private javax.swing.JPanel LoginPanel;
     private javax.swing.JPanel LoginTop;
@@ -248,7 +289,7 @@ public class LoginView extends javax.swing.JFrame {
     private javax.swing.JLabel lbPassword;
     private javax.swing.JLabel lbRegister;
     private javax.swing.JLabel lbUsername;
-    private javax.swing.JTextField txtPassword;
+    private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

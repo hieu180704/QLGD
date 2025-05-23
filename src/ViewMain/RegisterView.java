@@ -1,207 +1,251 @@
 package ViewMain;
 
-import ViewMain.LoginView;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.JTextComponent;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.RoundRectangle2D;
 
-/**
- *
- * @author ADMIN
- */
-public class RegisterView extends javax.swing.JFrame {
+public class RegisterView extends JFrame {
 
-    /**
-     * Creates new form RegisterView
-     */
     public RegisterView() {
-        initComponents();
-        this.setLocationRelativeTo(null);
-        // Thêm WindowListener để mở lại LoginView khi đóng RegisterView
-        this.addWindowListener(new java.awt.event.WindowAdapter() {
+        setTitle("Register");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(750, 500);
+        setLocationRelativeTo(null);
+        setUndecorated(true);
+
+        // Background gradient panel
+        JPanel backgroundPanel = new JPanel() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-                new LoginView().setVisible(true);
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                Color color1 = new Color(95, 99, 204);
+                Color color2 = new Color(79, 205, 193);
+                GradientPaint gp = new GradientPaint(0, 0, color1, getWidth(), getHeight(), color2);
+                g2.setPaint(gp);
+                g2.fillRect(0, 0, getWidth(), getHeight());
             }
+        };
+        backgroundPanel.setLayout(new GridBagLayout());
+        setContentPane(backgroundPanel);
+
+        // White rounded form panel
+        JPanel formPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setColor(Color.WHITE);
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.dispose();
+                super.paintComponent(g);
+            }
+        };
+        formPanel.setOpaque(false);
+        formPanel.setPreferredSize(new Dimension(500, 350));
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setBorder(new EmptyBorder(20, 30, 20, 30));
+
+        // Title
+        JLabel titleLabel = new JLabel("CREATE ACCOUNT");
+        titleLabel.setFont(new Font("Arial Black", Font.BOLD, 20));
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        formPanel.add(titleLabel);
+
+        // Text fields
+        JTextField tfName = createStyledTextField("John Doe");
+        formPanel.add(tfName);
+        formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        JTextField tfEmail = createStyledTextField("Your Email");
+        formPanel.add(tfEmail);
+        formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        JPasswordField pfPassword = createStyledPasswordField("Password");
+        formPanel.add(pfPassword);
+        formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        JPasswordField pfRePassword = createStyledPasswordField("Repeat your password");
+        formPanel.add(pfRePassword);
+        formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        // Sign Up button
+        JButton btnSignUp = new JButton("SIGN UP") {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                GradientPaint gp = new GradientPaint(0, 0, new Color(123, 130, 230), 0, getHeight(), new Color(79, 205, 193));
+                g2d.setPaint(gp);
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+                g2d.dispose();
+                super.paintComponent(g);
+            }
+        };
+        btnSignUp.setFocusPainted(false);
+        btnSignUp.setForeground(Color.WHITE);
+        btnSignUp.setFont(new Font("Arial Black", Font.BOLD, 16));
+        btnSignUp.setBorderPainted(false);
+        btnSignUp.setContentAreaFilled(false);
+        btnSignUp.setOpaque(false);
+        btnSignUp.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnSignUp.setPreferredSize(new Dimension(300, 40));
+        btnSignUp.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        formPanel.add(btnSignUp);
+
+        // Login link label
+        JLabel lblLogin = new JLabel("<html>Have already an account? <b><u>Login here</u></b></html>");
+        lblLogin.setFont(new Font("Arial", Font.PLAIN, 13));
+        lblLogin.setForeground(Color.BLACK);
+        lblLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
+        lblLogin.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+        lblLogin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        formPanel.add(lblLogin);
+
+        // Add hover effect & click event for login label
+        lblLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                RegisterView.this.dispose();
+                new ViewMain.LoginView().setVisible(true);
+                //JOptionPane.showMessageDialog(RegisterView.this, "Chuyển sang form đăng nhập (demo).");
+                // Ở đây bạn có thể mở form LoginView mới hoặc xử lý gì tùy ý
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                lblLogin.setForeground(new Color(50, 100, 200));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                lblLogin.setForeground(Color.BLACK);
+            }
+        });
+
+        backgroundPanel.add(formPanel);
+
+        // Rounded JFrame shape, cập nhật khi resize
+        setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
+            }
+        });
+
+        // Demo action button sign up
+        btnSignUp.addActionListener(e -> {
+            String name = tfName.getText().trim();
+            String email = tfEmail.getText().trim();
+            String pass = new String(pfPassword.getPassword());
+            String rePass = new String(pfRePassword.getPassword());
+
+            if (name.isEmpty() || name.equals("John Doe") ||
+                email.isEmpty() || email.equals("Your Email") ||
+                pass.isEmpty() || pass.equals("Password") ||
+                rePass.isEmpty() || rePass.equals("Repeat your password")) {
+                JOptionPane.showMessageDialog(this, "Please fill all fields correctly!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!pass.equals(rePass)) {
+                JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            JOptionPane.showMessageDialog(this, "Register success! (Demo)");
+            // Ở đây bạn xử lý đăng ký thực tế
         });
     }
 
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtUsername = new javax.swing.JTextField();
-        txtEmail = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JTextField();
-        btnRegister = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
-        jLabel1.setText("ĐĂNG KÝ");
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel2.setText("Tài khoản :");
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel3.setText("Mật khẩu :");
-
-        txtUsername.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUsernameActionPerformed(evt);
-            }
-        });
-
-        txtEmail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtEmailActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel4.setText(" Email :");
-
-        txtPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPasswordActionPerformed(evt);
-            }
-        });
-
-        btnRegister.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnRegister.setText("Đăng ký");
-
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/Icon_Ball.png"))); // NOI18N
-
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/Icon_ball1_1.png"))); // NOI18N
-
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/Icon_ball3.png"))); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(126, 126, 126)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtEmail)
-                                    .addComponent(txtPassword)
-                                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(37, 37, 37)
-                                .addComponent(jLabel1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnRegister)
-                        .addGap(123, 123, 123)))
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(jLabel5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addGap(42, 42, 42)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28)
-                        .addComponent(btnRegister)))
-                .addContainerGap(59, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel6))
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtEmailActionPerformed
-
-    private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUsernameActionPerformed
-
-    private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPasswordActionPerformed
-
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
+    private JTextField createStyledTextField(String placeholder) {
+        JTextField tf = new JTextField();
+        tf.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
+        tf.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        tf.setForeground(Color.GRAY);
+        tf.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(180, 180, 180), 1, true),
+                BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+        addPlaceholder(tf, placeholder);
+        tf.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                tf.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(79, 205, 193), 2, true),
+                        BorderFactory.createEmptyBorder(7, 9, 7, 9)));
+                if (tf.getText().equals(placeholder)) {
+                    tf.setText("");
+                    tf.setForeground(Color.BLACK);
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RegisterView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RegisterView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RegisterView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RegisterView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new RegisterView().setVisible(true);
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tf.getText().isEmpty()) {
+                    tf.setForeground(Color.GRAY);
+                    tf.setText(placeholder);
+                }
+                tf.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(180, 180, 180), 1, true),
+                        BorderFactory.createEmptyBorder(8, 10, 8, 10)));
             }
         });
+        return tf;
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnRegister;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtPassword;
-    private javax.swing.JTextField txtUsername;
-    // End of variables declaration//GEN-END:variables
+    private JPasswordField createStyledPasswordField(String placeholder) {
+        JPasswordField pf = new JPasswordField();
+        pf.setMaximumSize(new Dimension(Integer.MAX_VALUE, 38));
+        pf.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        pf.setForeground(Color.GRAY);
+        pf.setEchoChar((char) 0);
+        pf.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(180, 180, 180), 1, true),
+                BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+        addPlaceholder(pf, placeholder);
+        pf.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                pf.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(79, 205, 193), 2, true),
+                        BorderFactory.createEmptyBorder(7, 9, 7, 9)));
+                String pass = new String(pf.getPassword());
+                if (pass.equals(placeholder)) {
+                    pf.setText("");
+                    pf.setForeground(Color.BLACK);
+                    pf.setEchoChar('●');
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                String pass = new String(pf.getPassword());
+                if (pass.isEmpty()) {
+                    pf.setEchoChar((char) 0);
+                    pf.setForeground(Color.GRAY);
+                    pf.setText(placeholder);
+                }
+                pf.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(180, 180, 180), 1, true),
+                        BorderFactory.createEmptyBorder(8, 10, 8, 10)));
+            }
+        });
+        return pf;
+    }
+
+    private void addPlaceholder(JTextComponent field, String placeholder) {
+        field.setText(placeholder);
+        field.setForeground(Color.GRAY);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            RegisterView view = new RegisterView();
+            view.setVisible(true);
+        });
+    }
 }
