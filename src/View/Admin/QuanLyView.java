@@ -2,14 +2,21 @@ package View.Admin;
 
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
+
+import Model.UserModel;
+
 import Model.GiaiDau;
 import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
 import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
+
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
+import Controller.UserController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class QuanLyView extends JFrame {
 
@@ -23,6 +30,10 @@ public class QuanLyView extends JFrame {
     private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
     private RoundBorder rou = new RoundBorder();
 
+    private UserModel usercurrent;
+    private UserEditPanel userEditPanel;
+    private UserController userController;
+
     private JLayeredPane layerPanel;
     private JButton btnTrangChu;
     private JButton btnDangXuat;
@@ -30,8 +41,12 @@ public class QuanLyView extends JFrame {
     private JButton btnDanhSachDoiBong;
     private JButton btnDanhSachCauThu;
     private JButton btnDanhSachTrongTai;
+    private JButton btnQuanLyTranDau;
     private JButton btnDanhSachHLV;
     private JButton btnQuanLyTaiKhoan;
+    private JButton btnQuanLySanDau;
+    private JButton btnQuanLyNhaTaiTro;
+    private JButton btnThongKe;
     private JLabel jLabel1;
     private JLabel jLabel2;
     private JPanel sidebarPanel;
@@ -47,19 +62,15 @@ public class QuanLyView extends JFrame {
         // Gán event và style cho các nút sidebar
         addSidebarButtonStyle(btnTrangChu, quanLyController);
         addSidebarButtonStyle(btnQuanLyGiaiDau, quanLyController);
+        addSidebarButtonStyle(btnQuanLyTranDau, quanLyController);
         addSidebarButtonStyle(btnDanhSachDoiBong, quanLyController);
         addSidebarButtonStyle(btnDanhSachCauThu, quanLyController);
         addSidebarButtonStyle(btnDanhSachTrongTai, quanLyController);
         addSidebarButtonStyle(btnDanhSachHLV, quanLyController);
         addSidebarButtonStyle(btnQuanLyTaiKhoan, quanLyController);
-
-        // Nút đăng xuất
-        btnDangXuat.addActionListener(quanLyController);
-        btnDangXuat.setBackground(new Color(255, 77, 77));
-        btnDangXuat.setForeground(Color.WHITE);
-        btnDangXuat.setFocusPainted(false);
-        btnDangXuat.setMaximumSize(new Dimension(200, 50));
-        btnDangXuat.setHorizontalAlignment(SwingConstants.CENTER);
+        addSidebarButtonStyle(btnQuanLySanDau, quanLyController);
+        addSidebarButtonStyle(btnQuanLyNhaTaiTro, quanLyController);
+        addSidebarButtonStyle(btnThongKe, quanLyController);
 
         // Thêm các panel vào CardLayout
         CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
@@ -78,6 +89,32 @@ public class QuanLyView extends JFrame {
 
         // Hiển thị username ở header (nếu cần)
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
+    public QuanLyView(UserModel username) {
+        this();
+        this.usercurrent = username;
+        this.userController = new UserController(this, this.usercurrent);
+        // Thêm sự kiện click cho jLabel2
+        jLabel2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                userController.openUserEditPanel();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                jLabel2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                jLabel2.setForeground(new Color(135, 206, 235));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                jLabel2.setForeground(Color.WHITE);
+            }
+        });
+
+        jLabel2.setText(usercurrent.getUsername());
     }
 
     private void addSidebarButtonStyle(JButton button, java.awt.event.ActionListener listener) {
@@ -111,7 +148,8 @@ public class QuanLyView extends JFrame {
         jLabel2 = new JLabel("Username          ");
         layerPanel = new JLayeredPane();
         layerPanel.setLayout(new CardLayout());
-        layerPanel.add(detailGiaiDauPanel, "DetailGiaiDauPanel");
+
+
 
         Color sidebarBg = new Color(0, 51, 102);
         Color sidebarHover = new Color(0, 102, 204);
@@ -130,6 +168,12 @@ public class QuanLyView extends JFrame {
         ImageIcon anhGD3 = new ImageIcon(anhGD2);
         btnQuanLyGiaiDau.setIcon(anhGD3);
         btnQuanLyGiaiDau.setIconTextGap(5);
+        btnQuanLyTranDau = rou.createSidebarButton("Quản Lý Trận Đấu", 20, sidebarBg, sidebarHover);
+        ImageIcon anhTD1 = new ImageIcon(getClass().getResource("/Resources/match.png"));
+        Image anhTD2 = anhTD1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhTD3 = new ImageIcon(anhTD2);
+        btnQuanLyTranDau.setIcon(anhTD3);
+        btnQuanLyTranDau.setIconTextGap(5);
         btnDanhSachDoiBong = rou.createSidebarButton("Danh Sách Đội Bóng", 20, sidebarBg, sidebarHover);
         ImageIcon anhDB1 = new ImageIcon(getClass().getResource("/Resources/football-club.png"));
         Image anhDB2 = anhDB1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
@@ -160,8 +204,27 @@ public class QuanLyView extends JFrame {
         ImageIcon anhTK3 = new ImageIcon(anhTK2);
         btnQuanLyTaiKhoan.setIcon(anhTK3);
         btnQuanLyTaiKhoan.setIconTextGap(5);
+        btnQuanLySanDau = rou.createSidebarButton("Quản Lý Sân Đấu", 20, sidebarBg, sidebarHover);
+        ImageIcon anhSD1 = new ImageIcon(getClass().getResource("/Resources/stadium.png"));
+        Image anhSD2 = anhSD1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhSD3 = new ImageIcon(anhSD2);
+        btnQuanLySanDau.setIcon(anhSD3);
+        btnQuanLySanDau.setIconTextGap(5);
+        btnQuanLyNhaTaiTro = rou.createSidebarButton("Quản Lý Nhà Tài Trợ", 20, sidebarBg, sidebarHover);
+        ImageIcon anhNTT1 = new ImageIcon(getClass().getResource("/Resources/sponsor.png"));
+        Image anhNTT2 = anhNTT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhNTT3 = new ImageIcon(anhNTT2);
+        btnQuanLyNhaTaiTro.setIcon(anhNTT3);
+        btnQuanLyNhaTaiTro.setIconTextGap(5);
+        btnThongKe = rou.createSidebarButton("Thống Kê", 20, sidebarBg, sidebarHover);
+        ImageIcon anhT1 = new ImageIcon(getClass().getResource("/Resources/total.png"));
+        Image anhT2 = anhT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhT3 = new ImageIcon(anhT2);
+        btnThongKe.setIcon(anhT3);
+        btnThongKe.setIconTextGap(5);
+        
 
-        btnDangXuat = rou.createSidebarButton("Đăng Xuất", 20, logoutBg, logoutHover);
+        btnDangXuat = new JButton("Đăng Xuất");
 
         sidebarPanel = new JPanel();
         sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
@@ -173,6 +236,8 @@ public class QuanLyView extends JFrame {
         sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnQuanLyGiaiDau);
         sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(btnQuanLyTranDau);
+        sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnDanhSachDoiBong);
         sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnDanhSachCauThu);
@@ -182,41 +247,86 @@ public class QuanLyView extends JFrame {
         sidebarPanel.add(btnDanhSachHLV);
         sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnQuanLyTaiKhoan);
+        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(btnQuanLySanDau);
+        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(btnQuanLyNhaTaiTro);
+        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(btnThongKe);
 
-        sidebarPanel.add(Box.createVerticalGlue()); // đẩy btnDangXuat xuống dưới cùng
-
-        sidebarPanel.add(btnDangXuat);
-        sidebarPanel.add(Box.createVerticalStrut(20));
-
-        // Màu riêng cho btnDangXuat
-        btnDangXuat.setBackground(new Color(255, 51, 51));
-
+        sidebarPanel.add(Box.createVerticalGlue()); 
         getContentPane().add(sidebarPanel, BorderLayout.WEST);
 
         // Header panel cấu hình
-        headerPanel = new JPanel();
+        headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(new Color(0, 51, 102));
         headerPanel.setPreferredSize(new Dimension(770, 80));
-        headerPanel.setLayout(new BorderLayout());
 
+        jLabel1 = new JLabel("    Quản Lý Giải Đấu Bóng Đá");
         jLabel1.setFont(new Font("Tahoma", Font.BOLD, 24));
         jLabel1.setForeground(Color.WHITE);
         jLabel1.setHorizontalAlignment(SwingConstants.LEFT);
         jLabel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         headerPanel.add(jLabel1, BorderLayout.WEST);
 
+        JPanel userButtonGroup = new JPanel();
+        userButtonGroup.setLayout(new BoxLayout(userButtonGroup, BoxLayout.X_AXIS));
+        userButtonGroup.setOpaque(false);
+
+        jLabel2 = new JLabel("Username");
         jLabel2.setFont(new Font("Tahoma", Font.PLAIN, 18));
         jLabel2.setForeground(Color.WHITE);
-        jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel2.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-        headerPanel.add(jLabel2, BorderLayout.EAST);
+        userButtonGroup.add(jLabel2);
+        userButtonGroup.add(Box.createRigidArea(new Dimension(8, 0)));
+
+        btnDangXuat = new JButton("Đăng Xuất");
+        btnDangXuat.setBackground(new Color(255, 77, 77));
+        btnDangXuat.setForeground(Color.WHITE);
+        btnDangXuat.setFocusPainted(false);
+        btnDangXuat.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnDangXuat.setPreferredSize(null);
+        btnDangXuat.setMaximumSize(null);
+        userButtonGroup.add(btnDangXuat);
+
+        JPanel userLogoutPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 0));
+        userLogoutPanel.setOpaque(false);
+        userLogoutPanel.add(userButtonGroup);
+        userLogoutPanel.setBorder(BorderFactory.createEmptyBorder(27, 0, 0, 0));
+
+        headerPanel.add(userLogoutPanel, BorderLayout.EAST);
 
         getContentPane().add(headerPanel, BorderLayout.NORTH);
-
         // Thêm layerPanel vào center
         getContentPane().add(layerPanel, BorderLayout.CENTER);
 
+        userEditPanel = new UserEditPanel();
+        //userEditPanel.setPreferredSize(new Dimension(250, 150));
+        userEditPanel.setVisible(false); // ẩn panel lúc đầu
+
+// Bạn có thể chọn vị trí hiển thị, ví dụ thêm vào layerPanel hoặc tạo 1 panel riêng ở BorderLayout.EAST
+        getContentPane().add(userEditPanel, BorderLayout.EAST);
+// Hoặc bạn tạo một panel chứa layerPanel và userEditPanel để bố trí hợp lý hơn
+
+        
+
         pack();
+    }
+
+   // Cập nhật label hiển thị tên người dùng
+    public void updateUserInfoDisplay(UserModel user) {
+        jLabel2.setText(user.getUsername());
+    }
+
+    // Cho phép Controller show hoặc ẩn panel chỉnh sửa
+    public void showUserEditPanel(boolean visible) {
+        userEditPanel.setVisible(visible);
+        revalidate();
+        repaint();
+    }
+
+    // Lấy panel edit để Controller đăng ký event hoặc lấy dữ liệu
+    public UserEditPanel getUserEditPanel() {
+        return userEditPanel;
     }
 
     // Các hàm mở panel
