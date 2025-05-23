@@ -1,29 +1,32 @@
 package Controller;
 
 import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
-import View.Admin.QuanLyView;
+import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import DAO.GiaiDauDAO;
 import Model.GiaiDau;
-import Model.NhaTaiTro;
 import Model.TheThuc;
-import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
-import javax.imageio.ImageIO;
 
 public class ThemGiaiDauController implements java.awt.event.ActionListener {
 
     private ThemGiaiDauPanel panel;
     private QuanLyGiaiDauPanel quanLyGiaiDauPanel;
+    private GiaiDauDAO giaiDauDAO = new GiaiDauDAO();
 
     public ThemGiaiDauController(ThemGiaiDauPanel panel, QuanLyGiaiDauPanel quanLyGiaiDauPanel) {
         this.panel = panel;
         this.quanLyGiaiDauPanel = quanLyGiaiDauPanel;
+        panel.addController(this);
     }
 
     @Override
@@ -40,34 +43,38 @@ public class ThemGiaiDauController implements java.awt.event.ActionListener {
         }
     }
 
+// Trong method themGiaiDau()
     private void themGiaiDau() {
         String ten = panel.getTenGiaiDau();
-        NhaTaiTro ntt = panel.getNhaTaiTro();
         TheThuc tt = panel.getTheThuc();
-        Date ngayTao = panel.getNgayTao();
-        Date ngayBatDau = panel.getNgayBatDau();
+        LocalDate ngayBatDauLocal = panel.getNgayBatDau();
+        LocalDate ngayKetThucLocal = panel.getNgayKetThuc();
         byte[] anhGiaiDau = panel.getAnhGiaiDau();
 
-        if (ten.isEmpty() || ntt == null || tt == null || anhGiaiDau == null) {
-            JOptionPane.showMessageDialog(panel, "Vui lòng nhập đầy đủ thông tin!");
+        if (ten.isEmpty() || tt == null || ngayBatDauLocal == null || ngayKetThucLocal == null || anhGiaiDau == null) {
+            JOptionPane.showMessageDialog(panel, "Vui lòng nhập đầy đủ thông tin, bao gồm tên, thể thức, ngày bắt đầu, ngày kết thúc và chọn ảnh!");
+            return;
+        }
+
+        if (ngayKetThucLocal.isBefore(ngayBatDauLocal)) {
+            JOptionPane.showMessageDialog(panel, "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu!");
             return;
         }
 
         GiaiDau gd = new GiaiDau();
         gd.setTenGiaiDau(ten);
         gd.setAnhGiaiDau(anhGiaiDau);
-        gd.setMaNTT(ntt.getMaNTT());
-        gd.setMaTheThuc(tt.getMaTheThuc());
-        gd.setNgayTaoGiai(ngayTao);
-        gd.setNgayBatDau(ngayBatDau);
+        gd.setTheThuc(tt); // Sửa: set đối tượng TheThuc luôn
+        gd.setNgayTaoGiai(new Date()); // Tự động lấy ngày hiện tại
+        gd.setNgayBatDau(Date.from(ngayBatDauLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        gd.setNgayKetThuc(Date.from(ngayKetThucLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
-        GiaiDauDAO giaiDauDAO = new GiaiDauDAO();
         boolean ok = giaiDauDAO.insert(gd);
         if (ok) {
             JOptionPane.showMessageDialog(panel, "Thêm giải đấu thành công!");
             panel.clearForm();
             if (quanLyGiaiDauPanel != null) {
-                quanLyGiaiDauPanel.loadData();  // BẮT BUỘC PHẢI CÓ DÒNG NÀY!!!
+                quanLyGiaiDauPanel.loadData();
             }
         } else {
             JOptionPane.showMessageDialog(panel, "Thêm giải đấu thất bại!");
@@ -76,8 +83,8 @@ public class ThemGiaiDauController implements java.awt.event.ActionListener {
 
     private void quayLai() {
         Component parent = SwingUtilities.getWindowAncestor(panel);
-        if (parent instanceof java.awt.Window) {
-            ((java.awt.Window) parent).dispose();
+        if (parent instanceof Window) {
+            ((Window) parent).dispose();
         }
     }
 
@@ -88,7 +95,6 @@ public class ThemGiaiDauController implements java.awt.event.ActionListener {
             try {
                 byte[] bytes = Files.readAllBytes(file.toPath());
                 panel.setAnhGiaiDau(bytes);
-                // Load ảnh preview
                 panel.setPreviewImage(ImageIO.read(file));
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(panel, "Không thể đọc ảnh!");

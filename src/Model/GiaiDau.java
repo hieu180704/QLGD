@@ -1,32 +1,34 @@
 package Model;
 
 import java.util.Date;
+import java.util.List;
 
 public class GiaiDau {
 
     private int maGiaiDau;
     private String tenGiaiDau;
     private byte[] anhGiaiDau;
-    private int maNTT;
-    private int maTheThuc;
+    private TheThuc theThuc; // tham chiếu tới TheThuc
     private Date ngayTaoGiai;
     private Date ngayBatDau;
-    private NhaTaiTro nhaTaiTro;
-    private TheThuc theThuc;
+    private Date ngayKetThuc;
 
+    // Constructor
     public GiaiDau() {
     }
 
-    public GiaiDau(int maGiaiDau, String tenGiaiDau, byte[] anhGiaiDau, int maNTT, int maTheThuc, Date ngayTaoGiai, Date ngayBatDau) {
+    public GiaiDau(int maGiaiDau, String tenGiaiDau, byte[] anhGiaiDau, TheThuc theThuc,
+            Date ngayTaoGiai, Date ngayBatDau, Date ngayKetThuc) {
         this.maGiaiDau = maGiaiDau;
         this.tenGiaiDau = tenGiaiDau;
         this.anhGiaiDau = anhGiaiDau;
-        this.maNTT = maNTT;
-        this.maTheThuc = maTheThuc;
+        this.theThuc = theThuc;
         this.ngayTaoGiai = ngayTaoGiai;
         this.ngayBatDau = ngayBatDau;
+        this.ngayKetThuc = ngayKetThuc;
     }
 
+    // Getters & Setters
     public int getMaGiaiDau() {
         return maGiaiDau;
     }
@@ -51,20 +53,12 @@ public class GiaiDau {
         this.anhGiaiDau = anhGiaiDau;
     }
 
-    public int getMaNTT() {
-        return maNTT;
+    public TheThuc getTheThuc() {
+        return theThuc;
     }
 
-    public void setMaNTT(int maNTT) {
-        this.maNTT = maNTT;
-    }
-
-    public int getMaTheThuc() {
-        return maTheThuc;
-    }
-
-    public void setMaTheThuc(int maTheThuc) {
-        this.maTheThuc = maTheThuc;
+    public void setTheThuc(TheThuc theThuc) {
+        this.theThuc = theThuc;
     }
 
     public Date getNgayTaoGiai() {
@@ -83,19 +77,11 @@ public class GiaiDau {
         this.ngayBatDau = ngayBatDau;
     }
 
-    public NhaTaiTro getNhaTaiTro() {
-        return nhaTaiTro;
+    public Date getNgayKetThuc() {
+        return ngayKetThuc;
     }
 
-    public void setNhaTaiTro(NhaTaiTro nhaTaiTro) {
-        this.nhaTaiTro = nhaTaiTro;
-    }
-
-    public TheThuc getTheThuc() {
-        return theThuc;
-    }
-
-    public void setTheThuc(TheThuc theThuc) {
-        this.theThuc = theThuc;
+    public void setNgayKetThuc(Date ngayKetThuc) {
+        this.ngayKetThuc = ngayKetThuc;
     }
 }

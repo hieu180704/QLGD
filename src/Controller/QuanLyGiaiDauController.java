@@ -2,35 +2,38 @@ package Controller;
 
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
-import View.Admin.QuanLyView;
-import java.awt.Component;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 public class QuanLyGiaiDauController implements ActionListener {
 
-    private QuanLyGiaiDauPanel QuanLyGiaiDauPanel;
+    private QuanLyGiaiDauPanel quanLyGiaiDauPanel;
 
     public QuanLyGiaiDauController(QuanLyGiaiDauPanel quanLyGiaiDauPanel) {
-        this.QuanLyGiaiDauPanel = quanLyGiaiDauPanel;
+        this.quanLyGiaiDauPanel = quanLyGiaiDauPanel;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String src = e.getActionCommand();
-        if (src.equals("Thêm giải đấu")) {
-            ThemGiaiDauPanel themPanel = new ThemGiaiDauPanel(QuanLyGiaiDauPanel); // Truyền chính panel quản lý vào để làm mới
-            // controller đã được tạo trong ThemGiaiDauPanel constructor rồi, không cần tạo lại ở đây
+        String cmd = e.getActionCommand();
 
-            JFrame frame = new JFrame("Thêm Giải Đấu");
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setContentPane(themPanel);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
+        if ("Thêm giải đấu".equals(cmd)) {
+            openThemGiaiDauDialog();
         }
+        // Có thể thêm các xử lý khác nếu cần sau này
     }
 
+    private void openThemGiaiDauDialog() {
+        ThemGiaiDauPanel themPanel = new ThemGiaiDauPanel();
+        ThemGiaiDauController controller = new ThemGiaiDauController(themPanel, quanLyGiaiDauPanel);
+
+        JFrame frame = new JFrame("Thêm Giải Đấu");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setContentPane(themPanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
 }
