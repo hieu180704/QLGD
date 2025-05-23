@@ -27,8 +27,8 @@ public class QuanLyView extends JFrame {
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
     private DanhSachTrongTaiPanel danhSachTrongTaiPanel = new DanhSachTrongTaiPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
-    private ThemGiaiDauPanel themGiaiDauPanel = new ThemGiaiDauPanel();
     private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
+    private RoundBorder rou = new RoundBorder();
 
     private UserModel usercurrent;
     private UserEditPanel userEditPanel;
@@ -49,7 +49,7 @@ public class QuanLyView extends JFrame {
     private JPanel headerPanel;
 
     public QuanLyView() {
-        initComponents();
+        designView();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -142,17 +142,13 @@ public class QuanLyView extends JFrame {
         });
     }
 
-    private RoundBorder rou = new RoundBorder();
-
-    private void initComponents() {
+    private void designView() {
 
         jLabel1 = new JLabel("    Quản Lý Giải Đấu Bóng Đá");
         jLabel2 = new JLabel("Username          ");
         layerPanel = new JLayeredPane();
         layerPanel.setLayout(new CardLayout());
 
-        layerPanel.add(themGiaiDauPanel, "ThemGiaiDauPanel");
-        layerPanel.add(detailGiaiDauPanel, "DetailGiaiDauPanel");
 
 
         Color sidebarBg = new Color(0, 51, 102);
@@ -294,7 +290,7 @@ public class QuanLyView extends JFrame {
     }
 
     public void openQuanLyGiaiDauPanel() {
-        quanLyGiaiDauPanel.loadData();// gọi reload dữ liệu trước khi show panel
+        quanLyGiaiDauPanel.loadData(); //Load dữ liệu trước khi gọi panel
         CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
         cardLayout.show(layerPanel, "QuanLyGiaiDauPanel");
     }
@@ -319,23 +315,13 @@ public class QuanLyView extends JFrame {
         showPanel("QuanLyTaiKhoanPanel");
     }
 
-    private void showPanel(String panelName) {
-        CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
-        cardLayout.show(layerPanel, panelName);
-    }
-
     public void openThemGiaiDauPanel() {
         showPanel("ThemGiaiDauPanel");
     }
 
-    public void openDetailGiaiDauPanel(GiaiDau gd) {
-        detailGiaiDauPanel.setGiaiDau(gd);
+    private void showPanel(String panelName) {
         CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
-        cardLayout.show(layerPanel, "DetailGiaiDauPanel");
-    }
-
-    public QuanLyGiaiDauPanel getQuanLyGiaiDauPanel() {
-        return quanLyGiaiDauPanel;
+        cardLayout.show(layerPanel, panelName);
     }
 
     public static void main(String[] args) {
