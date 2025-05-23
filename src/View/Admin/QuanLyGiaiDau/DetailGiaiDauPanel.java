@@ -1,37 +1,34 @@
 package View.Admin.QuanLyGiaiDau;
 
-import Controller.DetailGiaiDauController;
-import DAO.GiaiDauDAO;
-import DAO.NhaTaiTroDAO;
-import DAO.TheThucDAO;
+import Controller.giaidaucontroller.DetailGiaiDauController;
 import Model.GiaiDau;
-import Model.NhaTaiTro;
-import Model.TheThuc;
+import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
 public class DetailGiaiDauPanel extends JPanel {
+
     private JTextField txtTenGiaiDau;
-    private JComboBox<NhaTaiTro> cbNhaTaiTro;
-    private JComboBox<TheThuc> cbTheThuc;
-    private JSpinner spNgayTao, spNgayBatDau;
+    private DatePicker dpNgayTao;
+    private DatePicker dpNgayBatDau;
+    private DatePicker dpNgayKetThuc;
+
     private JLabel lblPreview;
     private byte[] anhGiaiDau;
-
-    private final GiaiDauDAO giaiDauDAO = new GiaiDauDAO();
-    private JButton btnLuu, btnHuy, btnQuayLai, btnChonAnh, btnXoa;
     private GiaiDau currentGiaiDau;
+
+    private JButton btnLuu, btnXoa, btnQuayLai, btnChonAnh;
 
     public DetailGiaiDauPanel() {
         designDetailGiaiDauPanel();
     }
 
-    public void designDetailGiaiDauPanel() {
+    private void designDetailGiaiDauPanel() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 255));
         setBorder(new EmptyBorder(20, 60, 20, 60));
@@ -44,14 +41,13 @@ public class DetailGiaiDauPanel extends JPanel {
 
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setOpaque(false);
-        formPanel.setMaximumSize(new Dimension(500, 500));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 10, 5, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         int row = 0;
 
-        // Tên giải
+        // Tên giải đấu
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Tên giải đấu:"), gbc);
@@ -60,45 +56,32 @@ public class DetailGiaiDauPanel extends JPanel {
         gbc.gridy = row++;
         formPanel.add(txtTenGiaiDau, gbc);
 
-        // Nhà tài trợ
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Nhà tài trợ:"), gbc);
-        cbNhaTaiTro = new JComboBox<>();
-        loadNhaTaiTro();
-        gbc.gridx = 1;
-        gbc.gridy = row++;
-        formPanel.add(cbNhaTaiTro, gbc);
-
-        // Thể thức
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Thể thức:"), gbc);
-        cbTheThuc = new JComboBox<>();
-        loadTheThuc();
-        gbc.gridx = 1;
-        gbc.gridy = row++;
-        formPanel.add(cbTheThuc, gbc);
-
         // Ngày tạo
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Ngày tạo:"), gbc);
-        spNgayTao = new JSpinner(new SpinnerDateModel());
-        spNgayTao.setEditor(new JSpinner.DateEditor(spNgayTao, "dd/MM/yyyy"));
+        dpNgayTao = new DatePicker();
         gbc.gridx = 1;
         gbc.gridy = row++;
-        formPanel.add(spNgayTao, gbc);
+        formPanel.add(dpNgayTao, gbc);
 
         // Ngày bắt đầu
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Ngày bắt đầu:"), gbc);
-        spNgayBatDau = new JSpinner(new SpinnerDateModel());
-        spNgayBatDau.setEditor(new JSpinner.DateEditor(spNgayBatDau, "dd/MM/yyyy"));
+        dpNgayBatDau = new DatePicker();
         gbc.gridx = 1;
         gbc.gridy = row++;
-        formPanel.add(spNgayBatDau, gbc);
+        formPanel.add(dpNgayBatDau, gbc);
+
+        // Ngày kết thúc
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        formPanel.add(new JLabel("Ngày kết thúc:"), gbc);
+        dpNgayKetThuc = new DatePicker();
+        gbc.gridx = 1;
+        gbc.gridy = row++;
+        formPanel.add(dpNgayKetThuc, gbc);
 
         // Chọn ảnh
         gbc.gridx = 0;
@@ -120,7 +103,7 @@ public class DetailGiaiDauPanel extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Nút hành động
+        // Nút dưới
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
@@ -147,24 +130,14 @@ public class DetailGiaiDauPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // Getter button để controller đăng ký listener
-    public JButton getBtnLuu() {
-        return btnLuu;
+    public void addController(DetailGiaiDauController controller) {
+        btnLuu.addActionListener(controller);
+        btnXoa.addActionListener(controller);
+        btnQuayLai.addActionListener(controller);
+        btnChonAnh.addActionListener(controller);
     }
 
-    public JButton getBtnXoa() {
-        return btnXoa;
-    }
-
-    public JButton getBtnQuayLai() {
-        return btnQuayLai;
-    }
-
-    public JButton getBtnChonAnh() {
-        return btnChonAnh;
-    }
-
-    // Getter/setter dữ liệu form
+    // Getter & Setter
     public String getTenGiaiDau() {
         return txtTenGiaiDau.getText().trim();
     }
@@ -173,36 +146,52 @@ public class DetailGiaiDauPanel extends JPanel {
         txtTenGiaiDau.setText(ten);
     }
 
-    public NhaTaiTro getNhaTaiTro() {
-        return (NhaTaiTro) cbNhaTaiTro.getSelectedItem();
+    public LocalDate getNgayTao() {
+        return dpNgayTao.getDate();
     }
 
-    public void setNhaTaiTro(NhaTaiTro ntt) {
-        cbNhaTaiTro.setSelectedItem(ntt);
+    public void setNgayTao(Date date) {
+        if (date == null) {
+            dpNgayTao.clear();
+            return;
+        }
+        if (date instanceof java.sql.Date) {
+            dpNgayTao.setDate(((java.sql.Date) date).toLocalDate());
+        } else {
+            dpNgayTao.setDate(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        }
     }
 
-    public TheThuc getTheThuc() {
-        return (TheThuc) cbTheThuc.getSelectedItem();
+    public LocalDate getNgayBatDau() {
+        return dpNgayBatDau.getDate();
     }
 
-    public void setTheThuc(TheThuc tt) {
-        cbTheThuc.setSelectedItem(tt);
+    public void setNgayBatDau(Date date) {
+        if (date == null) {
+            dpNgayBatDau.clear();
+            return;
+        }
+        if (date instanceof java.sql.Date) {
+            dpNgayBatDau.setDate(((java.sql.Date) date).toLocalDate());
+        } else {
+            dpNgayBatDau.setDate(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        }
     }
 
-    public Date getNgayTao() {
-        return (Date) spNgayTao.getValue();
+    public LocalDate getNgayKetThuc() {
+        return dpNgayKetThuc.getDate();
     }
 
-    public void setNgayTao(Date d) {
-        spNgayTao.setValue(d);
-    }
-
-    public Date getNgayBatDau() {
-        return (Date) spNgayBatDau.getValue();
-    }
-
-    public void setNgayBatDau(Date d) {
-        spNgayBatDau.setValue(d);
+    public void setNgayKetThuc(Date date) {
+        if (date == null) {
+            dpNgayKetThuc.clear();
+            return;
+        }
+        if (date instanceof java.sql.Date) {
+            dpNgayKetThuc.setDate(((java.sql.Date) date).toLocalDate());
+        } else {
+            dpNgayKetThuc.setDate(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        }
     }
 
     public byte[] getAnhGiaiDau() {
@@ -228,26 +217,30 @@ public class DetailGiaiDauPanel extends JPanel {
 
     public void setCurrentGiaiDau(GiaiDau gd) {
         this.currentGiaiDau = gd;
-    }
-
-    public void addController(DetailGiaiDauController controller) {
-        btnLuu.addActionListener(controller);
-        btnXoa.addActionListener(controller);
-        btnQuayLai.addActionListener(controller);
-        btnChonAnh.addActionListener(controller);
-    }
-
-    private void loadNhaTaiTro() {
-        List<NhaTaiTro> list = new NhaTaiTroDAO().findAll();
-        for (NhaTaiTro ntt : list) {
-            cbNhaTaiTro.addItem(ntt);
+        if (gd != null) {
+            setTenGiaiDau(gd.getTenGiaiDau());
+            setNgayTao(gd.getNgayTaoGiai());
+            setNgayBatDau(gd.getNgayBatDau());
+            setNgayKetThuc(gd.getNgayKetThuc());
+            setAnhGiaiDau(gd.getAnhGiaiDau());
         }
     }
 
-    private void loadTheThuc() {
-        List<TheThuc> list = new TheThucDAO().findAll();
-        for (TheThuc tt : list) {
-            cbTheThuc.addItem(tt);
-        }
+    // Các nút
+    public JButton getBtnLuu() {
+        return btnLuu;
     }
+
+    public JButton getBtnXoa() {
+        return btnXoa;
+    }
+
+    public JButton getBtnQuayLai() {
+        return btnQuayLai;
+    }
+
+    public JButton getBtnChonAnh() {
+        return btnChonAnh;
+    }
+
 }

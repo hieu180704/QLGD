@@ -5,17 +5,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaiKhoanDAO implements GenericDAO<TaiKhoan>{
+public class TaiKhoanDAO implements GenericDAO<TaiKhoan> {
 
     // Thêm tài khoản mới
     public boolean insert(TaiKhoan tk) {
-        String sql = "INSERT INTO taikhoan (tenDangNhap, matKhau, loaiTaiKhoan) VALUES (?, ?, ?)";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             
+        String sql = "INSERT INTO taikhoan (tenDangNhap, matKhau, email, loaiTaiKhoan) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, tk.getTendangnhap());
             ps.setString(2, tk.getMatkhau());
-            ps.setInt(3, tk.getLoaitaikhoan());
+            ps.setString(3, tk.getEmail());
+            ps.setInt(4, tk.getLoaitaikhoan());
 
             int rows = ps.executeUpdate();
             return rows > 0;
@@ -27,13 +27,12 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan>{
 
     // Cập nhật tài khoản theo maTaiKhoan
     public boolean update(TaiKhoan tk) {
-        String sql = "UPDATE taikhoan SET tenDangNhap = ?, matKhau = ?, loaiTaiKhoan = ? WHERE maTaiKhoan = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             
+        String sql = "UPDATE taikhoan SET tenDangNhap = ?, matKhau = ?, email = ? WHERE maTaiKhoan = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, tk.getTendangnhap());
             ps.setString(2, tk.getMatkhau());
-            ps.setInt(3, tk.getLoaitaikhoan());
+            ps.setString(3, tk.getEmail());
             ps.setInt(4, tk.getMataikhoan());
 
             int rows = ps.executeUpdate();
@@ -47,9 +46,8 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan>{
     // Xóa tài khoản theo maTaiKhoan
     public boolean delete(int maTaiKhoan) {
         String sql = "DELETE FROM taikhoan WHERE maTaiKhoan = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, maTaiKhoan);
             int rows = ps.executeUpdate();
             return rows > 0;
@@ -62,9 +60,8 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan>{
     // Tìm tài khoản theo maTaiKhoan
     public TaiKhoan findById(int maTaiKhoan) {
         String sql = "SELECT * FROM taikhoan WHERE maTaiKhoan = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, maTaiKhoan);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -80,10 +77,8 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan>{
     public List<TaiKhoan> findAll() {
         List<TaiKhoan> list = new ArrayList<>();
         String sql = "SELECT * FROM taikhoan";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-             
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 TaiKhoan tk = mapResultSetToTaiKhoan(rs);
                 list.add(tk);
@@ -100,7 +95,25 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan>{
         tk.setMataikhoan(rs.getInt("maTaiKhoan"));
         tk.setTendangnhap(rs.getString("tenDangNhap"));
         tk.setMatkhau(rs.getString("matKhau"));
+        tk.setEmail(rs.getString("email"));
         tk.setLoaitaikhoan(rs.getInt("loaiTaiKhoan"));
         return tk;
+    }
+
+    public TaiKhoan findByUsernameAndPassword(String username, String password) {
+        String sql = "SELECT * FROM taikhoan WHERE tenDangNhap = ? AND matKhau = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToTaiKhoan(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

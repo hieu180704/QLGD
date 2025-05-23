@@ -2,14 +2,20 @@ package View.Admin;
 
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
+
 import Model.GiaiDau;
 import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
 import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
+
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
+import DAO.TaiKhoanDAO;
+import Model.TaiKhoan;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class QuanLyView extends JFrame {
 
@@ -22,6 +28,9 @@ public class QuanLyView extends JFrame {
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
     private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
     private RoundBorder rou = new RoundBorder();
+
+    private TaiKhoan usercurrent;
+    private int maTaiKhoan;
 
     private JLayeredPane layerPanel;
     private JButton btnTrangChu;
@@ -79,7 +88,7 @@ public class QuanLyView extends JFrame {
         // Hiển thị username ở header (nếu cần)
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
     }
-
+    
     private void addSidebarButtonStyle(JButton button, java.awt.event.ActionListener listener) {
         button.addActionListener(listener);
 
@@ -111,7 +120,6 @@ public class QuanLyView extends JFrame {
         jLabel2 = new JLabel("Username          ");
         layerPanel = new JLayeredPane();
         layerPanel.setLayout(new CardLayout());
-        layerPanel.add(detailGiaiDauPanel, "DetailGiaiDauPanel");
 
         Color sidebarBg = new Color(0, 51, 102);
         Color sidebarHover = new Color(0, 102, 204);
@@ -184,7 +192,6 @@ public class QuanLyView extends JFrame {
         ImageIcon anhT3 = new ImageIcon(anhT2);
         btnThongKe.setIcon(anhT3);
         btnThongKe.setIconTextGap(5);
-        
 
         btnDangXuat = new JButton("Đăng Xuất");
 
@@ -216,7 +223,7 @@ public class QuanLyView extends JFrame {
         sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnThongKe);
 
-        sidebarPanel.add(Box.createVerticalGlue()); 
+        sidebarPanel.add(Box.createVerticalGlue());
         getContentPane().add(sidebarPanel, BorderLayout.WEST);
 
         // Header panel cấu hình
@@ -262,6 +269,11 @@ public class QuanLyView extends JFrame {
         getContentPane().add(layerPanel, BorderLayout.CENTER);
 
         pack();
+    }
+
+    // Cập nhật label hiển thị tên người dùng
+    public void updateUserInfoDisplay(TaiKhoan user) {
+        jLabel2.setText(user.getTendangnhap());
     }
 
     // Các hàm mở panel

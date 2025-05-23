@@ -9,17 +9,7 @@ public class NhaTaiTro {
     private String soDienThoai;
     private String diaChi;
 
-    public NhaTaiTro() {
-    }
-
-    public NhaTaiTro(int maNTT, String tenNTT, byte[] logoNTT, String email, String soDienThoai, String diaChi) {
-        this.maNTT = maNTT;
-        this.tenNTT = tenNTT;
-        this.logoNTT = logoNTT;
-        this.email = email;
-        this.soDienThoai = soDienThoai;
-        this.diaChi = diaChi;
-    }
+    public NhaTaiTro() {}
 
     public int getMaNTT() {
         return maNTT;
