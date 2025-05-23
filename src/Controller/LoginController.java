@@ -1,16 +1,24 @@
 package controller;
 
-import DAO.UserDAO;
-import Model.UserAccountModel;
+import DAO.TaiKhoanDAO;
+import Model.TaiKhoan;
 
 public class LoginController {
-    private UserDAO userDAO;
 
-    public LoginController() {
-        userDAO = new UserDAO();
+    private TaiKhoanDAO taiKhoanDAO;
+
+    public LoginController(TaiKhoanDAO taiKhoanDAO) {
+        this.taiKhoanDAO = taiKhoanDAO;
     }
 
-    public UserAccountModel login(String username, String password) {
-        return userDAO.checkLogin(username, password);
+    public TaiKhoan login(String username, String password) {
+        // Gọi DAO tìm tài khoản theo username và password
+        TaiKhoan taiKhoan = taiKhoanDAO.findByUsernameAndPassword(username, password);
+
+        if (taiKhoan != null) {
+            // Có thể thêm kiểm tra thêm, ví dụ tài khoản bị khóa, ...
+            return taiKhoan;
+        }
+        return null; // đăng nhập sai
     }
 }
