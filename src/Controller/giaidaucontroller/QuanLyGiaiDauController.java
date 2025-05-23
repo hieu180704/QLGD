@@ -1,4 +1,4 @@
-package Controller;
+package Controller.giaidaucontroller;
 
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;

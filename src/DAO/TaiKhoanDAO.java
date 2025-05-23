@@ -9,12 +9,13 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan> {
 
     // Thêm tài khoản mới
     public boolean insert(TaiKhoan tk) {
-        String sql = "INSERT INTO taikhoan (tenDangNhap, matKhau, loaiTaiKhoan) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO taikhoan (tenDangNhap, matKhau, email, loaiTaiKhoan) VALUES (?, ?, ?, ?)";
         try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, tk.getTendangnhap());
             ps.setString(2, tk.getMatkhau());
-            ps.setInt(3, tk.getLoaitaikhoan());
+            ps.setString(3, tk.getEmail());
+            ps.setInt(4, tk.getLoaitaikhoan());
 
             int rows = ps.executeUpdate();
             return rows > 0;
@@ -26,12 +27,12 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan> {
 
     // Cập nhật tài khoản theo maTaiKhoan
     public boolean update(TaiKhoan tk) {
-        String sql = "UPDATE taikhoan SET tenDangNhap = ?, matKhau = ?, loaiTaiKhoan = ? WHERE maTaiKhoan = ?";
+        String sql = "UPDATE taikhoan SET tenDangNhap = ?, matKhau = ?, email = ? WHERE maTaiKhoan = ?";
         try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, tk.getTendangnhap());
             ps.setString(2, tk.getMatkhau());
-            ps.setInt(3, tk.getLoaitaikhoan());
+            ps.setString(3, tk.getEmail());
             ps.setInt(4, tk.getMataikhoan());
 
             int rows = ps.executeUpdate();
@@ -88,14 +89,31 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan> {
         return list;
     }
 
-    
     // Hàm tiện ích map ResultSet thành TaiKhoan
     private TaiKhoan mapResultSetToTaiKhoan(ResultSet rs) throws SQLException {
         TaiKhoan tk = new TaiKhoan();
         tk.setMataikhoan(rs.getInt("maTaiKhoan"));
         tk.setTendangnhap(rs.getString("tenDangNhap"));
         tk.setMatkhau(rs.getString("matKhau"));
+        tk.setEmail(rs.getString("email"));
         tk.setLoaitaikhoan(rs.getInt("loaiTaiKhoan"));
         return tk;
+    }
+
+    public TaiKhoan findByUsernameAndPassword(String username, String password) {
+        String sql = "SELECT * FROM taikhoan WHERE tenDangNhap = ? AND matKhau = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, username);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToTaiKhoan(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -3,15 +3,14 @@ package View.Admin;
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
 
-import Model.UserModel;
-
 import Model.GiaiDau;
 import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
 import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
 
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
-import Controller.UserController;
+import DAO.TaiKhoanDAO;
+import Model.TaiKhoan;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,9 +29,8 @@ public class QuanLyView extends JFrame {
     private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
     private RoundBorder rou = new RoundBorder();
 
-    private UserModel usercurrent;
-    private UserEditPanel userEditPanel;
-    private UserController userController;
+    private TaiKhoan usercurrent;
+    private int maTaiKhoan;
 
     private JLayeredPane layerPanel;
     private JButton btnTrangChu;
@@ -90,33 +88,7 @@ public class QuanLyView extends JFrame {
         // Hiển thị username ở header (nếu cần)
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
     }
-
-    public QuanLyView(UserModel username) {
-        this();
-        this.usercurrent = username;
-        this.userController = new UserController(this, this.usercurrent);
-        // Thêm sự kiện click cho jLabel2
-        jLabel2.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                userController.openUserEditPanel();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jLabel2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                jLabel2.setForeground(new Color(135, 206, 235));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jLabel2.setForeground(Color.WHITE);
-            }
-        });
-
-        jLabel2.setText(usercurrent.getUsername());
-    }
-
+    
     private void addSidebarButtonStyle(JButton button, java.awt.event.ActionListener listener) {
         button.addActionListener(listener);
 
@@ -148,8 +120,6 @@ public class QuanLyView extends JFrame {
         jLabel2 = new JLabel("Username          ");
         layerPanel = new JLayeredPane();
         layerPanel.setLayout(new CardLayout());
-
-
 
         Color sidebarBg = new Color(0, 51, 102);
         Color sidebarHover = new Color(0, 102, 204);
@@ -222,7 +192,6 @@ public class QuanLyView extends JFrame {
         ImageIcon anhT3 = new ImageIcon(anhT2);
         btnThongKe.setIcon(anhT3);
         btnThongKe.setIconTextGap(5);
-        
 
         btnDangXuat = new JButton("Đăng Xuất");
 
@@ -254,7 +223,7 @@ public class QuanLyView extends JFrame {
         sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnThongKe);
 
-        sidebarPanel.add(Box.createVerticalGlue()); 
+        sidebarPanel.add(Box.createVerticalGlue());
         getContentPane().add(sidebarPanel, BorderLayout.WEST);
 
         // Header panel cấu hình
@@ -299,34 +268,12 @@ public class QuanLyView extends JFrame {
         // Thêm layerPanel vào center
         getContentPane().add(layerPanel, BorderLayout.CENTER);
 
-        userEditPanel = new UserEditPanel();
-        //userEditPanel.setPreferredSize(new Dimension(250, 150));
-        userEditPanel.setVisible(false); // ẩn panel lúc đầu
-
-// Bạn có thể chọn vị trí hiển thị, ví dụ thêm vào layerPanel hoặc tạo 1 panel riêng ở BorderLayout.EAST
-        getContentPane().add(userEditPanel, BorderLayout.EAST);
-// Hoặc bạn tạo một panel chứa layerPanel và userEditPanel để bố trí hợp lý hơn
-
-        
-
         pack();
     }
 
-   // Cập nhật label hiển thị tên người dùng
-    public void updateUserInfoDisplay(UserModel user) {
-        jLabel2.setText(user.getUsername());
-    }
-
-    // Cho phép Controller show hoặc ẩn panel chỉnh sửa
-    public void showUserEditPanel(boolean visible) {
-        userEditPanel.setVisible(visible);
-        revalidate();
-        repaint();
-    }
-
-    // Lấy panel edit để Controller đăng ký event hoặc lấy dữ liệu
-    public UserEditPanel getUserEditPanel() {
-        return userEditPanel;
+    // Cập nhật label hiển thị tên người dùng
+    public void updateUserInfoDisplay(TaiKhoan user) {
+        jLabel2.setText(user.getTendangnhap());
     }
 
     // Các hàm mở panel

@@ -1,6 +1,6 @@
 package View.Admin.QuanLyGiaiDau;
 
-import Controller.ThemGiaiDauController;
+import Controller.giaidaucontroller.ThemGiaiDauController;
 import DAO.TheThucDAO;
 import Model.TheThuc;
 import com.github.lgooddatepicker.components.DatePicker;

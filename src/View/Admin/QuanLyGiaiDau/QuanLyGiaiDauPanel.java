@@ -1,6 +1,6 @@
 package View.Admin.QuanLyGiaiDau;
 
-import Controller.DetailGiaiDauController;
+import Controller.giaidaucontroller.DetailGiaiDauController;
 import DAO.GiaiDauDAO;
 import DAO.NhaTaiTroDAO;
 import Model.GiaiDau;
@@ -80,7 +80,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
         btnThem.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         btnThem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThem.setOpaque(true);
-        btnThem.addActionListener(new Controller.QuanLyGiaiDauController(this));
+        btnThem.addActionListener(new Controller.giaidaucontroller.QuanLyGiaiDauController(this));
 
         headerPanel.add(lblTitle, BorderLayout.WEST);
         headerPanel.add(searchPanel, BorderLayout.CENTER);
@@ -163,7 +163,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
             detailPanel.setCurrentGiaiDau(g);
 
             // Tạo controller chi tiết, truyền panel quản lý để reload dữ liệu sau khi sửa/xóa
-            new Controller.DetailGiaiDauController(detailPanel, this);
+            new Controller.giaidaucontroller.DetailGiaiDauController(detailPanel, this);
 
             detailFrame.setContentPane(detailPanel);
             detailFrame.pack();
