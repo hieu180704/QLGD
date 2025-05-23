@@ -24,7 +24,7 @@ public class QuanLyView extends JFrame {
     private DanhSachDoiBongPanel danhSachDoiBongPanel = new DanhSachDoiBongPanel();
     private DanhSachCauThuPanel danhSachCauThuPanel = new DanhSachCauThuPanel();
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
-    private DanhSachTrongTaiPanel danhSachTrongTaiPanel = new DanhSachTrongTaiPanel();
+    private TrongTaiPanel trongTaiPanel = new TrongTaiPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
     private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
     private RoundBorder rou = new RoundBorder();
@@ -77,7 +77,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(danhSachDoiBongPanel, "DanhSachDoiBongPanel");
         layerPanel.add(danhSachCauThuPanel, "DanhSachCauThuPanel");
         layerPanel.add(danhSachHLVPanel, "DanhSachHLVPanel");
-        layerPanel.add(danhSachTrongTaiPanel, "DanhSachTrongTaiPanel");
+        layerPanel.add(trongTaiPanel, "TrongTaiPanel");
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
 
         cardLayout.show(layerPanel, "TrangChuPanel");
@@ -300,7 +300,7 @@ public class QuanLyView extends JFrame {
     }
 
     public void openDanhSachTrongTai() {
-        showPanel("DanhSachTrongTaiPanel");
+        showPanel("TrongTaiPanel");
     }
 
     public void openQuanLyTaiKhoan() {
