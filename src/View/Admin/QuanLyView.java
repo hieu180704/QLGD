@@ -1,28 +1,21 @@
 package View.Admin;
-
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
-
-import Model.GiaiDau;
+import View.Admin.QuanLyCauThu.QuanLyCauThuView;
 import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
-import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
-
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
-import DAO.TaiKhoanDAO;
 import Model.TaiKhoan;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
 
 public class QuanLyView extends JFrame {
 
     private TrangChuPanel trangChuPanel = new TrangChuPanel();
     private QuanLyGiaiDauPanel quanLyGiaiDauPanel = new QuanLyGiaiDauPanel();
     private DanhSachDoiBongPanel danhSachDoiBongPanel = new DanhSachDoiBongPanel();
-    private DanhSachCauThuPanel danhSachCauThuPanel = new DanhSachCauThuPanel();
+    private QuanLyCauThuView quanLyCauThuView = new QuanLyCauThuView();
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
     private DanhSachTrongTaiPanel danhSachTrongTaiPanel = new DanhSachTrongTaiPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
@@ -75,7 +68,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(trangChuPanel, "TrangChuPanel");
         layerPanel.add(quanLyGiaiDauPanel, "QuanLyGiaiDauPanel");
         layerPanel.add(danhSachDoiBongPanel, "DanhSachDoiBongPanel");
-        layerPanel.add(danhSachCauThuPanel, "DanhSachCauThuPanel");
+        layerPanel.add(quanLyCauThuView, "QuanLyCauThuView");
         layerPanel.add(danhSachHLVPanel, "DanhSachHLVPanel");
         layerPanel.add(danhSachTrongTaiPanel, "DanhSachTrongTaiPanel");
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
@@ -292,7 +285,7 @@ public class QuanLyView extends JFrame {
     }
 
     public void openDanhSachCauThu() {
-        showPanel("DanhSachCauThuPanel");
+        showPanel("QuanLyCauThuView");
     }
 
     public void openDanhSachHLV() {

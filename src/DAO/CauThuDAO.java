@@ -3,6 +3,7 @@ package DAO;
 import Model.CauThu;
 import java.sql.*;
 import java.util.*;
+import Model.CauThu;
 
 public class CauThuDAO implements GenericDAO<CauThu> {
 
@@ -84,20 +85,25 @@ public class CauThuDAO implements GenericDAO<CauThu> {
 
     @Override
     public List<CauThu> findAll() {
-        List<CauThu> list = new ArrayList<>();
-        String sql = "SELECT * FROM cauthu";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                list.add(mapResultSet(rs));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    List<CauThu> list = new ArrayList<>();
+    String sql = "SELECT c.*, q.tenQuocGia, d.tenDoi FROM cauthu c " +
+                 "JOIN quocgia q ON c.maQuocGia = q.maQuocGia " +
+                 "JOIN doibong d ON c.maDoi = d.maDoi";
+    try (Connection conn = ConnectDB.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+            CauThu ct = mapResultSet(rs);
+            ct.setTenQuocGia(rs.getString("tenQuocGia"));
+            ct.setTenDoi(rs.getString("tenDoi"));
+            list.add(ct);
         }
-        return list;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return list;
+}
+
 
     private CauThu mapResultSet(ResultSet rs) throws SQLException {
         CauThu ct = new CauThu();
@@ -111,5 +117,13 @@ public class CauThuDAO implements GenericDAO<CauThu> {
         ct.setMaDoi(rs.getInt("maDoi"));
         ct.setSoAo(rs.getInt("soAo"));
         return ct;
+    }
+    
+    public interface GenericDAO<T> {
+    boolean insert(T obj);
+    boolean update(T obj);
+    boolean delete(int id);
+    T findById(int id);
+    List<T> findAll();
     }
 }
