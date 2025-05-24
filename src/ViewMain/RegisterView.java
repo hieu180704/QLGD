@@ -1,5 +1,6 @@
 package ViewMain;
 
+import controller.RegisterController;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
@@ -9,7 +10,12 @@ import java.awt.geom.RoundRectangle2D;
 
 public class RegisterView extends JFrame {
 
+    private RegisterController registerController;
+
     public RegisterView() {
+
+        registerController = new RegisterController();
+
         setTitle("Register");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750, 500);
@@ -56,7 +62,7 @@ public class RegisterView extends JFrame {
         formPanel.add(titleLabel);
 
         // Text fields
-        JTextField tfName = createStyledTextField("John Doe");
+        JTextField tfName = createStyledTextField("Username");
         formPanel.add(tfName);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -144,10 +150,11 @@ public class RegisterView extends JFrame {
             String pass = new String(pfPassword.getPassword());
             String rePass = new String(pfRePassword.getPassword());
 
-            if (name.isEmpty() || name.equals("John Doe") ||
-                email.isEmpty() || email.equals("Your Email") ||
-                pass.isEmpty() || pass.equals("Password") ||
-                rePass.isEmpty() || rePass.equals("Repeat your password")) {
+            // Kiểm tra nếu user chưa nhập hoặc vẫn còn giữ placeholder (chúng ta sẽ check với màu xám)
+            if (name.isEmpty() || name.equalsIgnoreCase("username") || tfName.getForeground() == Color.GRAY
+                    || email.isEmpty() || email.equalsIgnoreCase("your email") || tfEmail.getForeground() == Color.GRAY
+                    || pass.isEmpty() || pass.equalsIgnoreCase("password") || pfPassword.getForeground() == Color.GRAY
+                    || rePass.isEmpty() || rePass.equalsIgnoreCase("repeat your password") || pfRePassword.getForeground() == Color.GRAY) {
                 JOptionPane.showMessageDialog(this, "Please fill all fields correctly!", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -157,9 +164,18 @@ public class RegisterView extends JFrame {
                 return;
             }
 
-            JOptionPane.showMessageDialog(this, "Register success! (Demo)");
-            // Ở đây bạn xử lý đăng ký thực tế
+            // Gọi controller xử lý đăng ký
+            String result = registerController.dangKyTaiKhoan(name, pass, rePass, email);
+
+            if (result.equals("Đăng ký thành công!")) {
+                JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.dispose();
+                new ViewMain.LoginView().setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
+
     }
 
     private JTextField createStyledTextField(String placeholder) {
@@ -240,6 +256,30 @@ public class RegisterView extends JFrame {
     private void addPlaceholder(JTextComponent field, String placeholder) {
         field.setText(placeholder);
         field.setForeground(Color.GRAY);
+
+        field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (field.getText().equals(placeholder) && field.getForeground() == Color.GRAY) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                    if (field instanceof JPasswordField) {
+                        ((JPasswordField) field).setEchoChar('●');
+                    }
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setForeground(Color.GRAY);
+                    field.setText(placeholder);
+                    if (field instanceof JPasswordField) {
+                        ((JPasswordField) field).setEchoChar((char) 0);
+                    }
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {

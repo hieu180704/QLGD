@@ -20,7 +20,6 @@ public class LoginView extends javax.swing.JFrame {
 
     // private javax.swing.JPasswordField txtPassword;
     private QuanLyView quanLyView;
-    private TaiKhoan taiKhoan;
     private LoginController controller;
 
     private RegisterView registerView;
@@ -229,7 +228,7 @@ public class LoginView extends javax.swing.JFrame {
         if (userAccount != null) {
             if (userAccount.getLoaitaikhoan() == 1) {
                 int maTaiKhoan = userAccount.getMataikhoan();
-                QuanLyView quanLyView = new QuanLyView();
+                QuanLyView quanLyView = new QuanLyView(maTaiKhoan);
                 quanLyView.setVisible(true);
                 this.dispose();
             } else {
