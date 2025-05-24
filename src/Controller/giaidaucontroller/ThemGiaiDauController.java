@@ -43,7 +43,7 @@ public class ThemGiaiDauController implements java.awt.event.ActionListener {
         }
     }
 
-// Trong method themGiaiDau()
+    // Trong method themGiaiDau()
     private void themGiaiDau() {
         String ten = panel.getTenGiaiDau();
         TheThuc tt = panel.getTheThuc();
