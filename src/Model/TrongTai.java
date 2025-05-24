@@ -12,6 +12,9 @@ public class TrongTai {
     private Date ngaySinh;
     private QuocGia quocGia;
 
+    public TrongTai() {
+    }
+    
     public TrongTai(int maTrongTai, String tenTrongTai, Date ngaySinh, QuocGia quocGia) {
         this.maTrongTai = maTrongTai;
         this.tenTrongTai = tenTrongTai;

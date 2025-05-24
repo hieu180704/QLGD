@@ -14,13 +14,12 @@ public class QuanLyController implements ActionListener {
     // Constructor
     public QuanLyController(QuanLyView quanLyView) {
         this.quanLyView = quanLyView;
-        
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String button = e.getActionCommand();
-
 
         switch (button) {
             case "Trang Chủ":
@@ -28,6 +27,9 @@ public class QuanLyController implements ActionListener {
                 break;
             case "Quản Lý Giải Đấu":
                 quanLyView.openQuanLyGiaiDauPanel();
+                break;
+            case "Quản Lý Trận Đấu":
+                quanLyView.openTranDauPanel();
                 break;
             case "Danh Sách Cầu Thủ":
                 quanLyView.openDanhSachCauThu();
@@ -45,15 +47,15 @@ public class QuanLyController implements ActionListener {
                 quanLyView.openDanhSachTrongTai();
                 break;
             case "Đăng Xuất":
-               int choice = JOptionPane.showConfirmDialog(quanLyView,
-                       "Bạn có chắc chắn muốn đăng xuất?",
+                int choice = JOptionPane.showConfirmDialog(quanLyView,
+                        "Bạn có chắc chắn muốn đăng xuất?",
                         "Xác nhận đăng xuất",
                         JOptionPane.YES_NO_OPTION);
-               if (choice == JOptionPane.YES_OPTION) {
+                if (choice == JOptionPane.YES_OPTION) {
                     quanLyView.dispose();  // Đóng cửa sổ hiện tại
                     // Nếu bạn có màn hình đăng nhập, gọi nó ở đây, ví dụ:
-                     new LoginView().setVisible(true);
-                
+                    new LoginView().setVisible(true);
+
                 }
                 break;
             default:
