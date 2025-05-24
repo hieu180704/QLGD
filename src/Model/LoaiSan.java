@@ -1,11 +1,12 @@
 package Model;
 
+/**
+ *
+ * @author ntnfa
+ */
 public class LoaiSan {
     private int maLoai;
     private String tenLoai;
-
-    public LoaiSan() {
-    }
 
     public LoaiSan(int maLoai, String tenLoai) {
         this.maLoai = maLoai;
@@ -26,7 +27,12 @@ public class LoaiSan {
 
     public void setTenLoai(String tenLoai) {
         this.tenLoai = tenLoai;
-    }  
+    }
+
+    @Override
+    public String toString() {
+        return tenLoai;
+    }
+
+
 }
-
-

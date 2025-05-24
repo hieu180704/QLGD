@@ -1,3 +1,4 @@
+
 package Model;
 
 public class SanVanDong {
@@ -56,8 +57,5 @@ public class SanVanDong {
 
     public void setLoaiSan(LoaiSan loaiSan) {
         this.loaiSan = loaiSan;
-    }
-    
-    
+    } 
 }
-
