@@ -56,15 +56,6 @@ public class DetailGiaiDauPanel extends JPanel {
         gbc.gridy = row++;
         formPanel.add(txtTenGiaiDau, gbc);
 
-        // Ngày tạo
-        gbc.gridx = 0;
-        gbc.gridy = row;
-        formPanel.add(new JLabel("Ngày tạo:"), gbc);
-        dpNgayTao = new DatePicker();
-        gbc.gridx = 1;
-        gbc.gridy = row++;
-        formPanel.add(dpNgayTao, gbc);
-
         // Ngày bắt đầu
         gbc.gridx = 0;
         gbc.gridy = row;
@@ -146,22 +137,6 @@ public class DetailGiaiDauPanel extends JPanel {
         txtTenGiaiDau.setText(ten);
     }
 
-    public LocalDate getNgayTao() {
-        return dpNgayTao.getDate();
-    }
-
-    public void setNgayTao(Date date) {
-        if (date == null) {
-            dpNgayTao.clear();
-            return;
-        }
-        if (date instanceof java.sql.Date) {
-            dpNgayTao.setDate(((java.sql.Date) date).toLocalDate());
-        } else {
-            dpNgayTao.setDate(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
-    }
-
     public LocalDate getNgayBatDau() {
         return dpNgayBatDau.getDate();
     }
@@ -219,7 +194,6 @@ public class DetailGiaiDauPanel extends JPanel {
         this.currentGiaiDau = gd;
         if (gd != null) {
             setTenGiaiDau(gd.getTenGiaiDau());
-            setNgayTao(gd.getNgayTaoGiai());
             setNgayBatDau(gd.getNgayBatDau());
             setNgayKetThuc(gd.getNgayKetThuc());
             setAnhGiaiDau(gd.getAnhGiaiDau());

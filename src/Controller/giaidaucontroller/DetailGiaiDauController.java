@@ -54,25 +54,18 @@ public class DetailGiaiDauController implements java.awt.event.ActionListener {
         }
 
         // Lấy ngày từ DatePicker
-        LocalDate ngayTaoLocal = panel.getNgayTao();
         LocalDate ngayBatDauLocal = panel.getNgayBatDau();
         LocalDate ngayKetThucLocal = panel.getNgayKetThuc();
 
-        if (ngayTaoLocal == null || ngayBatDauLocal == null || ngayKetThucLocal == null) {
-            JOptionPane.showMessageDialog(panel, "Vui lòng chọn đầy đủ ngày tạo, ngày bắt đầu và ngày kết thúc!");
+        if (ngayBatDauLocal == null || ngayKetThucLocal == null) {
+            JOptionPane.showMessageDialog(panel, "Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc!");
             return;
         }
-
-        // Chuyển LocalDate -> Date
-        Date ngayTao = Date.from(ngayTaoLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        
         Date ngayBatDau = Date.from(ngayBatDauLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date ngayKetThuc = Date.from(ngayKetThucLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         // Validate ngày hợp lý
-        if (ngayTao.after(ngayBatDau)) {
-            JOptionPane.showMessageDialog(panel, "Ngày tạo không được sau ngày bắt đầu!");
-            return;
-        }
         if (ngayBatDau.after(ngayKetThuc)) {
             JOptionPane.showMessageDialog(panel, "Ngày bắt đầu không được sau ngày kết thúc!");
             return;
@@ -88,7 +81,6 @@ public class DetailGiaiDauController implements java.awt.event.ActionListener {
 
         // Cập nhật giá trị vào model
         gd.setTenGiaiDau(ten);
-        gd.setNgayTaoGiai(ngayTao);
         gd.setNgayBatDau(ngayBatDau);
         gd.setNgayKetThuc(ngayKetThuc);
         gd.setAnhGiaiDau(anh);
