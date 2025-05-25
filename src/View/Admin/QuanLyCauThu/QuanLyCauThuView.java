@@ -2,47 +2,39 @@ package View.Admin.QuanLyCauThu;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import Controller.CauThuController.QuanLyCauThuController;
-import DAO.CauThuDAO;
-import Model.CauThu;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.awt.event.ActionListener;
 
 public class QuanLyCauThuView extends JPanel {
-    private JTextField txtTimKiemTen;
-    private JTextField txtTimKiemQuocTich;
-    private JTextField txtTimKiemDoi;
+    private JTextField txtTimKiem;
+    private JButton btnTimKiem;
     private JButton btnThemCauThu;
     private JPanel panelDanhSachCauThu;
-
-    private CauThuDAO dao = new CauThuDAO();
-    private List<CauThu> danhSachCauThu;
-
-    private QuanLyCauThuController controller;
 
     public QuanLyCauThuView() {
         setLayout(new BorderLayout());
 
-        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        txtTimKiemTen = new JTextField(15);
-        txtTimKiemTen.setToolTipText("Tìm theo tên cầu thủ");
-        txtTimKiemQuocTich = new JTextField(15);
-        txtTimKiemQuocTich.setToolTipText("Tìm theo quốc tịch");
-        txtTimKiemDoi = new JTextField(15);
-        txtTimKiemDoi.setToolTipText("Tìm theo đội bóng");
-        btnThemCauThu = new JButton("Thêm cầu thủ");
+        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
 
-        panelTop.add(new JLabel("Tên:"));
-        panelTop.add(txtTimKiemTen);
-        panelTop.add(new JLabel("Quốc tịch:"));
-        panelTop.add(txtTimKiemQuocTich);
-        panelTop.add(new JLabel("Đội bóng:"));
-        panelTop.add(txtTimKiemDoi);
-        panelTop.add(btnThemCauThu);
+        txtTimKiem = new JTextField();
+        txtTimKiem.setToolTipText("Tìm kiếm theo tên, quốc tịch hoặc đội bóng");
+        txtTimKiem.setPreferredSize(new Dimension(300, 35));  
+        txtTimKiem.setBorder(new RoundedBorder(10));
+
+        btnTimKiem = new JButton("Tìm kiếm");
+        btnTimKiem.setPreferredSize(new Dimension(100, 35));
+        btnTimKiem.setBorder(new RoundedBorder(10));
+
+        btnThemCauThu = new JButton("Thêm cầu thủ");
+        btnThemCauThu.setPreferredSize(new Dimension(120, 35));
+        btnThemCauThu.setBorder(new RoundedBorder(10));
+
+        JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        panelButtons.add(btnTimKiem);
+        panelButtons.add(btnThemCauThu);
+
+        panelTop.add(txtTimKiem, BorderLayout.WEST);
+        panelTop.add(panelButtons, BorderLayout.EAST);
 
         add(panelTop, BorderLayout.NORTH);
 
@@ -50,30 +42,39 @@ public class QuanLyCauThuView extends JPanel {
         JScrollPane scrollPane = new JScrollPane(panelDanhSachCauThu);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
-
-        // Controller liên kết view và model
-        controller = new QuanLyCauThuController(this, dao);
-        controller.loadData();
-        controller.hienThiCauThu(controller.getDanhSachCauThu());
-
-        // Các listener cho tìm kiếm
-        DocumentListener docListener = new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { controller.timKiemVaHienThi(); }
-            public void removeUpdate(DocumentEvent e) { controller.timKiemVaHienThi(); }
-            public void changedUpdate(DocumentEvent e) { controller.timKiemVaHienThi(); }
-        };
-        txtTimKiemTen.getDocument().addDocumentListener(docListener);
-        txtTimKiemQuocTich.getDocument().addDocumentListener(docListener);
-        txtTimKiemDoi.getDocument().addDocumentListener(docListener);
-
-        // Nút thêm cầu thủ
-        btnThemCauThu.addActionListener(e -> controller.showThemDialog());
     }
 
-    // Getters cho controller truy cập các component
-    public String getTimKiemTen() { return txtTimKiemTen.getText(); }
-    public String getTimKiemQuocTich() { return txtTimKiemQuocTich.getText(); }
-    public String getTimKiemDoi() { return txtTimKiemDoi.getText(); }
-    public JPanel getPanelDanhSachCauThu() { return panelDanhSachCauThu; }
-}
+    public String getTimKiemText() {
+        return txtTimKiem.getText();
+    }
 
+    public void addBtnTimKiemListener(ActionListener listener) {
+        btnTimKiem.addActionListener(listener);
+    }
+
+    public void addBtnThemCauThuListener(ActionListener listener) {
+        btnThemCauThu.addActionListener(listener);
+    }
+
+    public JPanel getPanelDanhSachCauThu() {
+        return panelDanhSachCauThu;
+    }
+
+    private static class RoundedBorder extends LineBorder {
+        private int radius;
+
+        public RoundedBorder(int radius) {
+            super(Color.GRAY, 1, true);
+            this.radius = radius;
+        }
+
+        @Override
+        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setColor(lineColor);
+            g2.setStroke(new BasicStroke(thickness));
+            g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
+            g2.dispose();
+        }
+    }
+}

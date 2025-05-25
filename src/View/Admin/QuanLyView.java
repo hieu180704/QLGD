@@ -1,6 +1,10 @@
 package View.Admin;
+import Controller.CauThuController.QuanLyCauThuController;
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
+import DAO.CauThuDAO;
+import DAO.DoiBongDAO;
+import DAO.QuocGiaDAO;
 import View.Admin.QuanLyCauThu.QuanLyCauThuView;
 import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
 import View.CustomButton.RoundBorder;
@@ -50,6 +54,12 @@ public class QuanLyView extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         QuanLyController quanLyController = new QuanLyController(this);
+        
+        CauThuDAO cauThuDAO = new CauThuDAO();
+        DoiBongDAO doiBongDAO = new DoiBongDAO();
+        QuocGiaDAO quocGiaDAO = new QuocGiaDAO();
+        
+        QuanLyCauThuController cauThuController = new QuanLyCauThuController(quanLyCauThuView, cauThuDAO, quocGiaDAO, doiBongDAO);
 
         // Gán event và style cho các nút sidebar
         addSidebarButtonStyle(btnTrangChu, quanLyController);

@@ -86,16 +86,32 @@ public class CauThuDAO implements GenericDAO<CauThu> {
     @Override
     public List<CauThu> findAll() {
     List<CauThu> list = new ArrayList<>();
-    String sql = "SELECT c.*, q.tenQuocGia, d.tenDoi FROM cauthu c " +
+    String sql = "SELECT c.maCauThu, c.tenCauThu, c.anhCauThu, c.ngaySinh, c.maQuocGia, c.chieuCao, c.canNang, c.maDoi, c.soAo, " +
+                 "q.tenQuocGia, d.tenDoi " +
+                 "FROM cauthu c " +
                  "JOIN quocgia q ON c.maQuocGia = q.maQuocGia " +
                  "JOIN doibong d ON c.maDoi = d.maDoi";
+
     try (Connection conn = ConnectDB.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql);
          ResultSet rs = ps.executeQuery()) {
+
         while (rs.next()) {
-            CauThu ct = mapResultSet(rs);
+            CauThu ct = new CauThu();
+            ct.setMaCauThu(rs.getInt("maCauThu"));
+            ct.setTenCauThu(rs.getString("tenCauThu"));
+            ct.setAnhCauThu(rs.getBytes("anhCauThu"));
+            ct.setNgaySinh(rs.getDate("ngaySinh"));
+            ct.setMaQuocGia(rs.getInt("maQuocGia"));
+            ct.setChieuCao(rs.getInt("chieuCao"));
+            ct.setCanNang(rs.getInt("canNang"));
+            ct.setMaDoi(rs.getInt("maDoi"));
+            ct.setSoAo(rs.getInt("soAo"));
+
+            // Gán tên quốc gia và tên đội
             ct.setTenQuocGia(rs.getString("tenQuocGia"));
             ct.setTenDoi(rs.getString("tenDoi"));
+
             list.add(ct);
         }
     } catch (SQLException e) {

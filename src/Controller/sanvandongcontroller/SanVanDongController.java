@@ -1,15 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Controller.sanvandongcontroller;
 
-/**
- *
- * @author ntnfa
- */
 import DAO.LoaiSanDAO;
-import DAO.SanVanDongDAO;
+//import DAO.SanVanDongDAO;
 import Model.LoaiSan;
 import Model.SanVanDong;
 import View.Admin.QuanLySanVanDong.FormThemSuaSanVanDong;
@@ -20,30 +12,30 @@ import javax.swing.SwingUtilities;
 
 public class SanVanDongController {
     private SanVanDongPanel panel;
-    private SanVanDongDAO sanVanDongDAO;
+//    private SanVanDongDAO sanVanDongDAO;
     private LoaiSanDAO loaiSanDAO;
     private FormThemSuaSanVanDong formThemSua;
 
     public SanVanDongController(SanVanDongPanel panel) {
         this.panel = panel;
-        this.sanVanDongDAO = new SanVanDongDAO();
+//        this.sanVanDongDAO = new SanVanDongDAO();
         this.loaiSanDAO = new LoaiSanDAO();
     }
 
     public void loadTatCaSanVanDong() {
-        List<SanVanDong> list = sanVanDongDAO.getAllSanVanDong();
-        panel.hienThiDanhSachSanVanDong(list);
+//        List<SanVanDong> list = sanVanDongDAO.getAllSanVanDong();
+//        panel.hienThiDanhSachSanVanDong(list);
     }
 
     public void timKiemSanVanDong() {
         String tuKhoa = panel.getTuKhoaTimKiem();
         List<SanVanDong> list;
         if (tuKhoa.isEmpty()) {
-            list = sanVanDongDAO.getAllSanVanDong();
+//            list = sanVanDongDAO.getAllSanVanDong();
         } else {
-            list = sanVanDongDAO.searchSanVanDongByName(tuKhoa);
+//            list = sanVanDongDAO.searchSanVanDongByName(tuKhoa);
         }
-        panel.hienThiDanhSachSanVanDong(list);
+//        panel.hienThiDanhSachSanVanDong(list);
     }
 
     public void moFormThemSanVanDong() {
@@ -62,35 +54,35 @@ public class SanVanDongController {
             panel.hienThongBao("Vui lòng chọn sân vận động để sửa");
             return;
         }
-        for (SanVanDong svd : sanVanDongDAO.getAllSanVanDong()) {
-            if (svd.getMaSVD()== maSVD) {
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
-                formThemSua = new FormThemSuaSanVanDong(frame, this);
-                formThemSua.hienThiLoaiSan(loaiSanDAO.getAllLoaiSan());
-                formThemSua.hienThiSanVanDong(svd);
-                formThemSua.setVisible(true);
-                loadTatCaSanVanDong();
-                break;
-            }
-        }
+//        for (SanVanDong svd : sanVanDongDAO.getAllSanVanDong()) {
+//            if (svd.getMaSVD()== maSVD) {
+//                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
+//                formThemSua = new FormThemSuaSanVanDong(frame, this);
+//                formThemSua.hienThiLoaiSan(loaiSanDAO.getAllLoaiSan());
+//                formThemSua.hienThiSanVanDong(svd);
+//                formThemSua.setVisible(true);
+//                loadTatCaSanVanDong();
+//                break;
+//            }
+//        }
     }
 
     public void themSanVanDong(SanVanDong svd) {
-        if (sanVanDongDAO.insertSanVanDong(svd)) {
-            panel.hienThongBao("Thêm thành công!");
-        } else {
-            panel.hienThongBao("Thêm thất bại!");
-        }
-        loadTatCaSanVanDong();
+//        if (sanVanDongDAO.insertSanVanDong(svd)) {
+//            panel.hienThongBao("Thêm thành công!");
+//        } else {
+//            panel.hienThongBao("Thêm thất bại!");
+//        }
+//        loadTatCaSanVanDong();
     }
 
     public void suaSanVanDong(SanVanDong svd) {
-        if (sanVanDongDAO.updateSanVanDong(svd)) {
-            panel.hienThongBao("Cập nhật thành công!");
-        } else {
-            panel.hienThongBao("Cập nhật thất bại!");
-        }
-        loadTatCaSanVanDong();
+//        if (sanVanDongDAO.updateSanVanDong(svd)) {
+//            panel.hienThongBao("Cập nhật thành công!");
+//        } else {
+//            panel.hienThongBao("Cập nhật thất bại!");
+//        }
+//        loadTatCaSanVanDong();
     }
 
     public void xoaSanVanDong() {
@@ -99,13 +91,13 @@ public class SanVanDongController {
             panel.hienThongBao("Vui lòng chọn sân vận động để xóa");
             return;
         }
-        if (panel.hoiXacNhan("Bạn có chắc chắn muốn xóa sân vận động này?")) {
-            if (sanVanDongDAO.deleteSanVanDong(maSVD)) {
-                panel.hienThongBao("Xóa thành công!");
-            } else {
-                panel.hienThongBao("Xóa thất bại!");
-            }
-            loadTatCaSanVanDong();
-        }
+//        if (panel.hoiXacNhan("Bạn có chắc chắn muốn xóa sân vận động này?")) {
+//            if (sanVanDongDAO.deleteSanVanDong(maSVD)) {
+//                panel.hienThongBao("Xóa thành công!");
+//            } else {
+//                panel.hienThongBao("Xóa thất bại!");
+//            }
+//            loadTatCaSanVanDong();
+//        }
     }
 }
