@@ -8,6 +8,7 @@ import Model.CauThu;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.DoiBongItem;
+import java.io.IOException;
 
 import javax.swing.*;
 import java.util.List;
@@ -28,20 +29,35 @@ public class QuanLyCauThuController {
         this.doiBongDAO = doiBongDAO;
 
         // Đăng ký sự kiện nút
-        this.view.addBtnTimKiemListener(e -> timKiemVaHienThi());
-        this.view.addBtnThemCauThuListener(e -> showThemDialog());
+        this.view.addBtnTimKiemListener(e -> {
+            try {
+                timKiemVaHienThi();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        this.view.addBtnThemCauThuListener(e -> {
+            try {
+                showThemDialog();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
         loadData();
-        hienThiCauThu(danhSachCauThu);
+        try {
+            hienThiCauThu(danhSachCauThu);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void loadData() {
         danhSachCauThu = cauThuDAO.findAll();
-        
     }
 
-    public void hienThiCauThu(List<CauThu> ds) {
-        JPanel panel = view.getPanelDanhSachCauThu();
+    public void hienThiCauThu(List<CauThu> ds) throws IOException {
+        JPanel panel = view.getPanelDanhSachCauThu();   
         panel.removeAll();
         for (CauThu ct : ds) {
             panel.add(new View.Admin.QuanLyCauThu.CauThuPanel(ct));
@@ -50,7 +66,8 @@ public class QuanLyCauThuController {
         panel.repaint();
     }
 
-    public void timKiemVaHienThi() {
+
+    public void timKiemVaHienThi() throws IOException {
         String key = view.getTimKiemText().toLowerCase().trim();
         if (key.isEmpty()) {
             loadData();
@@ -66,7 +83,6 @@ public class QuanLyCauThuController {
     }
 
     public void showThemDialog() {
-        // Lấy danh sách quốc gia và đội bóng từ DAO, chuyển thành item cho combobox
         List<QuocGiaItem> dsQuocGia = quocGiaDAO.findAll().stream()
                 .map(qg -> new QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
                 .collect(Collectors.toList());
@@ -84,7 +100,11 @@ public class QuanLyCauThuController {
             boolean success = cauThuDAO.insert(newCauThu);
             if (success) {
                 danhSachCauThu.add(newCauThu);
-                hienThiCauThu(danhSachCauThu);
+                try {
+                    hienThiCauThu(danhSachCauThu);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 JOptionPane.showMessageDialog(null, "Thêm cầu thủ thành công");
             } else {
                 JOptionPane.showMessageDialog(null, "Thêm cầu thủ thất bại");
@@ -92,3 +112,4 @@ public class QuanLyCauThuController {
         }
     }
 }
+

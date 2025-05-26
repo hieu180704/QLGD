@@ -20,14 +20,19 @@ public class CauThuPanel extends JPanel {
         ImageCircleLabel lblAnh = new ImageCircleLabel();
 
         byte[] anhBytes = ct.getAnhCauThu();
-        if (anhBytes != null && anhBytes.length > 0) {
+        try {
             BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(anhBytes));
-            // resize bằng cách chất lượng cao như đã hướng dẫn
-            Image resizedImg = resizeImage(bufferedImage, 90, 90);
-            lblAnh.setImage(resizedImg);
-        } else {
-            lblAnh.setImage(null); // hoặc ảnh placeholder
+            if (bufferedImage != null) {
+                Image resizedImg = bufferedImage.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+                lblAnh.setImage(resizedImg);
+            } else {
+                lblAnh.setImage(null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            lblAnh.setImage(null);
         }
+
         
         JPanel pnlAnhWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         pnlAnhWrapper.setBorder(new EmptyBorder(5, 0, 0, 0)); // cách mép trên 5px

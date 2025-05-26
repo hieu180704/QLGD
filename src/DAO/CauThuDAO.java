@@ -90,7 +90,7 @@ public class CauThuDAO implements GenericDAO<CauThu> {
                  "q.tenQuocGia, d.tenDoi " +
                  "FROM cauthu c " +
                  "JOIN quocgia q ON c.maQuocGia = q.maQuocGia " +
-                 "JOIN doibong d ON c.maDoi = d.maDoi";
+                 "JOIN doibong d ON c.maDoi = d.maDoiBong";
 
     try (Connection conn = ConnectDB.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql);

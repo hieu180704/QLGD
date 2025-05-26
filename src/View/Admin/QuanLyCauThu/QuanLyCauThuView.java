@@ -24,6 +24,8 @@ public class QuanLyCauThuView extends JPanel {
         btnTimKiem = new JButton("Tìm kiếm");
         btnTimKiem.setPreferredSize(new Dimension(100, 35));
         btnTimKiem.setBorder(new RoundedBorder(10));
+        
+        
 
         btnThemCauThu = new JButton("Thêm cầu thủ");
         btnThemCauThu.setPreferredSize(new Dimension(120, 35));
