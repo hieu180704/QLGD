@@ -27,7 +27,7 @@ public class QuanLyView extends JFrame {
     private TrongTaiPanel trongTaiPanel = new TrongTaiPanel();
     private SanVanDongPanel sanVanDongPanel = new SanVanDongPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
-    private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
+    private TranDauPanel tranDauPanel = new TranDauPanel();
     private RoundBorder rou = new RoundBorder();
 
     private TaiKhoan usercurrent;
@@ -81,6 +81,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(trongTaiPanel, "TrongTaiPanel");
         layerPanel.add(sanVanDongPanel, "SanVanDongPanel");
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
+        layerPanel.add(tranDauPanel, "TranDauPanel");
 
         cardLayout.show(layerPanel, "TrangChuPanel");
 
@@ -90,7 +91,7 @@ public class QuanLyView extends JFrame {
         // Hiển thị username ở header (nếu cần)
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
     }
-    
+
     private void addSidebarButtonStyle(JButton button, java.awt.event.ActionListener listener) {
         button.addActionListener(listener);
 
@@ -315,6 +316,10 @@ public class QuanLyView extends JFrame {
 
     public void openThemGiaiDauPanel() {
         showPanel("ThemGiaiDauPanel");
+    }
+
+    public void openTranDauPanel() {
+        showPanel("TranDauPanel");
     }
 
     private void showPanel(String panelName) {

@@ -115,22 +115,23 @@ public class QuanLyGiaiDauPanel extends JPanel {
             private void filterList() {
                 String keyword = txtTimKiem.getText().trim().toLowerCase();
                 panelItems.removeAll();
+                giaiDauDAO = new GiaiDauDAO();
+
+                List<GiaiDau> filteredList;
                 if (keyword.isEmpty()) {
-                    // Hiển thị toàn bộ danh sách gốc
-                    for (GiaiDau gd : danhSachGiaiDau) {
-                        addItemGiaiDau(gd);
-                    }
+                    filteredList = giaiDauDAO.findAll();
                 } else {
-                    // Lọc theo tên giải đấu
-                    for (GiaiDau gd : danhSachGiaiDau) {
-                        if (gd.getTenGiaiDau().toLowerCase().contains(keyword)) {
-                            addItemGiaiDau(gd);
-                        }
-                    }
+                    filteredList = giaiDauDAO.findByKeyword(keyword);
                 }
+
+                for (GiaiDau gd : filteredList) {
+                    addItemGiaiDau(gd);
+                }
+
                 panelItems.revalidate();
                 panelItems.repaint();
             }
+
         });
 
     }
