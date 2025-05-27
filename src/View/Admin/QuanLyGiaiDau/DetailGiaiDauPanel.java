@@ -12,9 +12,16 @@ import java.time.ZoneId;
 import java.util.Date;
 
 public class DetailGiaiDauPanel extends JPanel {
+    // Đổi JList từ String sang kiểu hiển thị là String nhưng mình map id trong HashMap
+
+    private DefaultListModel<String> modelDoiChuaThamGia;
+    private DefaultListModel<String> modelDoiDaThamGia;
+
+    // Mình dùng map giữ maDoiBong tương ứng với String hiển thị (tenDoi)
+    private java.util.Map<String, Integer> mapChuaThamGia = new java.util.HashMap<>();
+    private java.util.Map<String, Integer> mapDaThamGia = new java.util.HashMap<>();
 
     private JTextField txtTenGiaiDau;
-    private DatePicker dpNgayTao;
     private DatePicker dpNgayBatDau;
     private DatePicker dpNgayKetThuc;
 
@@ -23,6 +30,11 @@ public class DetailGiaiDauPanel extends JPanel {
     private GiaiDau currentGiaiDau;
 
     private JButton btnLuu, btnXoa, btnQuayLai, btnChonAnh;
+
+    private JList<String> listDoiChuaThamGia;
+    private JList<String> listDoiDaThamGia;
+
+    private JButton btnThemDoi, btnBoDoi;
 
     public DetailGiaiDauPanel() {
         designDetailGiaiDauPanel();
@@ -33,12 +45,14 @@ public class DetailGiaiDauPanel extends JPanel {
         setBackground(new Color(245, 245, 255));
         setBorder(new EmptyBorder(20, 60, 20, 60));
 
+        // Tiêu đề
         JLabel lblTitle = new JLabel("CHI TIẾT GIẢI ĐẤU");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTitle.setForeground(new Color(30, 30, 100));
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblTitle, BorderLayout.NORTH);
 
+        // Panel form nhập thông tin giải đấu
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -92,9 +106,62 @@ public class DetailGiaiDauPanel extends JPanel {
         lblPreview.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         formPanel.add(lblPreview, gbc);
 
-        add(formPanel, BorderLayout.CENTER);
+        add(formPanel, BorderLayout.NORTH);
 
-        // Nút dưới
+        // Panel chính cho 2 danh sách đội bóng và nút thêm/bỏ
+        JPanel teamsPanel = new JPanel(new GridBagLayout());
+        teamsPanel.setOpaque(false);
+        GridBagConstraints gbcTeams = new GridBagConstraints();
+        gbcTeams.insets = new Insets(5, 5, 5, 5);
+        gbcTeams.fill = GridBagConstraints.BOTH;
+        gbcTeams.weightx = 0.4;
+        gbcTeams.weighty = 1.0;
+
+        // Danh sách đội bóng chưa tham gia
+        modelDoiChuaThamGia = new DefaultListModel<>();
+        listDoiChuaThamGia = new JList<>(modelDoiChuaThamGia);
+        listDoiChuaThamGia.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        JScrollPane scrollChuaThamGia = new JScrollPane(listDoiChuaThamGia);
+        scrollChuaThamGia.setPreferredSize(new Dimension(200, 300));
+
+        gbcTeams.gridx = 0;
+        gbcTeams.gridy = 0;
+        teamsPanel.add(new JLabel("Đội bóng chưa tham gia"), gbcTeams);
+        gbcTeams.gridy = 1;
+        teamsPanel.add(scrollChuaThamGia, gbcTeams);
+
+        // Panel nút thêm/bỏ đội
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 5, 10));
+        buttonPanel.setOpaque(false);
+        btnThemDoi = new JButton(">>");
+        btnBoDoi = new JButton("<<");
+        buttonPanel.add(btnThemDoi);
+        buttonPanel.add(btnBoDoi);
+
+        gbcTeams.gridx = 1;
+        gbcTeams.gridy = 1;
+        gbcTeams.weightx = 0.1;
+        gbcTeams.fill = GridBagConstraints.NONE;
+        teamsPanel.add(buttonPanel, gbcTeams);
+
+        // Danh sách đội bóng đã tham gia
+        modelDoiDaThamGia = new DefaultListModel<>();
+        listDoiDaThamGia = new JList<>(modelDoiDaThamGia);
+        listDoiDaThamGia.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        JScrollPane scrollDaThamGia = new JScrollPane(listDoiDaThamGia);
+        scrollDaThamGia.setPreferredSize(new Dimension(200, 300));
+
+        gbcTeams.gridx = 2;
+        gbcTeams.gridy = 0;
+        gbcTeams.weightx = 0.4;
+        gbcTeams.fill = GridBagConstraints.BOTH;
+        teamsPanel.add(new JLabel("Đội bóng đã tham gia"), gbcTeams);
+        gbcTeams.gridy = 1;
+        teamsPanel.add(scrollDaThamGia, gbcTeams);
+
+        add(teamsPanel, BorderLayout.CENTER);
+
+        // Nút dưới cùng
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
@@ -126,6 +193,8 @@ public class DetailGiaiDauPanel extends JPanel {
         btnXoa.addActionListener(controller);
         btnQuayLai.addActionListener(controller);
         btnChonAnh.addActionListener(controller);
+        btnThemDoi.addActionListener(controller);
+        btnBoDoi.addActionListener(controller);
     }
 
     // Getter & Setter
@@ -215,6 +284,59 @@ public class DetailGiaiDauPanel extends JPanel {
 
     public JButton getBtnChonAnh() {
         return btnChonAnh;
+    }
+
+    public JButton getBtnThemDoi() {
+        return btnThemDoi;
+    }
+
+    public JButton getBtnBoDoi() {
+        return btnBoDoi;
+    }
+
+    // Setter danh sách đội với maDoiBong và tenDoi
+    public void setDoiChuaThamGia(java.util.List<Model.DoiBong> doiList) {
+        modelDoiChuaThamGia.clear();
+        mapChuaThamGia.clear();
+        for (Model.DoiBong d : doiList) {
+            String display = d.getTenDoi();
+            modelDoiChuaThamGia.addElement(display);
+            mapChuaThamGia.put(display, d.getMaDoiBong());
+        }
+    }
+
+    public void setDoiDaThamGia(java.util.List<Model.DoiBong> doiList) {
+        modelDoiDaThamGia.clear();
+        mapDaThamGia.clear();
+        for (Model.DoiBong d : doiList) {
+            String display = d.getTenDoi();
+            modelDoiDaThamGia.addElement(display);
+            mapDaThamGia.put(display, d.getMaDoiBong());
+        }
+    }
+
+    // Lấy danh sách maDoiBong được chọn từ list chưa tham gia
+    public java.util.List<Integer> getSelectedMaDoiChuaThamGia() {
+        java.util.List<Integer> list = new java.util.ArrayList<>();
+        for (String s : listDoiChuaThamGia.getSelectedValuesList()) {
+            Integer id = mapChuaThamGia.get(s);
+            if (id != null) {
+                list.add(id);
+            }
+        }
+        return list;
+    }
+
+    // Lấy danh sách maDoiBong được chọn từ list đã tham gia
+    public java.util.List<Integer> getSelectedMaDoiDaThamGia() {
+        java.util.List<Integer> list = new java.util.ArrayList<>();
+        for (String s : listDoiDaThamGia.getSelectedValuesList()) {
+            Integer id = mapDaThamGia.get(s);
+            if (id != null) {
+                list.add(id);
+            }
+        }
+        return list;
     }
 
 }

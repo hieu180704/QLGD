@@ -29,8 +29,9 @@ public class QuanLyView extends JFrame {
     private DanhSachCauThuPanel danhSachCauThuPanel = new DanhSachCauThuPanel();
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
     private TrongTaiPanel trongTaiPanel = new TrongTaiPanel();
+    private SanVanDongPanel sanVanDongPanel = new SanVanDongPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
-    private DetailGiaiDauPanel detailGiaiDauPanel = new DetailGiaiDauPanel();
+    private TranDauPanel tranDauPanel = new TranDauPanel();
     private RoundBorder rou = new RoundBorder();
 
     //private UserEditPanel userEditPanel = new UserEditPanel();
@@ -90,9 +91,10 @@ public class QuanLyView extends JFrame {
         layerPanel.add(danhSachCauThuPanel, "DanhSachCauThuPanel");
         layerPanel.add(danhSachHLVPanel, "DanhSachHLVPanel");
         layerPanel.add(trongTaiPanel, "TrongTaiPanel");
+        layerPanel.add(sanVanDongPanel, "SanVanDongPanel");
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
         layerPanel.add(nhaTaiTroPanel, "NhaTaiTroPanel");
-
+        layerPanel.add(tranDauPanel, "TranDauPanel");
 
         cardLayout.show(layerPanel, "TrangChuPanel");
 
@@ -103,7 +105,6 @@ public class QuanLyView extends JFrame {
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 
     }
-
     public QuanLyView(int maTaiKhoan) {
         this();
         this.maTaiKhoan = maTaiKhoan;
@@ -348,6 +349,10 @@ public class QuanLyView extends JFrame {
     public void openDanhSachTrongTai() {
         showPanel("TrongTaiPanel");
     }
+    
+    public void openQuanLySanDau() {
+        showPanel("SanVanDongPanel");
+    }
 
     public void openQuanLyTaiKhoan() {
         taiKhoanController.loadTableData();
@@ -356,6 +361,10 @@ public class QuanLyView extends JFrame {
 
     public void openThemGiaiDauPanel() {
         showPanel("ThemGiaiDauPanel");
+    }
+
+    public void openTranDauPanel() {
+        showPanel("TranDauPanel");
     }
 
     private void showPanel(String panelName) {
