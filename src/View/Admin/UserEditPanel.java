@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class UserEditPanel extends JPanel {
+
     private JTextField txtUsername;
     private JTextField txtEmail;
     private JPasswordField pfPassword;  // Thêm field mật khẩu
@@ -26,24 +27,33 @@ public class UserEditPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Label và TextField Tên tài khoản (khóa không sửa)
-        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0;
         formPanel.add(new JLabel("Tên tài khoản:"), gbc);
-        gbc.gridx = 1; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
         txtUsername = new JTextField();
         txtUsername.setEditable(false); // KHÓA tên tài khoản
         formPanel.add(txtUsername, gbc);
 
         // Label và TextField Email
-        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
         formPanel.add(new JLabel("Email:"), gbc);
-        gbc.gridx = 1; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
         txtEmail = new JTextField();
         formPanel.add(txtEmail, gbc);
 
         // Label và PasswordField Mật khẩu
-        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
         formPanel.add(new JLabel("Mật khẩu:"), gbc);
-        gbc.gridx = 1; gbc.weightx = 1.0;
+        gbc.gridx = 1;
+        gbc.weightx = 1.0;
         pfPassword = new JPasswordField();
         formPanel.add(pfPassword, gbc);
 
@@ -65,6 +75,10 @@ public class UserEditPanel extends JPanel {
         txtUsername.setText(username);
         txtEmail.setText(email);
         pfPassword.setText(password);
+    }
+
+    public void setUsernameEditable(boolean editable) {
+        txtUsername.setEditable(editable);
     }
 
     public String getUsername() {
