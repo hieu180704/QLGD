@@ -171,4 +171,18 @@ public class GiaiDauDAO implements GenericDAO<GiaiDau> {
         return list;
     }
 
+    public List<GiaiDau> findGiaiDauCoTranDau() {
+        List<GiaiDau> list = new ArrayList<>();
+        String sql = "SELECT * FROM giaidau gd WHERE EXISTS (SELECT 1 FROM trandau td WHERE td.maGiaiDau = gd.maGiaiDau)";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

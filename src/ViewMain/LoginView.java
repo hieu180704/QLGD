@@ -10,8 +10,6 @@ import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;

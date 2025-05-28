@@ -14,8 +14,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     @Override
     public boolean insert(DoiBong obj) {
         String sql = "INSERT INTO doibong (tenDoi, logoDoi, maSVD, maQuocGia, maGiaiDau) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, obj.getTenDoi());
             ps.setBytes(2, obj.getLogoDoi());
@@ -39,7 +38,9 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             }
 
             int affectedRows = ps.executeUpdate();
-            if (affectedRows == 0) return false;
+            if (affectedRows == 0) {
+                return false;
+            }
 
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -58,8 +59,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     @Override
     public boolean update(DoiBong obj) {
         String sql = "UPDATE doibong SET tenDoi = ?, logoDoi = ?, maSVD = ?, maQuocGia = ?, maGiaiDau = ? WHERE maDoiBong = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, obj.getTenDoi());
             ps.setBytes(2, obj.getLogoDoi());
@@ -95,8 +95,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     @Override
     public boolean delete(int id) {
         String sql = "DELETE FROM doibong WHERE maDoiBong = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
@@ -110,8 +109,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     @Override
     public DoiBong findById(int id) {
         String sql = "SELECT * FROM doibong WHERE maDoiBong = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
@@ -130,9 +128,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     public List<DoiBong> findAll() {
         List<DoiBong> list = new ArrayList<>();
         String sql = "SELECT * FROM doibong";
-        try (Connection conn = ConnectDB.getConnection();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+        try (Connection conn = ConnectDB.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
                 list.add(map(rs));
@@ -145,7 +141,6 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     }
 
     // --- Các hàm mở rộng ---
-
     public List<DoiBong> findByMaGiaiDau(Integer maGiaiDau) {
         List<DoiBong> list = new ArrayList<>();
         String sql;
@@ -155,8 +150,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             sql = "SELECT * FROM doibong WHERE maGiaiDau = ?";
         }
 
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             if (maGiaiDau != null) {
                 ps.setInt(1, maGiaiDau);
@@ -176,8 +170,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
 
     public boolean updateMaGiaiDau(int maDoiBong, Integer maGiaiDau) {
         String sql = "UPDATE doibong SET maGiaiDau = ? WHERE maDoiBong = ?";
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             if (maGiaiDau == null) {
                 ps.setNull(1, Types.INTEGER);
@@ -226,4 +219,17 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
 
         return d;
     }
+
+    public boolean updateMaGiaiDauNull(int maGiaiDau) {
+        String sql = "UPDATE doibong SET maGiaiDau = NULL WHERE maGiaiDau = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, maGiaiDau);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

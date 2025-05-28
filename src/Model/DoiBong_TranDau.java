@@ -1,9 +1,12 @@
 package Model;
 
 public class DoiBong_TranDau {
+
     private TranDau tranDau;
     private DoiBong doiBong;
     private int soLanSut;
+    private int laChuNha;
+    private int soBanThang;
     private int sutTrungDich;
     private int kiemSoatBong;
     private int luotChuyenBong;
@@ -15,10 +18,12 @@ public class DoiBong_TranDau {
     public DoiBong_TranDau() {
     }
 
-    public DoiBong_TranDau(TranDau tranDau, DoiBong doiBong, int soLanSut, int sutTrungDich, int kiemSoatBong, int luotChuyenBong, int chuyenChinhXac, int phamLoi, int vietVi, int phatGoc) {
+    public DoiBong_TranDau(TranDau tranDau, DoiBong doiBong, int soLanSut, int laChuNha, int soBanThang, int sutTrungDich, int kiemSoatBong, int luotChuyenBong, int chuyenChinhXac, int phamLoi, int vietVi, int phatGoc) {
         this.tranDau = tranDau;
         this.doiBong = doiBong;
         this.soLanSut = soLanSut;
+        this.laChuNha = laChuNha;
+        this.soBanThang = soBanThang;
         this.sutTrungDich = sutTrungDich;
         this.kiemSoatBong = kiemSoatBong;
         this.luotChuyenBong = luotChuyenBong;
@@ -107,6 +112,21 @@ public class DoiBong_TranDau {
     public void setPhatGoc(int phatGoc) {
         this.phatGoc = phatGoc;
     }
-    
-    
+
+    public int getLaChuNha() {
+        return laChuNha;
+    }
+
+    public void setLaChuNha(int laChuNha) {
+        this.laChuNha = laChuNha;
+    }
+
+    public int getSoBanThang() {
+        return soBanThang;
+    }
+
+    public void setSoBanThang(int soBanThang) {
+        this.soBanThang = soBanThang;
+    }
+   
 }

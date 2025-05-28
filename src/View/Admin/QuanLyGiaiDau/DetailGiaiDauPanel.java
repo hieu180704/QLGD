@@ -9,7 +9,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DetailGiaiDauPanel extends JPanel {
     // Đổi JList từ String sang kiểu hiển thị là String nhưng mình map id trong HashMap
@@ -316,8 +318,8 @@ public class DetailGiaiDauPanel extends JPanel {
     }
 
     // Lấy danh sách maDoiBong được chọn từ list chưa tham gia
-    public java.util.List<Integer> getSelectedMaDoiChuaThamGia() {
-        java.util.List<Integer> list = new java.util.ArrayList<>();
+    public List<Integer> getSelectedMaDoiChuaThamGia() {
+        java.util.List<Integer> list = new ArrayList<>();
         for (String s : listDoiChuaThamGia.getSelectedValuesList()) {
             Integer id = mapChuaThamGia.get(s);
             if (id != null) {
@@ -328,8 +330,8 @@ public class DetailGiaiDauPanel extends JPanel {
     }
 
     // Lấy danh sách maDoiBong được chọn từ list đã tham gia
-    public java.util.List<Integer> getSelectedMaDoiDaThamGia() {
-        java.util.List<Integer> list = new java.util.ArrayList<>();
+    public List<Integer> getSelectedMaDoiDaThamGia() {
+        List<Integer> list = new ArrayList<>();
         for (String s : listDoiDaThamGia.getSelectedValuesList()) {
             Integer id = mapDaThamGia.get(s);
             if (id != null) {

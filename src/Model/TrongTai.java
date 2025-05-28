@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Model;
 
 import java.sql.Date;
@@ -30,4 +26,11 @@ public class TrongTai {
     public void setNgaySinh(Date ngaySinh) { this.ngaySinh = ngaySinh; }
     public QuocGia getQuocGia() { return quocGia; }
     public void setQuocGia(QuocGia quocGia) { this.quocGia = quocGia; }
+
+    @Override
+    public String toString() {
+        return tenTrongTai;
+    }
+    
+    
 }

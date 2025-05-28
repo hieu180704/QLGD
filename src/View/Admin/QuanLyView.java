@@ -1,25 +1,24 @@
 package View.Admin;
 
 import View.Admin.QuanLyTaiKhoan.QuanLyTaiKhoanPanel;
+import View.Admin.TranDau.TranDauPanel;
+import View.Admin.TranDau.XepLichThiDauPanel;
+import View.Admin.QuanLySanVanDong.SanVanDongPanel;
+import View.Admin.QuanLyTrongTai.TrongTaiPanel;
+
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
 import Controller.UserEditController;
 import Controller.quanlytaikhoancontroller.QuanLyTaiKhoanController;
-
-import Model.GiaiDau;
-import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
-import View.Admin.QuanLyGiaiDau.ThemGiaiDauPanel;
+import DAO.TaiKhoanDAO;
 
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
-import DAO.TaiKhoanDAO;
 import Model.TaiKhoan;
 import View.Admin.NhaTaiTroPanel.NhaTaiTroPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class QuanLyView extends JFrame {
 
@@ -32,6 +31,7 @@ public class QuanLyView extends JFrame {
     private SanVanDongPanel sanVanDongPanel = new SanVanDongPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
     private TranDauPanel tranDauPanel = new TranDauPanel();
+    private XepLichThiDauPanel xepLichThiDauPanel = new XepLichThiDauPanel();
     private RoundBorder rou = new RoundBorder();
 
     //private UserEditPanel userEditPanel = new UserEditPanel();
@@ -53,6 +53,7 @@ public class QuanLyView extends JFrame {
     private JButton btnQuanLyTaiKhoan;
     private JButton btnQuanLySanDau;
     private JButton btnQuanLyNhaTaiTro;
+    private JButton btnXepLichThiDau;
     private JButton btnThongKe;
     private JLabel jLabel1;
     private JLabel jLabel2;
@@ -82,6 +83,7 @@ public class QuanLyView extends JFrame {
         addSidebarButtonStyle(btnQuanLySanDau, quanLyController);
         addSidebarButtonStyle(btnQuanLyNhaTaiTro, quanLyController);
         addSidebarButtonStyle(btnThongKe, quanLyController);
+        addSidebarButtonStyle(btnXepLichThiDau, quanLyController);
 
         // Thêm các panel vào CardLayout
         CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
@@ -95,6 +97,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
         layerPanel.add(nhaTaiTroPanel, "NhaTaiTroPanel");
         layerPanel.add(tranDauPanel, "TranDauPanel");
+        layerPanel.add(xepLichThiDauPanel, "XepLichThiDauPanel");
 
         cardLayout.show(layerPanel, "TrangChuPanel");
 
@@ -166,6 +169,12 @@ public class QuanLyView extends JFrame {
         ImageIcon anhGD3 = new ImageIcon(anhGD2);
         btnQuanLyGiaiDau.setIcon(anhGD3);
         btnQuanLyGiaiDau.setIconTextGap(5);
+        btnXepLichThiDau = rou.createSidebarButton("Xếp Lịch Thi Đấu", 20, sidebarBg, sidebarHover);
+        ImageIcon anhLich1 = new ImageIcon(getClass().getResource("/Resources/tournament.png"));
+        Image anhLich2 = anhLich1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhLich3 = new ImageIcon(anhLich2);
+        btnQuanLyGiaiDau.setIcon(anhGD3);
+        btnQuanLyGiaiDau.setIconTextGap(5);
         btnQuanLyTranDau = rou.createSidebarButton("Quản Lý Trận Đấu", 20, sidebarBg, sidebarHover);
         ImageIcon anhTD1 = new ImageIcon(getClass().getResource("/Resources/match.png"));
         Image anhTD2 = anhTD1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
@@ -232,6 +241,8 @@ public class QuanLyView extends JFrame {
         sidebarPanel.add(btnTrangChu);
         sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnQuanLyGiaiDau);
+        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(btnXepLichThiDau);
         sidebarPanel.add(Box.createVerticalStrut(10));
         sidebarPanel.add(btnQuanLyTranDau);
         sidebarPanel.add(Box.createVerticalStrut(10));
@@ -338,6 +349,11 @@ public class QuanLyView extends JFrame {
         showPanel("DanhSachDoiBongPanel");
     }
 
+    public void openXepLichThiDau() {
+        showPanel("XepLichThiDauPanel");
+        xepLichThiDauPanel.loadGiaiDau();
+    }
+
     public void openDanhSachCauThu() {
         showPanel("DanhSachCauThuPanel");
     }
@@ -349,7 +365,7 @@ public class QuanLyView extends JFrame {
     public void openDanhSachTrongTai() {
         showPanel("TrongTaiPanel");
     }
-    
+
     public void openQuanLySanDau() {
         showPanel("SanVanDongPanel");
     }
@@ -365,6 +381,8 @@ public class QuanLyView extends JFrame {
 
     public void openTranDauPanel() {
         showPanel("TranDauPanel");
+        tranDauPanel.loadTranDau(-1);
+        tranDauPanel.loadGiaiDauLoc();
     }
 
     private void showPanel(String panelName) {

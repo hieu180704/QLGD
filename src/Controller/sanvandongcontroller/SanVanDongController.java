@@ -13,7 +13,7 @@ import DAO.SanVanDongDAO;
 import Model.LoaiSan;
 import Model.SanVanDong;
 import View.Admin.QuanLySanVanDong.FormThemSuaSanVanDong;
-import View.Admin.SanVanDongPanel;
+import View.Admin.QuanLySanVanDong.SanVanDongPanel;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;

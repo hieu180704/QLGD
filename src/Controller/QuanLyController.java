@@ -31,6 +31,9 @@ public class QuanLyController implements ActionListener {
             case "Quản Lý Trận Đấu":
                 quanLyView.openTranDauPanel();
                 break;
+            case "Xếp Lịch Thi Đấu":
+                quanLyView.openXepLichThiDau();
+                break;
             case "Danh Sách Cầu Thủ":
                 quanLyView.openDanhSachCauThu();
                 break;
