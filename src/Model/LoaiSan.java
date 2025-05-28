@@ -1,9 +1,5 @@
 package Model;
 
-/**
- *
- * @author ntnfa
- */
 public class LoaiSan {
     private int maLoai;
     private String tenLoai;
@@ -33,6 +29,4 @@ public class LoaiSan {
     public String toString() {
         return tenLoai;
     }
-
-
 }
