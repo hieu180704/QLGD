@@ -5,6 +5,7 @@ import DAO.CauThuDAO;
 import DAO.QuocGiaDAO;
 import DAO.DoiBongDAO;
 import Model.CauThu;
+import View.Admin.QuanLyCauThu.CauThuPanel;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.DoiBongItem;
@@ -12,6 +13,8 @@ import java.io.IOException;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class QuanLyCauThuController {
@@ -43,12 +46,20 @@ public class QuanLyCauThuController {
                 ex.printStackTrace();
             }
         });
+        
+        this.view.addBtnLamMoiListener(e -> {
+            try {
+                lamMoiDanhSach();
+            } catch (IOException ex) {
+                Logger.getLogger(QuanLyCauThuController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
 
         loadData();
         try {
             hienThiCauThu(danhSachCauThu);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); 
         }
     }
 
@@ -57,14 +68,15 @@ public class QuanLyCauThuController {
     }
 
     public void hienThiCauThu(List<CauThu> ds) throws IOException {
-        JPanel panel = view.getPanelDanhSachCauThu();   
+        JPanel panel = view.getPanelDanhSachCauThu();
         panel.removeAll();
         for (CauThu ct : ds) {
-            panel.add(new View.Admin.QuanLyCauThu.CauThuPanel(ct));
+            panel.add(new CauThuPanel(ct, this));  // truyền this để xử lý update, delete
         }
         panel.revalidate();
         panel.repaint();
     }
+
 
 
     public void timKiemVaHienThi() throws IOException {
@@ -80,6 +92,44 @@ public class QuanLyCauThuController {
                         || (ct.getTenDoi() != null && ct.getTenDoi().toLowerCase().contains(key)))
                 .collect(Collectors.toList());
         hienThiCauThu(dsLoc);
+    }
+    
+    public void updateCauThu(CauThu ct) throws IOException {
+    boolean success = cauThuDAO.update(ct);
+    if (success) {
+        // Cập nhật danh sách nội bộ
+        int index = -1;
+        for (int i = 0; i < danhSachCauThu.size(); i++) {
+            if (danhSachCauThu.get(i).getMaCauThu() == ct.getMaCauThu()) {
+                index = i;
+                break;
+            }
+        }
+        if (index >= 0) {
+            danhSachCauThu.set(index, ct);
+            hienThiCauThu(danhSachCauThu);
+            JOptionPane.showMessageDialog(null, "Cập nhật cầu thủ thành công");
+        }
+    } else {
+        JOptionPane.showMessageDialog(null, "Cập nhật cầu thủ thất bại");
+    }
+    }
+
+    public void deleteCauThu(int maCauThu) throws IOException {
+        boolean success = cauThuDAO.delete(maCauThu);
+        if (success) {
+            danhSachCauThu.removeIf(ct -> ct.getMaCauThu() == maCauThu);
+            hienThiCauThu(danhSachCauThu);
+            JOptionPane.showMessageDialog(null, "Xóa cầu thủ thành công");
+        } else {
+            JOptionPane.showMessageDialog(null, "Xóa cầu thủ thất bại");
+        }
+    }
+
+    
+    public void lamMoiDanhSach() throws IOException {
+    loadData();  // tải lại dữ liệu từ DB
+    hienThiCauThu(danhSachCauThu);  // hiển thị lại tất cả cầu thủ
     }
 
     public void showThemDialog() {

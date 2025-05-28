@@ -9,6 +9,7 @@ public class QuanLyCauThuView extends JPanel {
     private JTextField txtTimKiem;
     private JButton btnTimKiem;
     private JButton btnThemCauThu;
+    private JButton btnLamMoi;
     private JPanel panelDanhSachCauThu;
 
     public QuanLyCauThuView() {
@@ -25,15 +26,18 @@ public class QuanLyCauThuView extends JPanel {
         btnTimKiem.setPreferredSize(new Dimension(100, 35));
         btnTimKiem.setBorder(new RoundedBorder(10));
         
-        
-
         btnThemCauThu = new JButton("Thêm cầu thủ");
         btnThemCauThu.setPreferredSize(new Dimension(120, 35));
         btnThemCauThu.setBorder(new RoundedBorder(10));
+        
+        btnLamMoi = new JButton("Làm mới");
+        btnLamMoi.setPreferredSize(new Dimension(100, 35));
+        btnLamMoi.setBorder(new RoundedBorder(10));
 
         JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         panelButtons.add(btnTimKiem);
         panelButtons.add(btnThemCauThu);
+        panelButtons.add(btnLamMoi);
 
         panelTop.add(txtTimKiem, BorderLayout.WEST);
         panelTop.add(panelButtons, BorderLayout.EAST);
@@ -60,6 +64,10 @@ public class QuanLyCauThuView extends JPanel {
 
     public JPanel getPanelDanhSachCauThu() {
         return panelDanhSachCauThu;
+    }
+    
+    public void addBtnLamMoiListener(ActionListener listener) {
+    btnLamMoi.addActionListener(listener);
     }
 
     private static class RoundedBorder extends LineBorder {

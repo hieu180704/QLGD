@@ -1,5 +1,6 @@
 package View.Admin.QuanLyCauThu;
 
+import Controller.CauThuController.QuanLyCauThuController;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -7,10 +8,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import javax.imageio.ImageIO;
 import Model.CauThu;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CauThuPanel extends JPanel {
-    public CauThuPanel(CauThu ct) throws IOException {
+    public CauThuPanel(CauThu ct, QuanLyCauThuController controller) throws IOException {
         setPreferredSize(new Dimension(140, 160));
         setLayout(new BorderLayout());
 
@@ -47,6 +52,29 @@ public class CauThuPanel extends JPanel {
         pnlThongTin.add(new JLabel(ct.getTenQuocGia(), JLabel.CENTER));
         pnlThongTin.add(new JLabel(ct.getTenDoi(), JLabel.CENTER));
         add(pnlThongTin, BorderLayout.CENTER);
+        
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                SuaXoaCauThuDialog dialog = new SuaXoaCauThuDialog(null, ct);
+                dialog.setVisible(true);
+
+                if (dialog.isUpdated()) {
+                    CauThu updated = dialog.getCauThu();
+                    try {
+                        controller.updateCauThu(updated);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CauThuPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (dialog.isDeleted()) {
+                    try {
+                        controller.deleteCauThu(ct.getMaCauThu());
+                    } catch (IOException ex) {
+                        Logger.getLogger(CauThuPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        });
     }
     
     private Image resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
