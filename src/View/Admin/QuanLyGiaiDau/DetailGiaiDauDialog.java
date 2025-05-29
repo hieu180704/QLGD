@@ -1,60 +1,56 @@
 package View.Admin.QuanLyGiaiDau;
 
-import Controller.giaidaucontroller.DetailGiaiDauController;
 import Model.GiaiDau;
+import Model.DoiBong;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
-public class DetailGiaiDauPanel extends JPanel {
-    // Đổi JList từ String sang kiểu hiển thị là String nhưng mình map id trong HashMap
+public class DetailGiaiDauDialog extends JDialog {
 
     private DefaultListModel<String> modelDoiChuaThamGia;
     private DefaultListModel<String> modelDoiDaThamGia;
-
-    // Mình dùng map giữ maDoiBong tương ứng với String hiển thị (tenDoi)
-    private java.util.Map<String, Integer> mapChuaThamGia = new java.util.HashMap<>();
-    private java.util.Map<String, Integer> mapDaThamGia = new java.util.HashMap<>();
+    private Map<String, Integer> mapChuaThamGia = new HashMap<>();
+    private Map<String, Integer> mapDaThamGia = new HashMap<>();
 
     private JTextField txtTenGiaiDau;
     private DatePicker dpNgayBatDau;
     private DatePicker dpNgayKetThuc;
-
     private JLabel lblPreview;
+    
     private byte[] anhGiaiDau;
     private GiaiDau currentGiaiDau;
 
     private JButton btnLuu, btnXoa, btnQuayLai, btnChonAnh;
-
     private JList<String> listDoiChuaThamGia;
     private JList<String> listDoiDaThamGia;
-
     private JButton btnThemDoi, btnBoDoi;
 
-    public DetailGiaiDauPanel() {
-        designDetailGiaiDauPanel();
+    public DetailGiaiDauDialog(Window owner) {
+        super(owner, "CHI TIẾT GIẢI ĐẤU", ModalityType.APPLICATION_MODAL);
+        designDetailGiaiDauDialog();
+        pack();
+        setLocationRelativeTo(owner);
     }
 
-    private void designDetailGiaiDauPanel() {
+    private void designDetailGiaiDauDialog() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 255));
-        setBorder(new EmptyBorder(20, 60, 20, 60));
+        ((JComponent) getContentPane()).setBorder(new EmptyBorder(20, 60, 20, 60));
 
-        // Tiêu đề
         JLabel lblTitle = new JLabel("CHI TIẾT GIẢI ĐẤU");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
         lblTitle.setForeground(new Color(30, 30, 100));
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblTitle, BorderLayout.NORTH);
 
-        // Panel form nhập thông tin giải đấu
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -110,7 +106,7 @@ public class DetailGiaiDauPanel extends JPanel {
 
         add(formPanel, BorderLayout.NORTH);
 
-        // Panel chính cho 2 danh sách đội bóng và nút thêm/bỏ
+        // Danh sách đội bóng và nút thêm/bỏ
         JPanel teamsPanel = new JPanel(new GridBagLayout());
         teamsPanel.setOpaque(false);
         GridBagConstraints gbcTeams = new GridBagConstraints();
@@ -119,7 +115,7 @@ public class DetailGiaiDauPanel extends JPanel {
         gbcTeams.weightx = 0.4;
         gbcTeams.weighty = 1.0;
 
-        // Danh sách đội bóng chưa tham gia
+        // Đội chưa tham gia
         modelDoiChuaThamGia = new DefaultListModel<>();
         listDoiChuaThamGia = new JList<>(modelDoiChuaThamGia);
         listDoiChuaThamGia.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -132,7 +128,7 @@ public class DetailGiaiDauPanel extends JPanel {
         gbcTeams.gridy = 1;
         teamsPanel.add(scrollChuaThamGia, gbcTeams);
 
-        // Panel nút thêm/bỏ đội
+        // Nút thêm/bỏ
         JPanel buttonPanel = new JPanel(new GridLayout(2, 1, 5, 10));
         buttonPanel.setOpaque(false);
         btnThemDoi = new JButton(">>");
@@ -146,7 +142,7 @@ public class DetailGiaiDauPanel extends JPanel {
         gbcTeams.fill = GridBagConstraints.NONE;
         teamsPanel.add(buttonPanel, gbcTeams);
 
-        // Danh sách đội bóng đã tham gia
+        // Đội đã tham gia
         modelDoiDaThamGia = new DefaultListModel<>();
         listDoiDaThamGia = new JList<>(modelDoiDaThamGia);
         listDoiDaThamGia.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -164,9 +160,8 @@ public class DetailGiaiDauPanel extends JPanel {
         add(teamsPanel, BorderLayout.CENTER);
 
         // Nút dưới cùng
-        JPanel bottomPanel = new JPanel();
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
         bottomPanel.setOpaque(false);
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 15));
 
         btnLuu = new JButton("Lưu");
         btnLuu.setPreferredSize(new Dimension(100, 40));
@@ -190,7 +185,8 @@ public class DetailGiaiDauPanel extends JPanel {
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    public void addController(DetailGiaiDauController controller) {
+    // Thêm controller cho các nút
+    public void addController(ActionListener controller) {
         btnLuu.addActionListener(controller);
         btnXoa.addActionListener(controller);
         btnQuayLai.addActionListener(controller);
@@ -199,7 +195,7 @@ public class DetailGiaiDauPanel extends JPanel {
         btnBoDoi.addActionListener(controller);
     }
 
-    // Getter & Setter
+    // Getter & Setter và các phương thức quản lý dữ liệu
     public String getTenGiaiDau() {
         return txtTenGiaiDau.getText().trim();
     }
@@ -217,11 +213,7 @@ public class DetailGiaiDauPanel extends JPanel {
             dpNgayBatDau.clear();
             return;
         }
-        if (date instanceof java.sql.Date) {
-            dpNgayBatDau.setDate(((java.sql.Date) date).toLocalDate());
-        } else {
-            dpNgayBatDau.setDate(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
+        dpNgayBatDau.setDate(new java.sql.Date(date.getTime()).toLocalDate());
     }
 
     public LocalDate getNgayKetThuc() {
@@ -233,11 +225,7 @@ public class DetailGiaiDauPanel extends JPanel {
             dpNgayKetThuc.clear();
             return;
         }
-        if (date instanceof java.sql.Date) {
-            dpNgayKetThuc.setDate(((java.sql.Date) date).toLocalDate());
-        } else {
-            dpNgayKetThuc.setDate(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
+        dpNgayKetThuc.setDate(new java.sql.Date(date.getTime()).toLocalDate());
     }
 
     public byte[] getAnhGiaiDau() {
@@ -271,7 +259,7 @@ public class DetailGiaiDauPanel extends JPanel {
         }
     }
 
-    // Các nút
+    // Các nút getter
     public JButton getBtnLuu() {
         return btnLuu;
     }
@@ -296,30 +284,31 @@ public class DetailGiaiDauPanel extends JPanel {
         return btnBoDoi;
     }
 
-    // Setter danh sách đội với maDoiBong và tenDoi
-    public void setDoiChuaThamGia(java.util.List<Model.DoiBong> doiList) {
+    // Quản lý danh sách đội
+    public void setDoiChuaThamGia(List<DoiBong> doiList) {
         modelDoiChuaThamGia.clear();
         mapChuaThamGia.clear();
-        for (Model.DoiBong d : doiList) {
+        System.out.println("setDoiChuaThamGia called with size: " + doiList.size());
+        for (DoiBong d : doiList) {
             String display = d.getTenDoi();
             modelDoiChuaThamGia.addElement(display);
             mapChuaThamGia.put(display, d.getMaDoiBong());
         }
     }
 
-    public void setDoiDaThamGia(java.util.List<Model.DoiBong> doiList) {
+    public void setDoiDaThamGia(List<DoiBong> doiList) {
         modelDoiDaThamGia.clear();
         mapDaThamGia.clear();
-        for (Model.DoiBong d : doiList) {
+        System.out.println("setDoiDaThamGia called with size: " + doiList.size());
+        for (DoiBong d : doiList) {
             String display = d.getTenDoi();
             modelDoiDaThamGia.addElement(display);
             mapDaThamGia.put(display, d.getMaDoiBong());
         }
     }
 
-    // Lấy danh sách maDoiBong được chọn từ list chưa tham gia
     public List<Integer> getSelectedMaDoiChuaThamGia() {
-        java.util.List<Integer> list = new ArrayList<>();
+        List<Integer> list = new ArrayList<>();
         for (String s : listDoiChuaThamGia.getSelectedValuesList()) {
             Integer id = mapChuaThamGia.get(s);
             if (id != null) {
@@ -329,7 +318,6 @@ public class DetailGiaiDauPanel extends JPanel {
         return list;
     }
 
-    // Lấy danh sách maDoiBong được chọn từ list đã tham gia
     public List<Integer> getSelectedMaDoiDaThamGia() {
         List<Integer> list = new ArrayList<>();
         for (String s : listDoiDaThamGia.getSelectedValuesList()) {
@@ -340,5 +328,4 @@ public class DetailGiaiDauPanel extends JPanel {
         }
         return list;
     }
-
 }

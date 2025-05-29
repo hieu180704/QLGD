@@ -4,7 +4,7 @@
  */
 package View.Admin.QuanLySanVanDong;
 
-import Controller.sanvandongcontroller.SanVanDongController;
+import Controller.SanVanDongController;
 import Model.SanVanDong;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

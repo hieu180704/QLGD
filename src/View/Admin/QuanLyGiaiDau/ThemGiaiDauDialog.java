@@ -1,6 +1,5 @@
 package View.Admin.QuanLyGiaiDau;
 
-import Controller.giaidaucontroller.ThemGiaiDauController;
 import DAO.TheThucDAO;
 import Model.TheThuc;
 import com.github.lgooddatepicker.components.DatePicker;
@@ -8,11 +7,11 @@ import com.github.lgooddatepicker.components.DatePicker;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
-public class ThemGiaiDauPanel extends JPanel {
+public class ThemGiaiDauDialog extends JDialog {
 
     private JTextField txtTenGiaiDau;
     private JComboBox<TheThuc> cbTheThuc;
@@ -23,14 +22,17 @@ public class ThemGiaiDauPanel extends JPanel {
 
     private JButton btnLuu, btnHuy, btnQuayLai, btnChonAnh;
 
-    public ThemGiaiDauPanel() {
-        designThemGiaiDauPanel();
+    public ThemGiaiDauDialog(Window owner) {
+        super(owner, "Thêm Giải Đấu", ModalityType.APPLICATION_MODAL);
+        designThemGiaiDauDialog();
+        pack();
+        setLocationRelativeTo(owner);
     }
 
-    private void designThemGiaiDauPanel() {
+    private void designThemGiaiDauDialog() {
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 255));
-        setBorder(new EmptyBorder(20, 60, 20, 60));
+        ((JComponent) getContentPane()).setBorder(new EmptyBorder(20, 60, 20, 60));
 
         JLabel lblTitle = new JLabel("THÊM GIẢI ĐẤU MỚI");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
@@ -65,7 +67,7 @@ public class ThemGiaiDauPanel extends JPanel {
         gbc.gridy = row++;
         formPanel.add(cbTheThuc, gbc);
 
-        // Ngày bắt đầu (DatePicker)
+        // Ngày bắt đầu
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Ngày bắt đầu:"), gbc);
@@ -74,7 +76,7 @@ public class ThemGiaiDauPanel extends JPanel {
         gbc.gridy = row++;
         formPanel.add(dpNgayBatDau, gbc);
 
-        // Ngày kết thúc (DatePicker)
+        // Ngày kết thúc
         gbc.gridx = 0;
         gbc.gridy = row;
         formPanel.add(new JLabel("Ngày kết thúc:"), gbc);
@@ -103,10 +105,9 @@ public class ThemGiaiDauPanel extends JPanel {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // Nút dưới
-        JPanel bottomPanel = new JPanel();
+        // Panel nút dưới
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         bottomPanel.setOpaque(false);
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 15));
 
         btnLuu = new JButton("Lưu");
         btnLuu.setPreferredSize(new Dimension(100, 40));
@@ -136,14 +137,14 @@ public class ThemGiaiDauPanel extends JPanel {
         }
     }
 
-    public void addController(ThemGiaiDauController controller) {
+    public void addController(ActionListener controller) {
         btnLuu.addActionListener(controller);
         btnHuy.addActionListener(controller);
         btnQuayLai.addActionListener(controller);
         btnChonAnh.addActionListener(controller);
     }
 
-    // Getter
+    // Getters
     public String getTenGiaiDau() {
         return txtTenGiaiDau.getText().trim();
     }

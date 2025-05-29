@@ -1,4 +1,4 @@
-package Controller.quanlytaikhoancontroller;
+package Controller;
 
 import DAO.TaiKhoanDAO;
 import Model.TaiKhoan;
