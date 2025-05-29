@@ -87,6 +87,7 @@ public class LoginView extends javax.swing.JFrame {
         lbUsername.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbUsername.setText("Usernames");
 
+        txtUsername.setText("admin");
         txtUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsernameActionPerformed(evt);
@@ -136,6 +137,7 @@ public class LoginView extends javax.swing.JFrame {
         lbPassword.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbPassword.setText("Password:");
 
+        txtPassword.setText("admin");
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPasswordActionPerformed(evt);

@@ -1,4 +1,4 @@
-package Controller.trandaucontroller;
+package Controller;
 
 import DAO.GiaiDauDAO;
 import Model.GiaiDau;

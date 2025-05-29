@@ -4,7 +4,7 @@
  */
 package View.Admin.NhaTaiTroPanel;
 
-import Controller.nhataitrocontroller.NhaTaiTroController;
+import Controller.NhaTaiTroController;
 import DAO.NhaTaiTroDAO;
 import Model.NhaTaiTro;
 import java.awt.BorderLayout;

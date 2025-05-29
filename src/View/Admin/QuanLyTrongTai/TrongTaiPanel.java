@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package View.Admin.QuanLyTrongTai;
-import Controller.trongtaicontroller.TrongTaiController;
+import Controller.TrongTaiController;
 import Model.TrongTai;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
