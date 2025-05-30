@@ -6,6 +6,7 @@ import DAO.QuocGiaDAO;
 import DAO.DoiBongDAO;
 import Model.CauThu;
 import View.Admin.QuanLyCauThu.CauThuPanel;
+import View.Admin.QuanLyCauThu.SuaXoaCauThuDialog;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.DoiBongItem;
@@ -22,14 +23,18 @@ public class QuanLyCauThuController {
     private final CauThuDAO cauThuDAO;
     private final QuocGiaDAO quocGiaDAO;
     private final DoiBongDAO doiBongDAO;
-
+   
     private List<CauThu> danhSachCauThu;
 
     public QuanLyCauThuController(QuanLyCauThuView view, CauThuDAO cauThuDAO, QuocGiaDAO quocGiaDAO, DoiBongDAO doiBongDAO) {
+       
+        
         this.view = view;
         this.cauThuDAO = cauThuDAO;
         this.quocGiaDAO = quocGiaDAO;
         this.doiBongDAO = doiBongDAO;
+      ;
+
 
         // Đăng ký sự kiện nút
         this.view.addBtnTimKiemListener(e -> {
@@ -94,10 +99,37 @@ public class QuanLyCauThuController {
         hienThiCauThu(dsLoc);
     }
     
+    public void showSuaXoaDialog(CauThu ct) {
+        List<QuocGiaItem> dsQuocGia = quocGiaDAO.findAll().stream()
+                .map(qg -> new QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
+                .collect(Collectors.toList());
+
+        List<DoiBongItem> dsDoiBong = doiBongDAO.findAll().stream()
+                .map(db -> new DoiBongItem(db.getMaDoiBong(), db.getTenDoi()))
+                .collect(Collectors.toList());
+
+        SuaXoaCauThuDialog dialog = new SuaXoaCauThuDialog(null, ct, dsQuocGia, dsDoiBong);
+        dialog.setVisible(true);
+
+        if (dialog.isUpdated()) {
+            CauThu updated = dialog.getCauThuSuaXoa();
+            try {
+                updateCauThu(updated);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (dialog.isDeleted()) {
+            try {
+                deleteCauThu(ct.getMaCauThu());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
     public void updateCauThu(CauThu ct) throws IOException {
     boolean success = cauThuDAO.update(ct);
     if (success) {
-        // Cập nhật danh sách nội bộ
         int index = -1;
         for (int i = 0; i < danhSachCauThu.size(); i++) {
             if (danhSachCauThu.get(i).getMaCauThu() == ct.getMaCauThu()) {
@@ -112,7 +144,7 @@ public class QuanLyCauThuController {
         }
     } else {
         JOptionPane.showMessageDialog(null, "Cập nhật cầu thủ thất bại");
-    }
+        }
     }
 
     public void deleteCauThu(int maCauThu) throws IOException {
@@ -133,13 +165,13 @@ public class QuanLyCauThuController {
     }
 
     public void showThemDialog() {
-        List<QuocGiaItem> dsQuocGia = quocGiaDAO.findAll().stream()
-                .map(qg -> new QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
-                .collect(Collectors.toList());
+            List<QuocGiaItem> dsQuocGia = quocGiaDAO.findAll().stream()
+                    .map(qg -> new QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
+                    .collect(Collectors.toList());
 
-        List<DoiBongItem> dsDoiBong = doiBongDAO.findAll().stream()
-                .map(db -> new DoiBongItem(db.getMaDoiBong(), db.getTenDoi()))
-                .collect(Collectors.toList());
+            List<DoiBongItem> dsDoiBong = doiBongDAO.findAll().stream()
+                    .map(db -> new DoiBongItem(db.getMaDoiBong(), db.getTenDoi()))
+                    .collect(Collectors.toList());
 
         ThemCauThuDialog dialog = new ThemCauThuDialog(null, dsQuocGia, dsDoiBong);
         dialog.setVisible(true);

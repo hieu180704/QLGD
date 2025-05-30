@@ -1,20 +1,30 @@
 package View.Admin.QuanLyCauThu;
 
 import Controller.CauThuController.QuanLyCauThuController;
+import DAO.DoiBongDAO;
+import DAO.QuocGiaDAO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import javax.imageio.ImageIO;
 import Model.CauThu;
+import View.Admin.QuanLyCauThu.ThemCauThuDialog.DoiBongItem;
+import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class CauThuPanel extends JPanel {
+    
+    private QuocGiaDAO quocGiaDAO = new QuocGiaDAO();
+    private DoiBongDAO doiBongDAO = new DoiBongDAO();
+
     public CauThuPanel(CauThu ct, QuanLyCauThuController controller) throws IOException {
         setPreferredSize(new Dimension(140, 160));
         setLayout(new BorderLayout());
@@ -56,7 +66,15 @@ public class CauThuPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                SuaXoaCauThuDialog dialog = new SuaXoaCauThuDialog(null, ct);
+                List<QuocGiaItem> dsQuocGia = quocGiaDAO.findAll().stream()
+                    .map(qg -> new QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
+                    .collect(Collectors.toList());
+
+                List<DoiBongItem> dsDoiBong = doiBongDAO.findAll().stream()
+                    .map(db -> new DoiBongItem(db.getMaDoiBong(), db.getTenDoi()))
+                    .collect(Collectors.toList());
+                
+                SuaXoaCauThuDialog dialog = new SuaXoaCauThuDialog(null, ct, dsQuocGia, dsDoiBong);
                 dialog.setVisible(true);
 
                 if (dialog.isUpdated()) {

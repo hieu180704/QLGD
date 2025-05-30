@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ThemCauThuDialog extends JDialog {
 
@@ -44,6 +45,14 @@ public class ThemCauThuDialog extends JDialog {
         public String toString() {
             return tenQuocGia;
         }
+
+        String getTenQuocGia() {
+            return this.tenQuocGia; 
+        }
+
+        int getMaQuocGia() {
+            return this.maQuocGia; 
+        }
     }
 
     public static class DoiBongItem {
@@ -58,6 +67,14 @@ public class ThemCauThuDialog extends JDialog {
         @Override
         public String toString() {
             return tenDoi;
+        }
+
+        String getTenDoiBong() {
+            return this.tenDoi;
+        }
+
+        int getMaDoiBong() {
+            return this.maDoi;
         }
     }
 

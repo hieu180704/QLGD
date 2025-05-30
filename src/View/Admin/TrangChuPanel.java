@@ -1,7 +1,5 @@
 package View.Admin;
 
-
-
 public class TrangChuPanel extends javax.swing.JPanel {
 
     public TrangChuPanel() {

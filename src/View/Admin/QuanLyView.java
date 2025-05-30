@@ -6,7 +6,6 @@ import View.Admin.TranDau.TranDauPanel;
 import View.Admin.TranDau.XepLichThiDauPanel;
 import View.Admin.QuanLySanVanDong.SanVanDongPanel;
 import View.Admin.QuanLyTrongTai.TrongTaiPanel;
-
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
 import Controller.UserEditController;
@@ -162,14 +161,14 @@ public class QuanLyView extends JFrame {
     private void designView() {
 
         jLabel1 = new JLabel("    Quản Lý Giải Đấu Bóng Đá");
-        jLabel2 = new JLabel("Username          ");
+        jLabel2 = new JLabel("Username    ");
         layerPanel = new JLayeredPane();
         layerPanel.setLayout(new CardLayout());
 
         Color sidebarBg = new Color(0, 51, 102);
         Color sidebarHover = new Color(0, 102, 204);
-        Color logoutBg = new Color(255, 77, 77);
-        Color logoutHover = new Color(255, 102, 102);
+//        Color logoutBg = new Color(255, 77, 77);
+//        Color logoutHover = new Color(255, 102, 102);
 
         btnTrangChu = rou.createSidebarButton("Trang Chủ", 20, sidebarBg, sidebarHover);
         ImageIcon anhTC1 = new ImageIcon(getClass().getResource("/Resources/home.png"));
@@ -260,31 +259,31 @@ public class QuanLyView extends JFrame {
         sidebarPanel = new JPanel();
         sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
         sidebarPanel.setBackground(sidebarBg);
-        sidebarPanel.setPreferredSize(new Dimension(260, 600));
+        sidebarPanel.setPreferredSize(new Dimension(250, 600));
 
-        sidebarPanel.add(Box.createVerticalStrut(20));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnTrangChu);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnQuanLyGiaiDau);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnXepLichThiDau);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnQuanLyTranDau);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnDanhSachDoiBong);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnDanhSachCauThu);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnDanhSachTrongTai);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnDanhSachHLV);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnQuanLyTaiKhoan);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnQuanLySanDau);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnQuanLyNhaTaiTro);
-        sidebarPanel.add(Box.createVerticalStrut(10));
+        sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnThongKe);
 
         sidebarPanel.add(Box.createVerticalGlue());
