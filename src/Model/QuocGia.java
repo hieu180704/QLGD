@@ -8,6 +8,9 @@ public class QuocGia {
     private int maQuocGia;
     private String tenQuocGia;
 
+    public QuocGia() {
+    }
+
     public QuocGia(int maQuocGia, String tenQuocGia) {
         this.maQuocGia = maQuocGia;
         this.tenQuocGia = tenQuocGia;

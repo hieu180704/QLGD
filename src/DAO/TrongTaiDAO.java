@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import Model.QuocGia;
@@ -11,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrongTaiDAO {
+
     public List<TrongTai> getAllTrongTai() {
         List<TrongTai> list = new ArrayList<TrongTai>();
-        String sql = "SELECT tt.maTrongTai, tt.tenTrongTai, tt.ngaySinh, tt.maQuocGia, qg.tenQuocGia " +
-                     "FROM trongtai tt LEFT JOIN quocgia qg ON tt.maQuocGia = qg.maQuocGia";
+        String sql = "SELECT tt.maTrongTai, tt.tenTrongTai, tt.ngaySinh, tt.maQuocGia, qg.tenQuocGia "
+                + "FROM trongtai tt LEFT JOIN quocgia qg ON tt.maQuocGia = qg.maQuocGia";
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
@@ -35,18 +32,33 @@ public class TrongTaiDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try { if(rs != null) rs.close(); } catch(Exception e) {}
-            try { if(stmt != null) stmt.close(); } catch(Exception e) {}
-            try { if(conn != null) conn.close(); } catch(Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return list;
     }
 
     public List<TrongTai> searchTrongTaiByName(String name) {
         List<TrongTai> list = new ArrayList<TrongTai>();
-        String sql = "SELECT tt.maTrongTai, tt.tenTrongTai, tt.ngaySinh, tt.maQuocGia, qg.tenQuocGia " +
-                     "FROM trongtai tt LEFT JOIN quocgia qg ON tt.maQuocGia = qg.maQuocGia " +
-                     "WHERE tt.tenTrongTai LIKE ?";
+        String sql = "SELECT tt.maTrongTai, tt.tenTrongTai, tt.ngaySinh, tt.maQuocGia, qg.tenQuocGia "
+                + "FROM trongtai tt LEFT JOIN quocgia qg ON tt.maQuocGia = qg.maQuocGia "
+                + "WHERE tt.tenTrongTai LIKE ?";
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -68,9 +80,24 @@ public class TrongTaiDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            try { if(rs != null) rs.close(); } catch(Exception e) {}
-            try { if(ps != null) ps.close(); } catch(Exception e) {}
-            try { if(conn != null) conn.close(); } catch(Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
         return list;
     }
@@ -91,8 +118,18 @@ public class TrongTaiDAO {
             e.printStackTrace();
             return false;
         } finally {
-            try { if(ps != null) ps.close(); } catch(Exception e) {}
-            try { if(conn != null) conn.close(); } catch(Exception e) {}
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -113,8 +150,18 @@ public class TrongTaiDAO {
             e.printStackTrace();
             return false;
         } finally {
-            try { if(ps != null) ps.close(); } catch(Exception e) {}
-            try { if(conn != null) conn.close(); } catch(Exception e) {}
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -132,9 +179,37 @@ public class TrongTaiDAO {
             e.printStackTrace();
             return false;
         } finally {
-            try { if(ps != null) ps.close(); } catch(Exception e) {}
-            try { if(conn != null) conn.close(); } catch(Exception e) {}
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (Exception e) {
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+            }
         }
     }
-}
 
+    public List<TrongTai> findAll() {
+        List<TrongTai> list = new ArrayList<>();
+        String sql = "SELECT * FROM trongtai";
+
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                TrongTai tt = new TrongTai();
+                tt.setMaTrongTai(rs.getInt("maTrongTai"));
+                tt.setTenTrongTai(rs.getString("tenTrongTai"));
+                list.add(tt);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+}

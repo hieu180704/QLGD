@@ -4,6 +4,7 @@ import Model.NhaTaiTro;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 
 public class NhaTaiTroDAO implements GenericDAO<NhaTaiTro> {
 
@@ -143,4 +144,26 @@ public class NhaTaiTroDAO implements GenericDAO<NhaTaiTro> {
 
         return list;
     }
+
+    // Lấy logo nhà tài trợ từ database
+    public ImageIcon getLogoFromDatabase(int maNTT) {
+        String sql = "SELECT logoNTT FROM nhataitro WHERE maNTT = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, maNTT);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                byte[] imgBytes = rs.getBytes("logoNTT");
+                if (imgBytes != null) {
+                    // Chuyển byte array thành ImageIcon
+                    ImageIcon imageIcon = new ImageIcon(imgBytes);
+                    return imageIcon;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null; // trả về null nếu không tìm thấy logo
+    }
+
 }

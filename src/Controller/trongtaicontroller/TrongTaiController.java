@@ -9,7 +9,7 @@ import DAO.TrongTaiDAO;
 import Model.QuocGia;
 import Model.TrongTai;
 import View.Admin.QuanLyTrongTai.FormThemSuaTrongTai;
-import View.Admin.TrongTaiPanel;
+import View.Admin.QuanLyTrongTai.TrongTaiPanel;
 import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;

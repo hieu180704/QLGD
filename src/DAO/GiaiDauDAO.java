@@ -134,4 +134,55 @@ public class GiaiDauDAO implements GenericDAO<GiaiDau> {
 
         return gd;
     }
+
+    public List<GiaiDau> findByKeyword(String keyword) {
+        List<GiaiDau> list = new ArrayList<>();
+        String sql = "SELECT * FROM giaidau WHERE LOWER(tenGiaiDau) LIKE ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + keyword.toLowerCase() + "%");
+            ResultSet rs = ps.executeQuery();
+
+            TheThucDAO theThucDAO = new TheThucDAO();
+
+            while (rs.next()) {
+                GiaiDau gd = map(rs);
+                // load thông tin TheThuc
+                gd.setTheThuc(theThucDAO.findById(gd.getTheThuc().getMaTheThuc()));
+                list.add(gd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<GiaiDau> findGiaiDauChuaCoTranDau() {
+        List<GiaiDau> list = new ArrayList<>();
+        String sql = "SELECT * FROM giaidau gd WHERE NOT EXISTS (SELECT 1 FROM trandau td WHERE td.maGiaiDau = gd.maGiaiDau)";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<GiaiDau> findGiaiDauCoTranDau() {
+        List<GiaiDau> list = new ArrayList<>();
+        String sql = "SELECT * FROM giaidau gd WHERE EXISTS (SELECT 1 FROM trandau td WHERE td.maGiaiDau = gd.maGiaiDau)";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(map(rs));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

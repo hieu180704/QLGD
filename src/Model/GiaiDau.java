@@ -84,4 +84,9 @@ public class GiaiDau {
     public void setNgayKetThuc(Date ngayKetThuc) {
         this.ngayKetThuc = ngayKetThuc;
     }
+
+    @Override
+    public String toString() {
+        return this.tenGiaiDau;
+    }
 }

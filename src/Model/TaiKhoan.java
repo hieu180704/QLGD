@@ -10,7 +10,7 @@ public class TaiKhoan {
     public TaiKhoan() {
     }
 
-    public TaiKhoan(int mataikhoan, String tendangnhap, String matkhau, String email, int loaitaikhoan) {
+    public TaiKhoan( int mataikhoan, String tendangnhap, String matkhau, String email, int loaitaikhoan) {
         this.mataikhoan = mataikhoan;
         this.tendangnhap = tendangnhap;
         this.matkhau = matkhau;

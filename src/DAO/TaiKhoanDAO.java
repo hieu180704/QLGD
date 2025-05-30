@@ -43,6 +43,21 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan> {
         return false;
     }
 
+    public boolean updateMatKhauVaEmail(TaiKhoan tk) {
+        String sql = "UPDATE taikhoan SET matKhau = ?, email = ? WHERE maTaiKhoan = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, tk.getMatkhau());
+            ps.setString(2, tk.getEmail());
+            ps.setInt(3, tk.getMataikhoan());
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // Xóa tài khoản theo maTaiKhoan
     public boolean delete(int maTaiKhoan) {
         String sql = "DELETE FROM taikhoan WHERE maTaiKhoan = ?";
@@ -116,4 +131,18 @@ public class TaiKhoanDAO implements GenericDAO<TaiKhoan> {
         }
         return null;
     }
+
+    // Kiểm tra username đã tồn tại chưa
+    public boolean kiemTraTenDangNhap(String tendangnhap) {
+        String sql = "SELECT * FROM taikhoan WHERE tendangnhap = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tendangnhap);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
