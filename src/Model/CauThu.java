@@ -13,6 +13,10 @@ public class CauThu {
     private int maDoi;
     private int soAo;
 
+    // Thêm 2 trường tên hiển thị cho quốc gia và đội bóng (không lưu trong DB trực tiếp, dùng join lấy)
+    private String tenQuocGia; 
+    private String tenDoi;
+
     public CauThu() {}
 
     public CauThu(int maCauThu, String tenCauThu, byte[] anhCauThu, Date ngaySinh,
@@ -28,6 +32,7 @@ public class CauThu {
         this.soAo = soAo;
     }
 
+    // Getter và Setter cho các trường cơ bản
     public int getMaCauThu() { return maCauThu; }
     public void setMaCauThu(int maCauThu) { this.maCauThu = maCauThu; }
 
@@ -54,4 +59,10 @@ public class CauThu {
 
     public int getSoAo() { return soAo; }
     public void setSoAo(int soAo) { this.soAo = soAo; }
+
+    public String getTenQuocGia() { return tenQuocGia; }
+    public void setTenQuocGia(String tenQuocGia) { this.tenQuocGia = tenQuocGia; }
+
+    public String getTenDoi() { return tenDoi; }
+    public void setTenDoi(String tenDoi) { this.tenDoi = tenDoi; }
 }

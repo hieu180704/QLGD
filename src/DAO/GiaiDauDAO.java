@@ -130,7 +130,7 @@ public class GiaiDauDAO implements GenericDAO<GiaiDau> {
 
         gd.setNgayTaoGiai(rs.getDate("ngayTaoGiai"));
         gd.setNgayBatDau(rs.getDate("ngayBatDau"));
-        gd.setNgayKetThuc(rs.getDate("ngayKetThuc"));
+        
 
         return gd;
     }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import Model.QuocGia;
@@ -10,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuocGiaDAO {
-    public List<QuocGia> getAllQuocGia() {
+    public List<QuocGia> findAll() {
         List<QuocGia> list = new ArrayList<QuocGia>();
         String sql = "SELECT * FROM quocgia";
         Connection conn = null;

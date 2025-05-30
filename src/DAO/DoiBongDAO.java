@@ -4,7 +4,6 @@ import Model.DoiBong;
 import Model.GiaiDau;
 import Model.QuocGia;
 import Model.SanVanDong;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +132,6 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             while (rs.next()) {
                 list.add(map(rs));
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -231,5 +229,4 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             return false;
         }
     }
-
 }
