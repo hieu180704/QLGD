@@ -1,21 +1,6 @@
 package View.Admin;
-<<<<<<< HEAD
+
 import Controller.CauThuController.QuanLyCauThuController;
-import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
-import Controller.QuanLyController;
-import DAO.CauThuDAO;
-import DAO.DoiBongDAO;
-import DAO.QuocGiaDAO;
-import View.Admin.QuanLyCauThu.QuanLyCauThuView;
-import View.Admin.QuanLyGiaiDau.DetailGiaiDauPanel;
-import View.CustomButton.RoundBorder;
-import com.formdev.flatlaf.FlatLightLaf;
-import Model.TaiKhoan;
-import javax.swing.*;
-import java.awt.*;
-
-=======
-
 import View.Admin.QuanLyTaiKhoan.QuanLyTaiKhoanPanel;
 import View.Admin.TranDau.TranDauPanel;
 import View.Admin.TranDau.XepLichThiDauPanel;
@@ -25,17 +10,20 @@ import View.Admin.QuanLyTrongTai.TrongTaiPanel;
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
 import Controller.UserEditController;
-import Controller.quanlytaikhoancontroller.QuanLyTaiKhoanController;
+import Controller.QuanLyTaiKhoanController;
+import DAO.CauThuDAO;
+import DAO.DoiBongDAO;
+import DAO.QuocGiaDAO;
 import DAO.TaiKhoanDAO;
 
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 import Model.TaiKhoan;
 import View.Admin.NhaTaiTroPanel.NhaTaiTroPanel;
+import View.Admin.QuanLyCauThu.QuanLyCauThuView;
 
 import javax.swing.*;
 import java.awt.*;
->>>>>>> 48deee4495cd8deca04ff1b6359ee1b7642e3b9e
 
 public class QuanLyView extends JFrame {
 
@@ -71,6 +59,7 @@ public class QuanLyView extends JFrame {
     private JButton btnQuanLySanDau;
     private JButton btnQuanLyNhaTaiTro;
     private JButton btnXepLichThiDau;
+    private JButton btnDangKyDoiBong;
     private JButton btnThongKe;
     private JLabel jLabel1;
     private JLabel jLabel2;
@@ -84,18 +73,15 @@ public class QuanLyView extends JFrame {
 
         taiKhoanController = new QuanLyTaiKhoanController(quanLyTaiKhoanPanel);
         QuanLyController quanLyController = new QuanLyController(this);
-<<<<<<< HEAD
         
         CauThuDAO cauThuDAO = new CauThuDAO();
         DoiBongDAO doiBongDAO = new DoiBongDAO();
         QuocGiaDAO quocGiaDAO = new QuocGiaDAO();
         
         QuanLyCauThuController cauThuController = new QuanLyCauThuController(quanLyCauThuView, cauThuDAO, quocGiaDAO, doiBongDAO);
-=======
         nhaTaiTroPanel = new NhaTaiTroPanel();
 
         new UserEditController(this);
->>>>>>> 48deee4495cd8deca04ff1b6359ee1b7642e3b9e
 
         // Gán event và style cho các nút sidebar
         addSidebarButtonStyle(btnTrangChu, quanLyController);
@@ -125,6 +111,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(tranDauPanel, "TranDauPanel");
         layerPanel.add(xepLichThiDauPanel, "XepLichThiDauPanel");
 
+
         cardLayout.show(layerPanel, "TrangChuPanel");
 
         // Thiết lập màu nền sidebar
@@ -134,6 +121,7 @@ public class QuanLyView extends JFrame {
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
 
     }
+
     public QuanLyView(int maTaiKhoan) {
         this();
         this.maTaiKhoan = maTaiKhoan;
@@ -189,66 +177,77 @@ public class QuanLyView extends JFrame {
         ImageIcon anhTC3 = new ImageIcon(anhTC2);
         btnTrangChu.setIcon(anhTC3);
         btnTrangChu.setIconTextGap(5);
+
         btnQuanLyGiaiDau = rou.createSidebarButton("Quản Lý Giải Đấu", 20, sidebarBg, sidebarHover);
         ImageIcon anhGD1 = new ImageIcon(getClass().getResource("/Resources/tournament.png"));
         Image anhGD2 = anhGD1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhGD3 = new ImageIcon(anhGD2);
         btnQuanLyGiaiDau.setIcon(anhGD3);
         btnQuanLyGiaiDau.setIconTextGap(5);
+
         btnXepLichThiDau = rou.createSidebarButton("Xếp Lịch Thi Đấu", 20, sidebarBg, sidebarHover);
         ImageIcon anhLich1 = new ImageIcon(getClass().getResource("/Resources/tournament.png"));
         Image anhLich2 = anhLich1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhLich3 = new ImageIcon(anhLich2);
-        btnQuanLyGiaiDau.setIcon(anhGD3);
-        btnQuanLyGiaiDau.setIconTextGap(5);
+        btnXepLichThiDau.setIcon(anhGD3);
+        btnXepLichThiDau.setIconTextGap(5);
+
         btnQuanLyTranDau = rou.createSidebarButton("Quản Lý Trận Đấu", 20, sidebarBg, sidebarHover);
         ImageIcon anhTD1 = new ImageIcon(getClass().getResource("/Resources/match.png"));
         Image anhTD2 = anhTD1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhTD3 = new ImageIcon(anhTD2);
         btnQuanLyTranDau.setIcon(anhTD3);
         btnQuanLyTranDau.setIconTextGap(5);
+
         btnDanhSachDoiBong = rou.createSidebarButton("Danh Sách Đội Bóng", 20, sidebarBg, sidebarHover);
         ImageIcon anhDB1 = new ImageIcon(getClass().getResource("/Resources/football-club.png"));
         Image anhDB2 = anhDB1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhDB3 = new ImageIcon(anhDB2);
         btnDanhSachDoiBong.setIcon(anhDB3);
         btnDanhSachDoiBong.setIconTextGap(5);
+
         btnDanhSachCauThu = rou.createSidebarButton("Danh Sách Cầu Thủ", 20, sidebarBg, sidebarHover);
         ImageIcon anhCT1 = new ImageIcon(getClass().getResource("/Resources/soccer-player.png"));
         Image anhCT2 = anhCT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhCT3 = new ImageIcon(anhCT2);
         btnDanhSachCauThu.setIcon(anhCT3);
         btnDanhSachCauThu.setIconTextGap(5);
+
         btnDanhSachTrongTai = rou.createSidebarButton("Danh Sách Trọng Tài", 20, sidebarBg, sidebarHover);
         ImageIcon anhTT1 = new ImageIcon(getClass().getResource("/Resources/referee.png"));
         Image anhTT2 = anhTT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhTT3 = new ImageIcon(anhTT2);
         btnDanhSachTrongTai.setIcon(anhTT3);
         btnDanhSachTrongTai.setIconTextGap(5);
+
         btnDanhSachHLV = rou.createSidebarButton("Danh Sách HLV", 20, sidebarBg, sidebarHover);
         ImageIcon anhHLV1 = new ImageIcon(getClass().getResource("/Resources/manager.png"));
         Image anhHLV2 = anhHLV1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhHLV3 = new ImageIcon(anhHLV2);
         btnDanhSachHLV.setIcon(anhHLV3);
         btnDanhSachHLV.setIconTextGap(5);
+
         btnQuanLyTaiKhoan = rou.createSidebarButton("Quản Lý Tài Khoản", 20, sidebarBg, sidebarHover);
         ImageIcon anhTK1 = new ImageIcon(getClass().getResource("/Resources/user.png"));
         Image anhTK2 = anhTK1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhTK3 = new ImageIcon(anhTK2);
         btnQuanLyTaiKhoan.setIcon(anhTK3);
         btnQuanLyTaiKhoan.setIconTextGap(5);
+
         btnQuanLySanDau = rou.createSidebarButton("Quản Lý Sân Đấu", 20, sidebarBg, sidebarHover);
         ImageIcon anhSD1 = new ImageIcon(getClass().getResource("/Resources/stadium.png"));
         Image anhSD2 = anhSD1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhSD3 = new ImageIcon(anhSD2);
         btnQuanLySanDau.setIcon(anhSD3);
         btnQuanLySanDau.setIconTextGap(5);
+
         btnQuanLyNhaTaiTro = rou.createSidebarButton("Quản Lý Nhà Tài Trợ", 20, sidebarBg, sidebarHover);
         ImageIcon anhNTT1 = new ImageIcon(getClass().getResource("/Resources/sponsor.png"));
         Image anhNTT2 = anhNTT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon anhNTT3 = new ImageIcon(anhNTT2);
         btnQuanLyNhaTaiTro.setIcon(anhNTT3);
         btnQuanLyNhaTaiTro.setIconTextGap(5);
+
         btnThongKe = rou.createSidebarButton("Thống Kê", 20, sidebarBg, sidebarHover);
         ImageIcon anhT1 = new ImageIcon(getClass().getResource("/Resources/total.png"));
         Image anhT2 = anhT1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);

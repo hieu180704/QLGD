@@ -4,7 +4,7 @@
  */
 package View.Admin.QuanLyTrongTai;
 
-import Controller.trongtaicontroller.TrongTaiController;
+import Controller.TrongTaiController;
 import Model.QuocGia;
 import Model.TrongTai;
 import javax.swing.*;

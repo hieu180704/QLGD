@@ -1,4 +1,4 @@
-package Controller.nhataitrocontroller;
+package Controller;
 
 import DAO.NhaTaiTroDAO;
 import Model.NhaTaiTro;

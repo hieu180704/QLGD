@@ -4,30 +4,10 @@ import Model.DoiBong;
 import Model.GiaiDau;
 import Model.QuocGia;
 import Model.SanVanDong;
-
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class DoiBongDAO {
-
-    public List<DoiBong> findAll() {
-        List<DoiBong> list = new ArrayList<>();
-        String sql = "SELECT maDoiBong, tenDoi FROM doibong";
-
-        try (Connection conn = ConnectDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
-            while (rs.next()) {
-                DoiBong db = new DoiBong();
-                db.setMaDoiBong(rs.getInt("maDoiBong"));
-                db.setTenDoi(rs.getString("tenDoi"));
-                list.add(db);
-            }
-=======
 public class DoiBongDAO implements GenericDAO<DoiBong> {
 
     @Override
@@ -152,15 +132,11 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             while (rs.next()) {
                 list.add(map(rs));
             }
-
->>>>>>> 48deee4495cd8deca04ff1b6359ee1b7642e3b9e
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
-<<<<<<< HEAD
-=======
 
     // --- Các hàm mở rộng ---
     public List<DoiBong> findByMaGiaiDau(Integer maGiaiDau) {
@@ -253,6 +229,4 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             return false;
         }
     }
-
->>>>>>> 48deee4495cd8deca04ff1b6359ee1b7642e3b9e
 }

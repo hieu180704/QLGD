@@ -1,4 +1,7 @@
-package Controller.sanvandongcontroller;
+
+//package Controller.sanvandongcontroller;
+package Controller;
+
 
 import DAO.LoaiSanDAO;
 //import DAO.SanVanDongDAO;

@@ -3,8 +3,6 @@ package Model;
 public class DoiBong {
     private int maDoiBong;
     private String tenDoi;
-<<<<<<< HEAD
-=======
     private byte[] logoDoi;
     private SanVanDong sanVanDong;
     private QuocGia quocGia;
@@ -21,7 +19,6 @@ public class DoiBong {
         this.quocGia = quocGia;
         this.giaiDau = giaiDau;
     }
->>>>>>> 48deee4495cd8deca04ff1b6359ee1b7642e3b9e
 
     public int getMaDoiBong() {
         return maDoiBong;
@@ -38,9 +35,6 @@ public class DoiBong {
     public void setTenDoi(String tenDoi) {
         this.tenDoi = tenDoi;
     }
-<<<<<<< HEAD
-}
-=======
 
     public byte[] getLogoDoi() {
         return logoDoi;
@@ -78,4 +72,3 @@ public class DoiBong {
 }
 
 
->>>>>>> 48deee4495cd8deca04ff1b6359ee1b7642e3b9e

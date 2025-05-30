@@ -1,6 +1,6 @@
 package View.Admin.QuanLyGiaiDau;
 
-import Controller.giaidaucontroller.DetailGiaiDauController;
+import Controller.QuanLyGiaiDauController;
 import DAO.GiaiDauDAO;
 import DAO.NhaTaiTroDAO;
 import Model.GiaiDau;
@@ -11,10 +11,10 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Window;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -27,6 +27,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
     private List<GiaiDau> danhSachGiaiDau;
     private JPanel panelItems;
     private JTextField txtTimKiem;
+    private QuanLyGiaiDauController controller;
 
     private GiaiDauDAO giaiDauDAO;
     private NhaTaiTroDAO nhaTaiTroDAO;
@@ -35,6 +36,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
         giaiDauDAO = new GiaiDauDAO();
         nhaTaiTroDAO = new NhaTaiTroDAO();
         designPanel();
+        controller = new QuanLyGiaiDauController(this);  // Tạo 1 lần duy nhất
         loadData();
     }
 
@@ -80,7 +82,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
         btnThem.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         btnThem.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btnThem.setOpaque(true);
-        btnThem.addActionListener(new Controller.giaidaucontroller.QuanLyGiaiDauController(this));
+        btnThem.addActionListener(new Controller.QuanLyGiaiDauController(this));
 
         headerPanel.add(lblTitle, BorderLayout.WEST);
         headerPanel.add(searchPanel, BorderLayout.CENTER);
@@ -155,25 +157,12 @@ public class QuanLyGiaiDauPanel extends JPanel {
 
     private void addItemGiaiDau(GiaiDau gd) {
         ItemGiaiDau item = new ItemGiaiDau(gd, g -> {
-            JFrame detailFrame = new JFrame("Chi tiết giải đấu - " + g.getTenGiaiDau());
-            detailFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-            DetailGiaiDauPanel detailPanel = new DetailGiaiDauPanel();
-
-            // Set dữ liệu hiện tại lên panel detail
-            detailPanel.setCurrentGiaiDau(g);
-
-            // Tạo controller chi tiết, truyền panel quản lý để reload dữ liệu sau khi sửa/xóa
-            new Controller.giaidaucontroller.DetailGiaiDauController(detailPanel, this);
-
-            detailFrame.setContentPane(detailPanel);
-            detailFrame.pack();
-            detailFrame.setLocationRelativeTo(null);
-            detailFrame.setVisible(true);
+            controller.openDetailGiaiDauDialog(g);
         });
         item.setPreferredSize(new Dimension(320, 180));
         panelItems.add(item);
     }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
