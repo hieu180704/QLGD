@@ -45,7 +45,7 @@ public class TrongTaiController {
     public void moFormThemTrongTai() {
         JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
         formThemSua = new FormThemSuaTrongTai(frame, this);
-        List<QuocGia> listQG = quocGiaDAO.getAllQuocGia();
+        List<QuocGia> listQG = quocGiaDAO.findAll();
         formThemSua.hienThiQuocGia(listQG);
         formThemSua.hienThiTrongTai(null);
         formThemSua.setVisible(true);
@@ -62,7 +62,7 @@ public class TrongTaiController {
             if (tt.getMaTrongTai() == maTT) {
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(panel);
                 formThemSua = new FormThemSuaTrongTai(frame, this);
-                formThemSua.hienThiQuocGia(quocGiaDAO.getAllQuocGia());
+                formThemSua.hienThiQuocGia(quocGiaDAO.findAll());
                 formThemSua.hienThiTrongTai(tt);
                 formThemSua.setVisible(true);
                 loadTatCaTrongTai();
