@@ -11,7 +11,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Window;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,8 +34,9 @@ public class QuanLyGiaiDauPanel extends JPanel {
     public QuanLyGiaiDauPanel() {
         giaiDauDAO = new GiaiDauDAO();
         nhaTaiTroDAO = new NhaTaiTroDAO();
+        controller = new QuanLyGiaiDauController(this);
+        
         designPanel();
-        controller = new QuanLyGiaiDauController(this);  // Tạo 1 lần duy nhất
         loadData();
     }
 
@@ -162,7 +162,6 @@ public class QuanLyGiaiDauPanel extends JPanel {
         item.setPreferredSize(new Dimension(320, 180));
         panelItems.add(item);
     }
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

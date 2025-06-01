@@ -1,5 +1,6 @@
 package View.Admin.TranDau;
 
+import Controller.TranDauController;
 import DAO.GiaiDauDAO;
 import DAO.TranDauDAO;
 import Model.GiaiDau;
@@ -105,14 +106,18 @@ public class TranDauPanel extends JPanel {
         item.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ChiTietTranDauDialog dialog = new ChiTietTranDauDialog(SwingUtilities.getWindowAncestor(item) instanceof Frame
-                        ? (Frame) SwingUtilities.getWindowAncestor(item) : null,TranDauPanel.this);
+                Window window = SwingUtilities.getWindowAncestor(item);
+                Frame owner = (window instanceof Frame) ? (Frame) window : null;
+
+                ChiTietTranDauDialog dialog = new ChiTietTranDauDialog(owner, TranDauPanel.this);
                 dialog.loadTranDau(td);
-                dialog.setSaveAction(td);
+
+                // Tạo controller cho dialog và truyền đối tượng TranDau
+                TranDauController controller = new TranDauController(dialog, td);
+
                 dialog.setVisible(true);
             }
         });
-
         panelDanhSachTranDauContent.add(item);
     }
 
