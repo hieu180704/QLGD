@@ -1,6 +1,6 @@
 package View.Admin.QuanLyCauThu;
 
-import Controller.CauThuController.QuanLyCauThuController;
+import Controller.QuanLyCauThuController;
 import DAO.DoiBongDAO;
 import DAO.QuocGiaDAO;
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class CauThuPanel extends JPanel {
         setPreferredSize(new Dimension(140, 160));
         setLayout(new BorderLayout());
 
-        setBackground(new Color(217, 229, 243)); 
+        setBackground(new Color(179,218,255)); 
 
         // Custom JLabel vẽ ảnh tròn
         ImageCircleLabel lblAnh = new ImageCircleLabel();

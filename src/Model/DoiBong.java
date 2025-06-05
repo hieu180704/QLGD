@@ -67,8 +67,7 @@ public class DoiBong {
     public void setGiaiDau(GiaiDau giaiDau) {
         this.giaiDau = giaiDau;
     }
-    
-    
+        
 }
 
 

@@ -1,4 +1,4 @@
-package Controller.CauThuController;
+package Controller;
 
 import View.Admin.QuanLyCauThu.QuanLyCauThuView;
 import DAO.CauThuDAO;
@@ -164,7 +164,7 @@ public class QuanLyCauThuController {
     hienThiCauThu(danhSachCauThu);  // hiển thị lại tất cả cầu thủ
     }
 
-    public void showThemDialog() {
+    public void showThemDialog() throws IOException {
             List<QuocGiaItem> dsQuocGia = quocGiaDAO.findAll().stream()
                     .map(qg -> new QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
                     .collect(Collectors.toList());
@@ -192,6 +192,8 @@ public class QuanLyCauThuController {
                 JOptionPane.showMessageDialog(null, "Thêm cầu thủ thất bại");
             }
         }
+        loadData();
+        hienThiCauThu(danhSachCauThu);
     }
 }
 
