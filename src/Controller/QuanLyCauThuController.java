@@ -35,8 +35,6 @@ public class QuanLyCauThuController {
         this.doiBongDAO = doiBongDAO;
       ;
 
-
-        // Đăng ký sự kiện nút
         this.view.addBtnTimKiemListener(e -> {
             try {
                 timKiemVaHienThi();
@@ -81,8 +79,6 @@ public class QuanLyCauThuController {
         panel.revalidate();
         panel.repaint();
     }
-
-
 
     public void timKiemVaHienThi() throws IOException {
         String key = view.getTimKiemText().toLowerCase().trim();

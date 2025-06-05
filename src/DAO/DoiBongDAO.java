@@ -11,53 +11,35 @@ import java.util.List;
 public class DoiBongDAO implements GenericDAO<DoiBong> {
 
     @Override
-    public boolean insert(DoiBong obj) {
-        String sql = "INSERT INTO doibong (tenDoi, logoDoi, maSVD, maQuocGia, maGiaiDau) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    public boolean insert(DoiBong doiBong) {
+        String sql = "INSERT INTO doibong (tenDoi, logoDoi, maSVD, maQuocGia) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, doiBong.getTenDoi()); 
+            ps.setBytes(2, doiBong.getLogoDoi());    
 
-            ps.setString(1, obj.getTenDoi());
-            ps.setBytes(2, obj.getLogoDoi());
-
-            if (obj.getSanVanDong() != null) {
-                ps.setInt(3, obj.getSanVanDong().getMaSVD());
+            if (doiBong.getSanVanDong() != null) {
+                ps.setInt(3, doiBong.getSanVanDong().getMaSVD());
             } else {
                 ps.setNull(3, Types.INTEGER);
             }
 
-            if (obj.getQuocGia() != null) {
-                ps.setInt(4, obj.getQuocGia().getMaQuocGia());
+            if (doiBong.getQuocGia() != null) {
+                ps.setInt(4, doiBong.getQuocGia().getMaQuocGia());
             } else {
                 ps.setNull(4, Types.INTEGER);
             }
 
-            if (obj.getGiaiDau() != null) {
-                ps.setInt(5, obj.getGiaiDau().getMaGiaiDau());
-            } else {
-                ps.setNull(5, Types.INTEGER);
-            }
-
-            int affectedRows = ps.executeUpdate();
-            if (affectedRows == 0) {
-                return false;
-            }
-
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    obj.setMaDoiBong(generatedKeys.getInt(1));
-                }
-            }
-
-            return true;
-
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return false;  
         }
     }
 
     @Override
     public boolean update(DoiBong obj) {
-        String sql = "UPDATE doibong SET tenDoi = ?, logoDoi = ?, maSVD = ?, maQuocGia = ?, maGiaiDau = ? WHERE maDoiBong = ?";
+        String sql = "UPDATE doibong SET tenDoi = ?, logoDoi = ?, maSVD = ?, maQuocGia = ? WHERE maDoiBong = ?";
         try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, obj.getTenDoi());
@@ -75,13 +57,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
                 ps.setNull(4, Types.INTEGER);
             }
 
-            if (obj.getGiaiDau() != null) {
-                ps.setInt(5, obj.getGiaiDau().getMaGiaiDau());
-            } else {
-                ps.setNull(5, Types.INTEGER);
-            }
-
-            ps.setInt(6, obj.getMaDoiBong());
+            ps.setInt(5, obj.getMaDoiBong());
 
             return ps.executeUpdate() > 0;
 
@@ -90,6 +66,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             return false;
         }
     }
+
 
     @Override
     public boolean delete(int id) {
@@ -207,16 +184,9 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             d.setQuocGia(qg);
         }
 
-        // Map giaiDau
-        int maGiaiDau = rs.getInt("maGiaiDau");
-        if (!rs.wasNull()) {
-            GiaiDau gd = new GiaiDau();
-            gd.setMaGiaiDau(maGiaiDau);
-            d.setGiaiDau(gd);
-        }
-
         return d;
     }
+
 
     public boolean updateMaGiaiDauNull(int maGiaiDau) {
         String sql = "UPDATE doibong SET maGiaiDau = NULL WHERE maGiaiDau = ?";

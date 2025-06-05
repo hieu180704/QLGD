@@ -10,12 +10,41 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author ntnfa
- */
 public class SanVanDongDAO {
     public List<SanVanDong> getAllSanVanDong() {
+        List<SanVanDong> list = new ArrayList<SanVanDong>();
+        String sql = "SELECT svd.maSVD, svd.tenSVD, svd.sucChua, svd.diaChi, svd.maLoai, ls.tenLoai " +
+                     "FROM sanvandong svd LEFT JOIN loaisan ls ON svd.maLoai = ls.maLoai";
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectDB.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                LoaiSan ls = new LoaiSan(rs.getInt("maLoai"), rs.getString("tenLoai"));
+                SanVanDong svd = new SanVanDong(
+                        rs.getInt("maSVD"),
+                        rs.getString("tenSVD"),
+                        rs.getInt("sucChua"),
+                        rs.getString("diaChi"),
+                        ls
+                );
+                list.add(svd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if(rs != null) rs.close(); } catch(Exception e) {}
+            try { if(stmt != null) stmt.close(); } catch(Exception e) {}
+            try { if(conn != null) conn.close(); } catch(Exception e) {}
+        }
+        return list;
+    }
+
+    // Thêm phương thức findAll để lấy tất cả các sân vận động
+    public List<SanVanDong> findAll() {
         List<SanVanDong> list = new ArrayList<SanVanDong>();
         String sql = "SELECT svd.maSVD, svd.tenSVD, svd.sucChua, svd.diaChi, svd.maLoai, ls.tenLoai " +
                      "FROM sanvandong svd LEFT JOIN loaisan ls ON svd.maLoai = ls.maLoai";

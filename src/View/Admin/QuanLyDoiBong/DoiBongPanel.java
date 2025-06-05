@@ -1,41 +1,106 @@
 package View.Admin.QuanLyDoiBong;
 
+import Controller.DoiBongController;
+import DAO.QuocGiaDAO;
+import DAO.SanVanDongDAO;
+import Model.DoiBong;
+import Model.QuocGia;
 import View.Admin.QuanLyCauThu.ImageCircleLabel;
+import View.Admin.QuanLyCauThu.ThemCauThuDialog;
+import View.Admin.QuanLyDoiBong.SuaXoaDoiBongDialog;
+import View.Admin.QuanLyDoiBong.ThemDoiBongDialog.SanVanDongItem;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.swing.border.EmptyBorder;
 
 public class DoiBongPanel extends JPanel {
-    private ImageCircleLabel lblImage;
-    private JLabel lblTenDoi;
-    private JLabel lblTenGiaiDau;
+    private QuocGiaDAO quocGiaDAO = new QuocGiaDAO();
+    private SanVanDongDAO sanVanDongDAO = new SanVanDongDAO();
 
-    public DoiBongPanel(Image logoDoi, String tenDoi, String tenGiaiDau) {
-        setPreferredSize(new Dimension(150, 200));
-        setBackground(new Color(173, 216, 230)); // nền xanh nhạt
+    public DoiBongPanel(DoiBong db, DoiBongController controller) throws IOException {
+        setPreferredSize(new Dimension(140, 160));
         setLayout(new BorderLayout());
 
-        lblImage = new ImageCircleLabel();
-        lblImage.setPreferredSize(new Dimension(90, 90));
-        lblImage.setImage(logoDoi);
-        lblImage.setHorizontalAlignment(SwingConstants.CENTER);
-        add(lblImage, BorderLayout.CENTER);
+        setBackground(new Color(179, 218, 255));  // Nền xanh nhạt
 
-        JPanel panelText = new JPanel();
-        panelText.setBackground(new Color(173, 216, 230));
-        panelText.setLayout(new BoxLayout(panelText, BoxLayout.Y_AXIS));
-        panelText.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        ImageCircleLabel lblAnh = new ImageCircleLabel();
 
-        lblTenDoi = new JLabel(tenDoi);
-        lblTenDoi.setFont(new Font("Arial", Font.BOLD, 14));
-        lblTenDoi.setAlignmentX(Component.CENTER_ALIGNMENT);
+        byte[] logoBytes = db.getLogoDoi();
+        try {
+            Image logoImage = Toolkit.getDefaultToolkit().createImage(logoBytes);
+            Image scaledImage = logoImage.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+            lblAnh.setImage(scaledImage);
+        } catch (Exception e) {
+            lblAnh.setImage(null);
+        }
 
-        lblTenGiaiDau = new JLabel(tenGiaiDau);
-        lblTenGiaiDau.setFont(new Font("Arial", Font.PLAIN, 12));
-        lblTenGiaiDau.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel pnlAnhWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        pnlAnhWrapper.setBorder(new EmptyBorder(5, 0, 0, 0));  // Cách mép trên 5px
+        pnlAnhWrapper.setOpaque(false);  // Panel ảnh trong suốt để thấy nền ngoài
+        pnlAnhWrapper.add(lblAnh);
 
-        panelText.add(lblTenDoi);
-        panelText.add(lblTenGiaiDau);
+        add(pnlAnhWrapper, BorderLayout.NORTH);
 
-        add(panelText, BorderLayout.SOUTH);
+        JPanel pnlThongTin = new JPanel(new GridLayout(3, 1));
+        pnlThongTin.setOpaque(false);  // Trong suốt để nền ngoài nổi bật
+        pnlThongTin.add(new JLabel(db.getTenDoi(), JLabel.CENTER));
+        pnlThongTin.add(new JLabel(db.getTenQuocGia(), JLabel.CENTER));
+        pnlThongTin.add(new JLabel(db.getTenSanVanDong(), JLabel.CENTER)); // Hiển thị tên sân vận động
+        add(pnlThongTin, BorderLayout.CENTER);
+
+        // Thêm MouseListener để mở dialog khi nhấn vào đội bóng
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                List<QuocGia> dsQuocGia = quocGiaDAO.findAll();
+                
+                List<ThemCauThuDialog.QuocGiaItem> dsQuocGiaItems = dsQuocGia.stream()
+                    .map(qg -> new ThemCauThuDialog.QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))  
+                    .collect(Collectors.toList());
+                List<SanVanDongItem> dsSanVanDong = sanVanDongDAO.getAllSanVanDong().stream()
+                        .map(svd -> new SanVanDongItem(svd.getMaSVD(), svd.getTenSVD()))
+                        .collect(Collectors.toList());
+
+                // Mở dialog SuaXoaDoiBongDialog
+                SuaXoaDoiBongDialog dialog = new SuaXoaDoiBongDialog(null, db, dsQuocGiaItems, dsSanVanDong);
+                dialog.setVisible(true);
+
+                if (dialog.isUpdated()) {
+                    DoiBong updatedDoiBong = dialog.getDoiBongSuaXoa();
+                    try {
+                        controller.updateDoiBong(updatedDoiBong);  // Cập nhật đội bóng
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                } else if (dialog.isDeleted()) {
+                    try {
+                        controller.deleteDoiBong(db.getMaDoiBong());  // Xóa đội bóng
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private Image resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        BufferedImage resizedImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2d.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
+        g2d.dispose();
+
+        return resizedImage;
     }
 }

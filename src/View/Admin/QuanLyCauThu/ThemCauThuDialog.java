@@ -44,11 +44,11 @@ public class ThemCauThuDialog extends JDialog {
             return tenQuocGia;
         }
 
-        String getTenQuocGia() {
+        public String getTenQuocGia() {
             return this.tenQuocGia; 
         }
 
-        int getMaQuocGia() {
+        public int getMaQuocGia() {
             return this.maQuocGia; 
         }
     }
