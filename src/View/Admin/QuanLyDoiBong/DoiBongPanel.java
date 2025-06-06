@@ -15,9 +15,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.imageio.ImageIO;
 import javax.swing.border.EmptyBorder;
 
 public class DoiBongPanel extends JPanel {
@@ -34,10 +36,19 @@ public class DoiBongPanel extends JPanel {
 
         byte[] logoBytes = db.getLogoDoi();
         try {
-            Image logoImage = Toolkit.getDefaultToolkit().createImage(logoBytes);
-            Image scaledImage = logoImage.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
-            lblAnh.setImage(scaledImage);
-        } catch (Exception e) {
+            if (logoBytes != null) {
+                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(logoBytes));
+                if (bufferedImage != null) {
+                    Image scaledImage = bufferedImage.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
+                    lblAnh.setImage(scaledImage);
+                } else {
+                    lblAnh.setImage(null);
+                }
+            } else {
+                lblAnh.setImage(null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
             lblAnh.setImage(null);
         }
 
@@ -50,9 +61,9 @@ public class DoiBongPanel extends JPanel {
 
         JPanel pnlThongTin = new JPanel(new GridLayout(3, 1));
         pnlThongTin.setOpaque(false);  // Trong suốt để nền ngoài nổi bật
-        pnlThongTin.add(new JLabel(db.getTenDoi(), JLabel.CENTER));
-        pnlThongTin.add(new JLabel(db.getTenQuocGia(), JLabel.CENTER));
-        pnlThongTin.add(new JLabel(db.getTenSanVanDong(), JLabel.CENTER)); // Hiển thị tên sân vận động
+        pnlThongTin.add(new JLabel(db.getTenDoi() != null ? db.getTenDoi() : "", JLabel.CENTER));
+        pnlThongTin.add(new JLabel(db.getTenQuocGia() != null ? db.getTenQuocGia() : "", JLabel.CENTER));
+        pnlThongTin.add(new JLabel(db.getTenSanVanDong() != null ? db.getTenSanVanDong() : "", JLabel.CENTER));
         add(pnlThongTin, BorderLayout.CENTER);
 
         // Thêm MouseListener để mở dialog khi nhấn vào đội bóng
@@ -62,7 +73,7 @@ public class DoiBongPanel extends JPanel {
                 List<QuocGia> dsQuocGia = quocGiaDAO.findAll();
                 
                 List<ThemCauThuDialog.QuocGiaItem> dsQuocGiaItems = dsQuocGia.stream()
-                    .map(qg -> new ThemCauThuDialog.QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))  
+                    .map(qg -> new ThemCauThuDialog.QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
                     .collect(Collectors.toList());
                 List<SanVanDongItem> dsSanVanDong = sanVanDongDAO.getAllSanVanDong().stream()
                         .map(svd -> new SanVanDongItem(svd.getMaSVD(), svd.getTenSVD()))
@@ -75,13 +86,13 @@ public class DoiBongPanel extends JPanel {
                 if (dialog.isUpdated()) {
                     DoiBong updatedDoiBong = dialog.getDoiBongSuaXoa();
                     try {
-                        controller.updateDoiBong(updatedDoiBong);  // Cập nhật đội bóng
+                        controller.updateDoiBong(updatedDoiBong);
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }
                 } else if (dialog.isDeleted()) {
                     try {
-                        controller.deleteDoiBong(db.getMaDoiBong());  // Xóa đội bóng
+                        controller.deleteDoiBong(db.getMaDoiBong());
                     } catch (IOException ex) {
                         ex.printStackTrace();
                     }

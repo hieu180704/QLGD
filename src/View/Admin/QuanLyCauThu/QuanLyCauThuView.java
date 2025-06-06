@@ -69,7 +69,7 @@ public class QuanLyCauThuView extends JPanel {
     }
     
     public void addBtnLamMoiListener(ActionListener listener) {
-    btnLamMoi.addActionListener(listener);
+        btnLamMoi.addActionListener(listener);
     }
 
     private static class RoundedBorder extends LineBorder {

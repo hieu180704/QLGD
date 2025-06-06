@@ -74,7 +74,7 @@ public class QuanLyCauThuController {
         JPanel panel = view.getPanelDanhSachCauThu();
         panel.removeAll();
         for (CauThu ct : ds) {
-            panel.add(new CauThuPanel(ct, this));  // truyền this để xử lý update, delete
+            panel.add(new CauThuPanel(ct, this));  
         }
         panel.revalidate();
         panel.repaint();

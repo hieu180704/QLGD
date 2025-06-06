@@ -104,14 +104,23 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     public List<DoiBong> findAll() {
         List<DoiBong> list = new ArrayList<>();
         String sql = "SELECT * FROM doibong";
-        try (Connection conn = ConnectDB.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                list.add(map(rs));
+        try (Connection conn = ConnectDB.getConnection()) {
+            if (conn == null) {
+                System.out.println("Kết nối database thất bại!");
+                return list;
+            }
+            System.out.println("Kết nối database thành công, thực thi: " + sql);
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    System.out.println("Tìm thấy đội bóng: maDoiBong=" + rs.getInt("maDoiBong") + ", tenDoi=" + rs.getString("tenDoi"));
+                    list.add(map(rs));
+                }
             }
         } catch (SQLException e) {
+            System.out.println("Lỗi SQL trong findAll: " + e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("Tổng số đội bóng tìm thấy: " + list.size());
         return list;
     }
 
@@ -163,12 +172,12 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     }
 
     private DoiBong map(ResultSet rs) throws SQLException {
+        System.out.println(" maDoiBong=" + rs.getInt("maDoiBong"));
         DoiBong d = new DoiBong();
         d.setMaDoiBong(rs.getInt("maDoiBong"));
         d.setTenDoi(rs.getString("tenDoi"));
         d.setLogoDoi(rs.getBytes("logoDoi"));
 
-        // Map sanVanDong
         int maSVD = rs.getInt("maSVD");
         if (!rs.wasNull()) {
             SanVanDong svd = new SanVanDong();
@@ -176,7 +185,6 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             d.setSanVanDong(svd);
         }
 
-        // Map quocGia
         int maQuocGia = rs.getInt("maQuocGia");
         if (!rs.wasNull()) {
             QuocGia qg = new QuocGia();
@@ -184,6 +192,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             d.setQuocGia(qg);
         }
 
+        System.out.println("Đội bóng ánh xạ: " + d.getTenDoi());
         return d;
     }
 

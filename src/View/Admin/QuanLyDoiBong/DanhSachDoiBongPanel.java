@@ -52,43 +52,6 @@ public class DanhSachDoiBongPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(panelDanhSachDoiBong);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
-
-        loadDanhSachDoiBong();
-    }
-
-    public void loadDanhSachDoiBong() {
-        DoiBongDAO doiBongDAO = new DoiBongDAO();
-        List<DoiBong> danhSach = doiBongDAO.findAll();
-
-        panelDanhSachDoiBong.removeAll();
-
-        for (DoiBong db : danhSach) {
-            
-            JPanel card = new JPanel();
-            card.setPreferredSize(new Dimension(140, 160));
-            card.setLayout(new BorderLayout());
-            card.setBackground(new Color(179, 218, 255));
-
-            byte[] logoBytes = db.getLogoDoi();
-            ImageIcon icon = null;
-            if (logoBytes != null) {
-                Image img = Toolkit.getDefaultToolkit().createImage(logoBytes);
-                Image scaled = img.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
-                icon = new ImageIcon(scaled);
-            } else {
-                icon = new ImageIcon(); // ảnh mặc định hoặc để trống
-            }
-            JLabel lblAnh = new JLabel(icon, JLabel.CENTER);
-            card.add(lblAnh, BorderLayout.NORTH);
-
-            JLabel lblTenDoi = new JLabel(db.getTenDoi(), JLabel.CENTER);
-            card.add(lblTenDoi, BorderLayout.CENTER);
-
-            panelDanhSachDoiBong.add(card);
-        }
-
-        panelDanhSachDoiBong.revalidate();
-        panelDanhSachDoiBong.repaint();
     }
 
     public String getTimKiemText() {

@@ -11,8 +11,6 @@ import Model.DoiBong;
 import Model.QuocGia;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
 import View.Admin.QuanLyDoiBong.ThemDoiBongDialog.SanVanDongItem;
-import java.awt.Image;
-import java.awt.Toolkit;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -76,15 +74,14 @@ public class DoiBongController {
     public void hienThiDoiBong(List<DoiBong> ds) throws IOException {
         JPanel panel = view.getPanelDanhSachDoiBong();
         panel.removeAll();
-
         for (DoiBong db : ds) {
-            Image logoDoiImage = Toolkit.getDefaultToolkit().createImage(db.getLogoDoi());
-            String tenDoi = db.getTenDoi();
-            String tenGiaiDau = db.getGiaiDau() != null ? db.getGiaiDau().getTenGiaiDau() : "Không có giải đấu";  
-
-            panel.add(new DoiBongPanel(db, this));  
+            try {
+                DoiBongPanel dbPanel = new DoiBongPanel(db, this);
+                panel.add(dbPanel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
         panel.revalidate();
         panel.repaint();
     }
@@ -166,8 +163,8 @@ public class DoiBongController {
     }
 
     public void lamMoiDanhSach() throws IOException {
-        loadData();  // tải lại dữ liệu từ DB
-        hienThiDoiBong(danhSachDoiBong);  // hiển thị lại tất cả đội bóng
+        loadData();  
+        hienThiDoiBong(danhSachDoiBong);  
     }
 
     public void showThemDialog() throws IOException {
