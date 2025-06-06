@@ -11,53 +11,35 @@ import java.util.List;
 public class DoiBongDAO implements GenericDAO<DoiBong> {
 
     @Override
-    public boolean insert(DoiBong obj) {
-        String sql = "INSERT INTO doibong (tenDoi, logoDoi, maSVD, maQuocGia, maGiaiDau) VALUES (?, ?, ?, ?, ?)";
-        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    public boolean insert(DoiBong doiBong) {
+        String sql = "INSERT INTO doibong (tenDoi, logoDoi, maSVD, maQuocGia) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, doiBong.getTenDoi()); 
+            ps.setBytes(2, doiBong.getLogoDoi());    
 
-            ps.setString(1, obj.getTenDoi());
-            ps.setBytes(2, obj.getLogoDoi());
-
-            if (obj.getSanVanDong() != null) {
-                ps.setInt(3, obj.getSanVanDong().getMaSVD());
+            if (doiBong.getSanVanDong() != null) {
+                ps.setInt(3, doiBong.getSanVanDong().getMaSVD());
             } else {
                 ps.setNull(3, Types.INTEGER);
             }
 
-            if (obj.getQuocGia() != null) {
-                ps.setInt(4, obj.getQuocGia().getMaQuocGia());
+            if (doiBong.getQuocGia() != null) {
+                ps.setInt(4, doiBong.getQuocGia().getMaQuocGia());
             } else {
                 ps.setNull(4, Types.INTEGER);
             }
 
-            if (obj.getGiaiDau() != null) {
-                ps.setInt(5, obj.getGiaiDau().getMaGiaiDau());
-            } else {
-                ps.setNull(5, Types.INTEGER);
-            }
-
-            int affectedRows = ps.executeUpdate();
-            if (affectedRows == 0) {
-                return false;
-            }
-
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    obj.setMaDoiBong(generatedKeys.getInt(1));
-                }
-            }
-
-            return true;
-
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0; 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return false;  
         }
     }
 
     @Override
     public boolean update(DoiBong obj) {
-        String sql = "UPDATE doibong SET tenDoi = ?, logoDoi = ?, maSVD = ?, maQuocGia = ?, maGiaiDau = ? WHERE maDoiBong = ?";
+        String sql = "UPDATE doibong SET tenDoi = ?, logoDoi = ?, maSVD = ?, maQuocGia = ? WHERE maDoiBong = ?";
         try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, obj.getTenDoi());
@@ -75,13 +57,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
                 ps.setNull(4, Types.INTEGER);
             }
 
-            if (obj.getGiaiDau() != null) {
-                ps.setInt(5, obj.getGiaiDau().getMaGiaiDau());
-            } else {
-                ps.setNull(5, Types.INTEGER);
-            }
-
-            ps.setInt(6, obj.getMaDoiBong());
+            ps.setInt(5, obj.getMaDoiBong());
 
             return ps.executeUpdate() > 0;
 
@@ -90,6 +66,7 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             return false;
         }
     }
+
 
     @Override
     public boolean delete(int id) {
@@ -127,14 +104,23 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     public List<DoiBong> findAll() {
         List<DoiBong> list = new ArrayList<>();
         String sql = "SELECT * FROM doibong";
-        try (Connection conn = ConnectDB.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-
-            while (rs.next()) {
-                list.add(map(rs));
+        try (Connection conn = ConnectDB.getConnection()) {
+            if (conn == null) {
+                System.out.println("Kết nối database thất bại!");
+                return list;
+            }
+            System.out.println("Kết nối database thành công, thực thi: " + sql);
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    System.out.println("Tìm thấy đội bóng: maDoiBong=" + rs.getInt("maDoiBong") + ", tenDoi=" + rs.getString("tenDoi"));
+                    list.add(map(rs));
+                }
             }
         } catch (SQLException e) {
+            System.out.println("Lỗi SQL trong findAll: " + e.getMessage());
             e.printStackTrace();
         }
+        System.out.println("Tổng số đội bóng tìm thấy: " + list.size());
         return list;
     }
 
@@ -186,12 +172,12 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     }
 
     private DoiBong map(ResultSet rs) throws SQLException {
+        System.out.println(" maDoiBong=" + rs.getInt("maDoiBong"));
         DoiBong d = new DoiBong();
         d.setMaDoiBong(rs.getInt("maDoiBong"));
         d.setTenDoi(rs.getString("tenDoi"));
         d.setLogoDoi(rs.getBytes("logoDoi"));
 
-        // Map sanVanDong
         int maSVD = rs.getInt("maSVD");
         if (!rs.wasNull()) {
             SanVanDong svd = new SanVanDong();
@@ -199,7 +185,6 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             d.setSanVanDong(svd);
         }
 
-        // Map quocGia
         int maQuocGia = rs.getInt("maQuocGia");
         if (!rs.wasNull()) {
             QuocGia qg = new QuocGia();
@@ -207,16 +192,10 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
             d.setQuocGia(qg);
         }
 
-        // Map giaiDau
-        int maGiaiDau = rs.getInt("maGiaiDau");
-        if (!rs.wasNull()) {
-            GiaiDau gd = new GiaiDau();
-            gd.setMaGiaiDau(maGiaiDau);
-            d.setGiaiDau(gd);
-        }
-
+        System.out.println("Đội bóng ánh xạ: " + d.getTenDoi());
         return d;
     }
+
 
     public boolean updateMaGiaiDauNull(int maGiaiDau) {
         String sql = "UPDATE doibong SET maGiaiDau = NULL WHERE maGiaiDau = ?";

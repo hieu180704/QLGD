@@ -1,9 +1,11 @@
 package View.Admin.QuanLyCauThu;
 
+import View.CustomLayout.WrapLayout;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.FlowLayout;
 
 public class QuanLyCauThuView extends JPanel {
     private JTextField txtTimKiem;
@@ -44,7 +46,7 @@ public class QuanLyCauThuView extends JPanel {
 
         add(panelTop, BorderLayout.NORTH);
 
-        panelDanhSachCauThu = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        panelDanhSachCauThu = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 10));
         JScrollPane scrollPane = new JScrollPane(panelDanhSachCauThu);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
@@ -67,7 +69,7 @@ public class QuanLyCauThuView extends JPanel {
     }
     
     public void addBtnLamMoiListener(ActionListener listener) {
-    btnLamMoi.addActionListener(listener);
+        btnLamMoi.addActionListener(listener);
     }
 
     private static class RoundedBorder extends LineBorder {

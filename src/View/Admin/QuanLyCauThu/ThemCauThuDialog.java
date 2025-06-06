@@ -4,13 +4,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import Model.CauThu;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ThemCauThuDialog extends JDialog {
 
@@ -46,11 +44,11 @@ public class ThemCauThuDialog extends JDialog {
             return tenQuocGia;
         }
 
-        String getTenQuocGia() {
+        public String getTenQuocGia() {
             return this.tenQuocGia; 
         }
 
-        int getMaQuocGia() {
+        public int getMaQuocGia() {
             return this.maQuocGia; 
         }
     }
