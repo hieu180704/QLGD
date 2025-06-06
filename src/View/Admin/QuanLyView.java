@@ -1,6 +1,7 @@
 package View.Admin;
 
-import Controller.CauThuController.QuanLyCauThuController;
+import View.Admin.QuanLyDoiBong.DanhSachDoiBongPanel;
+import Controller.QuanLyCauThuController;
 import View.Admin.QuanLyTaiKhoan.QuanLyTaiKhoanPanel;
 import View.Admin.TranDau.TranDauPanel;
 import View.Admin.TranDau.XepLichThiDauPanel;
@@ -36,6 +37,7 @@ public class QuanLyView extends JFrame {
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
     private TranDauPanel tranDauPanel = new TranDauPanel();
     private XepLichThiDauPanel xepLichThiDauPanel = new XepLichThiDauPanel();
+    private QuanLySoDoPanel quanLySoDoPanel = new QuanLySoDoPanel();
     private RoundBorder rou = new RoundBorder();
 
     //private UserEditPanel userEditPanel = new UserEditPanel();
@@ -58,7 +60,8 @@ public class QuanLyView extends JFrame {
     private JButton btnQuanLySanDau;
     private JButton btnQuanLyNhaTaiTro;
     private JButton btnXepLichThiDau;
-    private JButton btnDangKyDoiBong;
+//    private JButton btnDangKyDoiBong;
+    private JButton btnQuanLySoDo;
     private JButton btnThongKe;
     private JLabel jLabel1;
     private JLabel jLabel2;
@@ -95,6 +98,7 @@ public class QuanLyView extends JFrame {
         addSidebarButtonStyle(btnQuanLyNhaTaiTro, quanLyController);
         addSidebarButtonStyle(btnThongKe, quanLyController);
         addSidebarButtonStyle(btnXepLichThiDau, quanLyController);
+        addSidebarButtonStyle(btnQuanLySoDo, quanLyController);
 
         // Thêm các panel vào CardLayout
         CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
@@ -109,6 +113,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(nhaTaiTroPanel, "NhaTaiTroPanel");
         layerPanel.add(tranDauPanel, "TranDauPanel");
         layerPanel.add(xepLichThiDauPanel, "XepLichThiDauPanel");
+        layerPanel.add(quanLySoDoPanel, "QuanLySoDoPanel");
 
 
         cardLayout.show(layerPanel, "TrangChuPanel");
@@ -246,6 +251,13 @@ public class QuanLyView extends JFrame {
         ImageIcon anhNTT3 = new ImageIcon(anhNTT2);
         btnQuanLyNhaTaiTro.setIcon(anhNTT3);
         btnQuanLyNhaTaiTro.setIconTextGap(5);
+        
+        btnQuanLySoDo = rou.createSidebarButton("Quản Lý Sơ Đồ", 20, sidebarBg, sidebarHover);
+        ImageIcon anhSDo1 = new ImageIcon(getClass().getResource("/Resources/tactical.png"));
+        Image anhSDo2 = anhSDo1.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon anhSDo3 = new ImageIcon(anhSDo2);
+        btnQuanLySoDo.setIcon(anhSDo3);
+        btnQuanLySoDo.setIconTextGap(5);
 
         btnThongKe = rou.createSidebarButton("Thống Kê", 20, sidebarBg, sidebarHover);
         ImageIcon anhT1 = new ImageIcon(getClass().getResource("/Resources/total.png"));
@@ -283,6 +295,8 @@ public class QuanLyView extends JFrame {
         sidebarPanel.add(btnQuanLySanDau);
         sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnQuanLyNhaTaiTro);
+        sidebarPanel.add(Box.createVerticalStrut(5));
+        sidebarPanel.add(btnQuanLySoDo);
         sidebarPanel.add(Box.createVerticalStrut(5));
         sidebarPanel.add(btnThongKe);
 
@@ -358,14 +372,13 @@ public class QuanLyView extends JFrame {
     }
 
     public void openQuanLyGiaiDauPanel() {
-        quanLyGiaiDauPanel.loadData(); //Load dữ liệu trước khi gọi panel
+        quanLyGiaiDauPanel.loadData(); 
         CardLayout cardLayout = (CardLayout) layerPanel.getLayout();
         cardLayout.show(layerPanel, "QuanLyGiaiDauPanel");
     }
 
     public void openNhaTaiTroPanel() {
-        // Nếu muốn load lại dữ liệu khi mở, gọi ở đây
-        nhaTaiTroPanel.loadData(); // nếu có method loadData public
+        nhaTaiTroPanel.loadData();
         showPanel("NhaTaiTroPanel");
     }
 
@@ -401,6 +414,10 @@ public class QuanLyView extends JFrame {
 
     public void openThemGiaiDauPanel() {
         showPanel("ThemGiaiDauPanel");
+    }
+    
+    public void openQuanLySoDoPanel() {
+        showPanel("QuanLySoDoPanel");
     }
 
     public void openTranDauPanel() {

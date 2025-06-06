@@ -1,6 +1,6 @@
 package View.Admin.QuanLyCauThu;
 
-import Controller.CauThuController.QuanLyCauThuController;
+import Controller.QuanLyCauThuController;
 import DAO.DoiBongDAO;
 import DAO.QuocGiaDAO;
 import javax.swing.*;
@@ -29,9 +29,8 @@ public class CauThuPanel extends JPanel {
         setPreferredSize(new Dimension(140, 160));
         setLayout(new BorderLayout());
 
-        setBackground(new Color(217, 229, 243)); 
+        setBackground(new Color(179,218,255)); 
 
-        // Custom JLabel vẽ ảnh tròn
         ImageCircleLabel lblAnh = new ImageCircleLabel();
 
         byte[] anhBytes = ct.getAnhCauThu();
@@ -48,19 +47,18 @@ public class CauThuPanel extends JPanel {
             lblAnh.setImage(null);
         }
 
-        
         JPanel pnlAnhWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        pnlAnhWrapper.setBorder(new EmptyBorder(5, 0, 0, 0)); // cách mép trên 5px
-        pnlAnhWrapper.setOpaque(false); // cho panel ảnh trong suốt để thấy nền ngoài
+        pnlAnhWrapper.setBorder(new EmptyBorder(5, 0, 0, 0));
+        pnlAnhWrapper.setOpaque(false);
         pnlAnhWrapper.add(lblAnh);
 
         add(pnlAnhWrapper, BorderLayout.NORTH);
 
         JPanel pnlThongTin = new JPanel(new GridLayout(3, 1));
-        pnlThongTin.setOpaque(false);  // trong suốt để nền ngoài nổi bật
-        pnlThongTin.add(new JLabel(ct.getTenCauThu(), JLabel.CENTER));
-        pnlThongTin.add(new JLabel(ct.getTenQuocGia(), JLabel.CENTER));
-        pnlThongTin.add(new JLabel(ct.getTenDoi(), JLabel.CENTER));
+        pnlThongTin.setOpaque(false);
+        pnlThongTin.add(new JLabel(ct.getTenCauThu() != null ? ct.getTenCauThu() : "", JLabel.CENTER));
+        pnlThongTin.add(new JLabel(ct.getTenQuocGia() != null ? ct.getTenQuocGia() : "", JLabel.CENTER));
+        pnlThongTin.add(new JLabel(ct.getTenDoi() != null ? ct.getTenDoi() : "", JLabel.CENTER));
         add(pnlThongTin, BorderLayout.CENTER);
         
         addMouseListener(new MouseAdapter() {
