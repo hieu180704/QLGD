@@ -5,7 +5,6 @@ import DAO.QuocGiaDAO;
 import DAO.SanVanDongDAO;
 import Model.DoiBong;
 import Model.QuocGia;
-import View.Admin.QuanLyCauThu.ImageCircleLabel;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog;
 import View.Admin.QuanLyDoiBong.SuaXoaDoiBongDialog;
 import View.Admin.QuanLyDoiBong.ThemDoiBongDialog.SanVanDongItem;
@@ -32,38 +31,50 @@ public class DoiBongPanel extends JPanel {
 
         setBackground(new Color(179, 218, 255));  // Nền xanh nhạt
 
-        ImageCircleLabel lblAnh = new ImageCircleLabel();
+        // Sử dụng JLabel thông thường thay vì ImageCircleLabel
+        JLabel lblAnh = new JLabel();
 
         byte[] logoBytes = db.getLogoDoi();
         try {
             if (logoBytes != null) {
                 BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(logoBytes));
                 if (bufferedImage != null) {
-                    Image scaledImage = bufferedImage.getScaledInstance(90, 90, Image.SCALE_SMOOTH);
-                    lblAnh.setImage(scaledImage);
+                    Image scaledImage = resizeImage(bufferedImage, 85, 85); // Giới hạn ở 85x85
+                    lblAnh.setIcon(new ImageIcon(scaledImage));
                 } else {
-                    lblAnh.setImage(null);
+                    lblAnh.setIcon(null);
                 }
             } else {
-                lblAnh.setImage(null);
+                lblAnh.setIcon(null);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            lblAnh.setImage(null);
+            lblAnh.setIcon(null);
         }
 
         JPanel pnlAnhWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        pnlAnhWrapper.setBorder(new EmptyBorder(5, 0, 0, 0));  // Cách mép trên 5px
-        pnlAnhWrapper.setOpaque(false);  // Panel ảnh trong suốt để thấy nền ngoài
+        pnlAnhWrapper.setBorder(new EmptyBorder(5, 0, 0, 0));  
+        pnlAnhWrapper.setOpaque(false);  
         pnlAnhWrapper.add(lblAnh);
 
         add(pnlAnhWrapper, BorderLayout.NORTH);
 
         JPanel pnlThongTin = new JPanel(new GridLayout(3, 1));
-        pnlThongTin.setOpaque(false);  // Trong suốt để nền ngoài nổi bật
-        pnlThongTin.add(new JLabel(db.getTenDoi() != null ? db.getTenDoi() : "", JLabel.CENTER));
-        pnlThongTin.add(new JLabel(db.getTenQuocGia() != null ? db.getTenQuocGia() : "", JLabel.CENTER));
-        pnlThongTin.add(new JLabel(db.getTenSanVanDong() != null ? db.getTenSanVanDong() : "", JLabel.CENTER));
+        pnlThongTin.setOpaque(false);  
+
+        // Tạo và đặt font in đậm cho các nhãn
+        JLabel teamLabel = new JLabel(db.getTenDoi() != null ? db.getTenDoi() : "", JLabel.CENTER);
+        teamLabel.setFont(new Font(teamLabel.getFont().getName(), Font.BOLD, teamLabel.getFont().getSize()));
+        pnlThongTin.add(teamLabel);
+
+        JLabel countryLabel = new JLabel(db.getTenQuocGia() != null ? db.getTenQuocGia() : "", JLabel.CENTER);
+        countryLabel.setFont(new Font(countryLabel.getFont().getName(), Font.BOLD, countryLabel.getFont().getSize()));
+        pnlThongTin.add(countryLabel);
+
+        JLabel stadiumLabel = new JLabel(db.getTenSanVanDong() != null ? db.getTenSanVanDong() : "", JLabel.CENTER);
+        stadiumLabel.setFont(new Font(stadiumLabel.getFont().getName(), Font.BOLD, stadiumLabel.getFont().getSize()));
+        pnlThongTin.add(stadiumLabel);
+
         add(pnlThongTin, BorderLayout.CENTER);
 
         // Thêm MouseListener để mở dialog khi nhấn vào đội bóng
@@ -79,7 +90,7 @@ public class DoiBongPanel extends JPanel {
                         .map(svd -> new SanVanDongItem(svd.getMaSVD(), svd.getTenSVD()))
                         .collect(Collectors.toList());
 
-                // Mở dialog SuaXoaDoiBongDialog
+                
                 SuaXoaDoiBongDialog dialog = new SuaXoaDoiBongDialog(null, db, dsQuocGiaItems, dsSanVanDong);
                 dialog.setVisible(true);
 
