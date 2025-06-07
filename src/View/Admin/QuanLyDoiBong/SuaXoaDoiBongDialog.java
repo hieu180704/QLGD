@@ -6,17 +6,21 @@ import java.awt.*;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
-import Model.DoiBong;
-import View.Admin.QuanLyDoiBong.ThemDoiBongDialog.SanVanDongItem;
-import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import Model.DoiBong;
+import Model.QuocGia;
+import Model.SanVanDong;
+import View.Admin.QuanLyDoiBong.ThemDoiBongDialog.SanVanDongItem;
+import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
+
 public class SuaXoaDoiBongDialog extends JDialog {
     private JTextField txtTenDoi;
-    private JComboBox<String> cbQuocGia, cbSanVanDong;
+    private JComboBox<String> cbQuocGia; 
+    private JComboBox<String> cbSanVanDong; 
     private JButton btnLuu, btnXoa, btnHuy;
     private JButton btnChonLogo;
     private JLabel lblLogo;
@@ -35,15 +39,7 @@ public class SuaXoaDoiBongDialog extends JDialog {
 
         super(parent, "Sửa/Xóa đội bóng", true);
 
-        List<String> tenQuocGiaList = dsQuocGia.stream()
-            .map(QuocGiaItem::getTenQuocGia)
-            .collect(Collectors.toList());
-
-        List<String> tenSanVanDongList = dsSanVanDong.stream()
-            .map(SanVanDongItem::getTenSVD)
-            .collect(Collectors.toList());
-
-        setSize(450, 500);
+        setSize(450, 300);
         setLocationRelativeTo(parent);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -61,8 +57,11 @@ public class SuaXoaDoiBongDialog extends JDialog {
         gbc.gridx = 0; gbc.gridy++;
         gbc.weightx = 0;
         add(new JLabel("Quốc gia:"), gbc);
+        List<String> tenQuocGiaList = dsQuocGia.stream()
+            .map(QuocGiaItem::getTenQuocGia)
+            .collect(Collectors.toList());
         cbQuocGia = new JComboBox<>(tenQuocGiaList.toArray(new String[0]));
-        cbQuocGia.setSelectedItem(doiBong.getTenQuocGia());
+        cbQuocGia.setSelectedItem(doiBong.getTenQuocGia()); // Dựa vào tenQuocGia
         gbc.gridx = 1; gbc.weightx = 1;
         add(cbQuocGia, gbc);
 
@@ -70,8 +69,11 @@ public class SuaXoaDoiBongDialog extends JDialog {
         gbc.gridx = 0; gbc.gridy++;
         gbc.weightx = 0;
         add(new JLabel("Sân vận động:"), gbc);
+        List<String> tenSanVanDongList = dsSanVanDong.stream()
+            .map(SanVanDongItem::getTenSVD)
+            .collect(Collectors.toList());
         cbSanVanDong = new JComboBox<>(tenSanVanDongList.toArray(new String[0]));
-        cbSanVanDong.setSelectedItem(doiBong.getTenSanVanDong());
+        cbSanVanDong.setSelectedItem(doiBong.getTenSanVanDong()); // Dựa vào tenSanVanDong
         gbc.gridx = 1; gbc.weightx = 1;
         add(cbSanVanDong, gbc);
 
@@ -154,28 +156,35 @@ public class SuaXoaDoiBongDialog extends JDialog {
         db.setMaDoiBong(this.maDoiBong);
         db.setTenDoi(txtTenDoi.getText().trim());
 
-        // Gán mã quốc gia
+        // Lấy mã từ tên quốc gia
         String tenQuocGia = (String) cbQuocGia.getSelectedItem();
         for (QuocGiaItem qg : dsQuocGia) {
             if (qg.getTenQuocGia().equals(tenQuocGia)) {
-                db.setMaQuocGia(qg.getMaQuocGia());
+                QuocGia quocGia = new QuocGia();
+                quocGia.setMaQuocGia(qg.getMaQuocGia());
+                quocGia.setTenQuocGia(qg.getTenQuocGia());
+                db.setQuocGia(quocGia);
                 break;
             }
         }
 
-        // Gán mã sân vận động
+        // Lấy mã từ tên sân vận động
         String tenSVD = (String) cbSanVanDong.getSelectedItem();
         for (SanVanDongItem svd : dsSanVanDong) {
             if (svd.getTenSVD().equals(tenSVD)) {
-                db.setMaSVD(svd.getMaSVD());
+                SanVanDong sanVanDong = new SanVanDong();
+                sanVanDong.setMaSVD(svd.getMaSVD());
+                sanVanDong.setTenSVD(svd.getTenSVD());
+                db.setSanVanDong(sanVanDong);
                 break;
             }
         }
 
+        // Giữ logo cũ nếu không chọn logo mới
         if (selectedLogo != null) {
             db.setLogoDoi(imageIconToBytes(selectedLogo));
         } else {
-            db.setLogoDoi(null);
+            db.setLogoDoi(null); // Hoặc db.setLogoDoi(doiBong.getLogoDoi()) để giữ logo cũ
         }
 
         return db;
@@ -223,4 +232,3 @@ public class SuaXoaDoiBongDialog extends JDialog {
         return getDoiBongSuaXoa();
     }
 }
-
