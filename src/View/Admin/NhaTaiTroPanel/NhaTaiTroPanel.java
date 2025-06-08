@@ -7,6 +7,7 @@ package View.Admin.NhaTaiTroPanel;
 import Controller.NhaTaiTroController;
 import DAO.NhaTaiTroDAO;
 import Model.NhaTaiTro;
+import Service.NhaTaiTroService;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -30,7 +31,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class NhaTaiTroPanel extends javax.swing.JPanel {
 
-    private NhaTaiTroController controller;
     private JTable table;
     private DefaultTableModel model;
     private JTextField txtTen, txtEmail, txtSDT, txtDiaChi, txtTimKiem;
@@ -38,8 +38,8 @@ public class NhaTaiTroPanel extends javax.swing.JPanel {
     private byte[] logoBytes = null;
 
     public NhaTaiTroPanel() {
-        controller = new NhaTaiTroController();
         initMyComponents();
+        new NhaTaiTroController(this);
     }
 
     private void initMyComponents() {
@@ -112,118 +112,78 @@ public class NhaTaiTroPanel extends javax.swing.JPanel {
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(searchPanel, BorderLayout.SOUTH);
-
-        // Sự kiện chọn dòng trên bảng
-        table.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow >= 0) {
-                    txtTen.setText(model.getValueAt(selectedRow, 1).toString());
-                    txtEmail.setText(model.getValueAt(selectedRow, 2).toString());
-                    txtSDT.setText(model.getValueAt(selectedRow, 3).toString());
-                    txtDiaChi.setText(model.getValueAt(selectedRow, 4).toString());
-                }
-            }
-        });
-
-        // Sự kiện chọn ảnh
-        btnChonAnh.addActionListener(event -> {
-            JFileChooser fileChooser = new JFileChooser();
-            int res = fileChooser.showOpenDialog(this);
-            if (res == JFileChooser.APPROVE_OPTION) {
-                try {
-                    logoBytes = java.nio.file.Files.readAllBytes(fileChooser.getSelectedFile().toPath());
-                    JOptionPane.showMessageDialog(this, "Đã chọn ảnh logo.");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, "Lỗi đọc file ảnh.");
-                }
-            }
-        });
-
-        // Sự kiện thêm
-        btnThem.addActionListener(event -> {
-            if (validateInput()) {
-                NhaTaiTro ntt = new NhaTaiTro(
-                        txtTen.getText(),
-                        logoBytes,
-                        txtEmail.getText(),
-                        txtSDT.getText(),
-                        txtDiaChi.getText()
-                );
-                if (controller.addNhaTaiTro(ntt)) {
-                    JOptionPane.showMessageDialog(this, "Thêm nhà tài trợ thành công!");
-                    loadData();
-                    clearInput();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Thêm nhà tài trợ thất bại.");
-                }
-            }
-        });
-
-        // Sự kiện sửa
-        btnSua.addActionListener(event -> {
-            int row = table.getSelectedRow();
-            if (row < 0) {
-                JOptionPane.showMessageDialog(this, "Chọn nhà tài trợ cần sửa!");
-                return;
-            }
-            if (validateInput()) {
-                int maNTT = (int) model.getValueAt(row, 0);
-                NhaTaiTro ntt = new NhaTaiTro(
-                        maNTT,
-                        txtTen.getText(),
-                        logoBytes,
-                        txtEmail.getText(),
-                        txtSDT.getText(),
-                        txtDiaChi.getText()
-                );
-                if (controller.updateNhaTaiTro(ntt)) {
-                    JOptionPane.showMessageDialog(this, "Cập nhật nhà tài trợ thành công!");
-                    loadData();
-                    clearInput();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Cập nhật thất bại.");
-                }
-            }
-        });
-
-        // Sự kiện xóa
-        btnXoa.addActionListener(event -> {
-            int row = table.getSelectedRow();
-            if (row < 0) {
-                JOptionPane.showMessageDialog(this, "Chọn nhà tài trợ cần xóa!");
-                return;
-            }
-            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa nhà tài trợ này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                int maNTT = (int) model.getValueAt(row, 0);
-                if (controller.deleteNhaTaiTro(maNTT)) {
-                    JOptionPane.showMessageDialog(this, "Xóa thành công!");
-                    loadData();
-                    clearInput();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Xóa thất bại.");
-                }
-            }
-        });
-
-        // Sự kiện tìm kiếm
-        btnTim.addActionListener(event -> {
-            String keyword = txtTimKiem.getText().trim();
-            if (keyword.isEmpty()) {
-                loadData();
-            } else {
-                search(keyword);
-            }
-        });
-
-        // Load dữ liệu lần đầu
-        loadData();
     }
 
-    // Load dữ liệu
+    // Getters
+    public JTable getTable() {
+        return table;
+    }
+
+    public DefaultTableModel getModel() {
+        return model;
+    }
+
+    public JTextField getTxtTen() {
+        return txtTen;
+    }
+
+    public JTextField getTxtEmail() {
+        return txtEmail;
+    }
+
+    public JTextField getTxtSDT() {
+        return txtSDT;
+    }
+
+    public JTextField getTxtDiaChi() {
+        return txtDiaChi;
+    }
+
+    public JTextField getTxtTimKiem() {
+        return txtTimKiem;
+    }
+
+    public JButton getBtnThem() {
+        return btnThem;
+    }
+
+    public JButton getBtnSua() {
+        return btnSua;
+    }
+
+    public JButton getBtnXoa() {
+        return btnXoa;
+    }
+
+    public JButton getBtnTim() {
+        return btnTim;
+    }
+
+    public JButton getBtnChonAnh() {
+        return btnChonAnh;
+    }
+
+    public byte[] getLogoBytes() {
+        return logoBytes;
+    }
+
+    public void setLogoBytes(byte[] logoBytes) {
+        this.logoBytes = logoBytes;
+    }
+
+    // Hiển thị thông báo
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    // Load dữ liệu vào bảng
     public void loadData() {
-        List<NhaTaiTro> list = controller.getAll();
+        List<NhaTaiTro> list = new NhaTaiTroService().getAllNhaTaiTro();
+        displayData(list);
+    }
+
+    // Hiển thị dữ liệu vào bảng
+    public void displayData(List<NhaTaiTro> list) {
         model.setRowCount(0);
         for (NhaTaiTro ntt : list) {
             ImageIcon logoIcon = null;
@@ -243,46 +203,8 @@ public class NhaTaiTroPanel extends javax.swing.JPanel {
         }
     }
 
-    // Tìm kiếm dữ liệu
-    private void search(String keyword) {
-        List<NhaTaiTro> list = controller.getAll();
-        model.setRowCount(0);
-        for (NhaTaiTro ntt : list) {
-            if (ntt.getTenNTT().toLowerCase().contains(keyword.toLowerCase())
-                    || ntt.getEmail().toLowerCase().contains(keyword.toLowerCase())) {
-                ImageIcon logoIcon = null;
-                if (ntt.getLogoNTT() != null) {
-                    ImageIcon icon = new ImageIcon(ntt.getLogoNTT());
-                    Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-                    logoIcon = new ImageIcon(img);
-                }
-                model.addRow(new Object[]{
-                    ntt.getMaNTT(),
-                    ntt.getTenNTT(),
-                    ntt.getEmail(),
-                    ntt.getSoDienThoai(),
-                    ntt.getDiaChi(),
-                    logoIcon
-                });
-            }
-        }
-    }
-
-    // Kiểm tra dữ liệu nhập
-    private boolean validateInput() {
-        if (txtTen.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Tên nhà tài trợ không được để trống!");
-            return false;
-        }
-        if (txtEmail.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Email không được để trống!");
-            return false;
-        }
-        return true;
-    }
-
     // Xóa dữ liệu nhập
-    private void clearInput() {
+    public void clearInput() {
         txtTen.setText("");
         txtEmail.setText("");
         txtSDT.setText("");

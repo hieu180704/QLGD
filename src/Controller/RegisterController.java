@@ -1,37 +1,71 @@
-package controller;
+package Controller;
 
-import DAO.TaiKhoanDAO;
-import Model.TaiKhoan;
+import Service.RegisterService;
+import ViewMain.RegisterView;
+import ViewMain.LoginView;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class RegisterController {
+    private RegisterView view;
+    private RegisterService registerService;
 
-    private TaiKhoanDAO taiKhoanDAO;
+    public RegisterController(RegisterView view) {
+        this.view = view;
+        this.registerService = new RegisterService();
 
-    public RegisterController() {
-        taiKhoanDAO = new TaiKhoanDAO();
+        // Thêm sự kiện cho nút Sign Up
+        view.getBtnSignUp().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleSignUp();
+            }
+        });
+
+        // Thêm sự kiện cho nhãn "Login here"
+        view.getLblLogin().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                view.dispose();
+                new LoginView().setVisible(true);
+            }
+        });
     }
 
-    public String dangKyTaiKhoan(String tendangnhap, String matkhau, String nhaplai, String email) {
-        if (tendangnhap == null || tendangnhap.isEmpty()) return "Tên đăng nhập không được để trống!";
-        if (matkhau == null || matkhau.isEmpty()) return "Mật khẩu không được để trống!";
-        if (!matkhau.equals(nhaplai)) return "Mật khẩu nhập lại không khớp!";
-        if (email == null || email.isEmpty()) return "Email không được để trống!";
+    private void handleSignUp() {
+        String tenDangNhap = view.getTfName().getText().trim();
+        String email = view.getTfEmail().getText().trim();
+        String matKhau = new String(view.getPfPassword().getPassword()).trim();
+        String nhapLaiMatKhau = new String(view.getPfRePassword().getPassword()).trim();
 
-        if (taiKhoanDAO.kiemTraTenDangNhap(tendangnhap)) {
-            return "Tên đăng nhập đã tồn tại!";
+        // Kiểm tra placeholder
+        if (tenDangNhap.equalsIgnoreCase("username") || view.getTfName().getForeground() == java.awt.Color.GRAY) {
+            view.showMessage("Vui lòng nhập tên đăng nhập hợp lệ!");
+            return;
+        }
+        if (email.equalsIgnoreCase("your email") || view.getTfEmail().getForeground() == java.awt.Color.GRAY) {
+            view.showMessage("Vui lòng nhập email hợp lệ!");
+            return;
+        }
+        if (matKhau.equalsIgnoreCase("password") || view.getPfPassword().getForeground() == java.awt.Color.GRAY) {
+            view.showMessage("Vui lòng nhập mật khẩu hợp lệ!");
+            return;
+        }
+        if (nhapLaiMatKhau.equalsIgnoreCase("repeat your password") || view.getPfRePassword().getForeground() == java.awt.Color.GRAY) {
+            view.showMessage("Vui lòng nhập lại mật khẩu hợp lệ!");
+            return;
         }
 
-        TaiKhoan tk = new TaiKhoan();
-        tk.setTendangnhap(tendangnhap);
-        tk.setMatkhau(matkhau);
-        tk.setEmail(email);
-        tk.setLoaitaikhoan(0); // 0 = user thường
+        // Gọi service để đăng ký
+        String result = registerService.dangKyTaiKhoan(tenDangNhap, matKhau, nhapLaiMatKhau, email);
+        view.showMessage(result);
 
-        boolean ketqua = taiKhoanDAO.insert(tk);
-        if (ketqua) {
-            return "Đăng ký thành công!";
-        } else {
-            return "Đăng ký thất bại, vui lòng thử lại!";
+        // Nếu đăng ký thành công, chuyển sang LoginView
+        if (result.equals("Đăng ký thành công!")) {
+            view.dispose();
+            new LoginView().setVisible(true);
         }
     }
 }

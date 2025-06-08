@@ -3,7 +3,7 @@ package DAO;
 import Model.DoiBong_TranDau;
 import Model.TranDau;
 import Model.DoiBong;
-import Model.SoDoRaSan;
+import Model.SoDo;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

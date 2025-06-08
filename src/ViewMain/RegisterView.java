@@ -1,21 +1,24 @@
 package ViewMain;
 
-import controller.RegisterController;
+import Controller.RegisterController;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class RegisterView extends JFrame {
 
-    private RegisterController registerController;
+    private JTextField tfName;
+    private JTextField tfEmail;
+    private JPasswordField pfPassword;
+    private JPasswordField pfRePassword;
+    private JButton btnSignUp;
+    private JLabel lblLogin;
 
     public RegisterView() {
-
-        registerController = new RegisterController();
-
         setTitle("Register");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(750, 500);
@@ -62,24 +65,24 @@ public class RegisterView extends JFrame {
         formPanel.add(titleLabel);
 
         // Text fields
-        JTextField tfName = createStyledTextField("Username");
+        tfName = createStyledTextField("Username");
         formPanel.add(tfName);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        JTextField tfEmail = createStyledTextField("Your Email");
+        tfEmail = createStyledTextField("Your Email");
         formPanel.add(tfEmail);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        JPasswordField pfPassword = createStyledPasswordField("Password");
+        pfPassword = createStyledPasswordField("Password");
         formPanel.add(pfPassword);
         formPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        JPasswordField pfRePassword = createStyledPasswordField("Repeat your password");
+        pfRePassword = createStyledPasswordField("Repeat your password");
         formPanel.add(pfRePassword);
         formPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         // Sign Up button
-        JButton btnSignUp = new JButton("SIGN UP") {
+        btnSignUp = new JButton("SIGN UP") {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g.create();
@@ -102,7 +105,7 @@ public class RegisterView extends JFrame {
         formPanel.add(btnSignUp);
 
         // Login link label
-        JLabel lblLogin = new JLabel("<html>Have already an account? <b><u>Login here</u></b></html>");
+        lblLogin = new JLabel("Have already an account? Login here");
         lblLogin.setFont(new Font("Arial", Font.PLAIN, 13));
         lblLogin.setForeground(Color.BLACK);
         lblLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -111,16 +114,8 @@ public class RegisterView extends JFrame {
         lblLogin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         formPanel.add(lblLogin);
 
-        // Add hover effect & click event for login label
+        // Add hover effect for login label
         lblLogin.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                RegisterView.this.dispose();
-                new ViewMain.LoginView().setVisible(true);
-                //JOptionPane.showMessageDialog(RegisterView.this, "Chuyển sang form đăng nhập (demo).");
-                // Ở đây bạn có thể mở form LoginView mới hoặc xử lý gì tùy ý
-            }
-
             @Override
             public void mouseEntered(MouseEvent e) {
                 lblLogin.setForeground(new Color(50, 100, 200));
@@ -134,7 +129,7 @@ public class RegisterView extends JFrame {
 
         backgroundPanel.add(formPanel);
 
-        // Rounded JFrame shape, cập nhật khi resize
+        // Rounded JFrame shape
         setShape(new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), 20, 20));
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -143,39 +138,37 @@ public class RegisterView extends JFrame {
             }
         });
 
-        // Demo action button sign up
-        btnSignUp.addActionListener(e -> {
-            String name = tfName.getText().trim();
-            String email = tfEmail.getText().trim();
-            String pass = new String(pfPassword.getPassword());
-            String rePass = new String(pfRePassword.getPassword());
+        // Khởi tạo controller
+        new RegisterController(this);
+    }
 
-            // Kiểm tra nếu user chưa nhập hoặc vẫn còn giữ placeholder (chúng ta sẽ check với màu xám)
-            if (name.isEmpty() || name.equalsIgnoreCase("username") || tfName.getForeground() == Color.GRAY
-                    || email.isEmpty() || email.equalsIgnoreCase("your email") || tfEmail.getForeground() == Color.GRAY
-                    || pass.isEmpty() || pass.equalsIgnoreCase("password") || pfPassword.getForeground() == Color.GRAY
-                    || rePass.isEmpty() || rePass.equalsIgnoreCase("repeat your password") || pfRePassword.getForeground() == Color.GRAY) {
-                JOptionPane.showMessageDialog(this, "Please fill all fields correctly!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+    // Getters
+    public JTextField getTfName() {
+        return tfName;
+    }
 
-            if (!pass.equals(rePass)) {
-                JOptionPane.showMessageDialog(this, "Passwords do not match!", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+    public JTextField getTfEmail() {
+        return tfEmail;
+    }
 
-            // Gọi controller xử lý đăng ký
-            String result = registerController.dangKyTaiKhoan(name, pass, rePass, email);
+    public JPasswordField getPfPassword() {
+        return pfPassword;
+    }
 
-            if (result.equals("Đăng ký thành công!")) {
-                JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
-                new ViewMain.LoginView().setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        });
+    public JPasswordField getPfRePassword() {
+        return pfRePassword;
+    }
 
+    public JButton getBtnSignUp() {
+        return btnSignUp;
+    }
+
+    public JLabel getLblLogin() {
+        return lblLogin;
+    }
+
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
     }
 
     private JTextField createStyledTextField(String placeholder) {

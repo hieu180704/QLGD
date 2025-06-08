@@ -4,12 +4,14 @@
  */
 package View.Admin.QuanLyTaiKhoan;
 
+import Controller.QuanLyTaiKhoanController;
 import Model.TaiKhoan;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -28,6 +30,11 @@ public class QuanLyTaiKhoanPanel extends javax.swing.JPanel {
     private JButton btnThem, btnSua, btnXoa, btnTimKiem;
 
     public QuanLyTaiKhoanPanel() {
+        initMyComponents();
+        new QuanLyTaiKhoanController(this);
+    }
+
+    private void initMyComponents() {
         setLayout(new BorderLayout());
 
         // Panel trên cùng: tìm kiếm
@@ -75,7 +82,12 @@ public class QuanLyTaiKhoanPanel extends javax.swing.JPanel {
         }
     }
 
-    // Lấy ID tài khoản được chọn, trả về null nếu không chọn
+    // Hiển thị thông báo
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    // Lấy ID tài khoản được chọn
     public Integer getSelectedTaiKhoanId() {
         int row = tableTaiKhoan.getSelectedRow();
         if (row == -1) {
@@ -94,7 +106,7 @@ public class QuanLyTaiKhoanPanel extends javax.swing.JPanel {
         return null;
     }
 
-    // Getters cho controller đăng ký sự kiện
+    // Getters cho controller
     public JButton getBtnThem() {
         return btnThem;
     }

@@ -1,5 +1,6 @@
 package View.Admin;
 
+import View.Admin.QuanLySoDo.QuanLySoDoPanel;
 import Controller.DoiBongController;
 import View.Admin.QuanLyDoiBong.DanhSachDoiBongPanel;
 import Controller.QuanLyCauThuController;
@@ -359,6 +360,10 @@ public class QuanLyView extends JFrame {
 
     public TaiKhoan getUserCurrent() {
         return usercurrent;
+    }
+
+    public JButton getBtnDangXuat() {
+        return btnDangXuat;
     }
 
     // Cập nhật label hiển thị tên người dùng

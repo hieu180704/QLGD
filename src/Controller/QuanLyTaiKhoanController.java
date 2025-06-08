@@ -1,75 +1,94 @@
 package Controller;
 
-import DAO.TaiKhoanDAO;
 import Model.TaiKhoan;
+import Service.TaiKhoanService;
 import View.Admin.QuanLyTaiKhoan.QuanLyTaiKhoanPanel;
-//import View.Admin.QuanLyTaiKhoanPanel;
 import View.Admin.QuanLyTaiKhoan.FormThemSuaTaiKhoan;
-
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class QuanLyTaiKhoanController {
-
     private QuanLyTaiKhoanPanel view;
-    private TaiKhoanDAO dao;
+    private TaiKhoanService service;
 
     public QuanLyTaiKhoanController(QuanLyTaiKhoanPanel view) {
         this.view = view;
-        this.dao = new TaiKhoanDAO();
+        this.service = new TaiKhoanService();
         initController();
         loadTableData();
     }
 
     private void initController() {
-        view.getBtnThem().addActionListener(e -> openUserEditDialog(null));
-        view.getBtnSua().addActionListener(e -> {
-            Integer id = view.getSelectedTaiKhoanId();
-            if (id == null) {
-                JOptionPane.showMessageDialog(view, "Vui lòng chọn tài khoản để sửa.");
-                return;
+        // Sự kiện nút Thêm
+        view.getBtnThem().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openUserEditDialog(null);
             }
-            TaiKhoan tk = dao.findById(id);
-            openUserEditDialog(tk);
         });
-        view.getBtnXoa().addActionListener(e -> {
-            Integer id = view.getSelectedTaiKhoanId();
-            if (id == null) {
-                JOptionPane.showMessageDialog(view, "Vui lòng chọn tài khoản để xóa.");
-                return;
+
+        // Sự kiện nút Sửa
+        view.getBtnSua().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Integer id = view.getSelectedTaiKhoanId();
+                if (id == null) {
+                    view.showMessage("Vui lòng chọn tài khoản để sửa.");
+                    return;
+                }
+                TaiKhoan tk = service.findById(id);
+                openUserEditDialog(tk);
             }
-            int confirm = JOptionPane.showConfirmDialog(view,
-                "Bạn có chắc muốn xóa tài khoản này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                if (dao.delete(id)) {
-                    JOptionPane.showMessageDialog(view, "Xóa thành công!");
-                    loadTableData();
-                } else {
-                    JOptionPane.showMessageDialog(view, "Xóa thất bại!");
+        });
+
+        // Sự kiện nút Xóa
+        view.getBtnXoa().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Integer id = view.getSelectedTaiKhoanId();
+                if (id == null) {
+                    view.showMessage("Vui lòng chọn tài khoản để xóa.");
+                    return;
+                }
+                int confirm = JOptionPane.showConfirmDialog(view,
+                        "Bạn có chắc muốn xóa tài khoản này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    String result = service.deleteTaiKhoan(id);
+                    view.showMessage(result);
+                    if (result.contains("thành công")) {
+                        loadTableData();
+                    }
                 }
             }
         });
-        view.getBtnTimKiem().addActionListener(e -> {
-            String keyword = view.getTxtTimKiem().getText().trim().toLowerCase();
-            if (keyword.isEmpty()) {
-                loadTableData();
-            } else {
-                List<TaiKhoan> all = dao.findAll();
-                all.removeIf(tk -> !tk.getTendangnhap().toLowerCase().contains(keyword) &&
-                        !tk.getEmail().toLowerCase().contains(keyword));
-                view.loadData(all);
+
+        // Sự kiện nút Tìm kiếm
+        view.getBtnTimKiem().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleSearch();
             }
         });
     }
 
     public void loadTableData() {
-        List<TaiKhoan> list = dao.findAll();
+        List<TaiKhoan> list = service.getAllTaiKhoan();
+        view.loadData(list);
+    }
+
+    private void handleSearch() {
+        String keyword = view.getTxtTimKiem().getText().trim();
+        List<TaiKhoan> list = service.searchTaiKhoan(keyword);
         view.loadData(list);
     }
 
     private void openUserEditDialog(TaiKhoan tk) {
         FormThemSuaTaiKhoan panel = new FormThemSuaTaiKhoan();
-
         if (tk != null) {
             panel.setUserData(tk.getTendangnhap(), tk.getEmail(), tk.getMatkhau());
             panel.setUsernameEditable(false);
@@ -81,47 +100,48 @@ public class QuanLyTaiKhoanController {
         dialog.pack();
         dialog.setLocationRelativeTo(view);
 
-        panel.getBtnSave().addActionListener(e -> {
-            String username = panel.getUsername();
-            String email = panel.getEmail();
-            String password = panel.getPassword();
+        // Sự kiện nút Lưu
+        panel.getBtnSave().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = panel.getUsername();
+                String email = panel.getEmail();
+                String password = panel.getPassword();
 
-            if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "Vui lòng điền đầy đủ thông tin!");
-                return;
-            }
-
-            if (tk == null) {
-                if (dao.kiemTraTenDangNhap(username)) {
-                    JOptionPane.showMessageDialog(dialog, "Tên đăng nhập đã tồn tại!");
-                    return;
-                }
-                TaiKhoan newTk = new TaiKhoan();
-                newTk.setTendangnhap(username);
-                newTk.setEmail(email);
-                newTk.setMatkhau(password);
-                newTk.setLoaitaikhoan(1);
-                if (dao.insert(newTk)) {
-                    JOptionPane.showMessageDialog(dialog, "Thêm tài khoản thành công!");
-                    loadTableData();
-                    dialog.dispose();
+                if (tk == null) {
+                    // Thêm tài khoản mới
+                    TaiKhoan newTk = new TaiKhoan();
+                    newTk.setTendangnhap(username);
+                    newTk.setEmail(email);
+                    newTk.setMatkhau(password);
+                    newTk.setLoaitaikhoan(1); // Admin
+                    String result = service.addTaiKhoan(newTk);
+                    panel.showMessage(result);
+                    if (result.contains("thành công")) {
+                        loadTableData();
+                        dialog.dispose();
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(dialog, "Thêm thất bại!");
-                }
-            } else {
-                tk.setEmail(email);
-                tk.setMatkhau(password);
-                if (dao.update(tk)) {
-                    JOptionPane.showMessageDialog(dialog, "Cập nhật thành công!");
-                    loadTableData();
-                    dialog.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(dialog, "Cập nhật thất bại!");
+                    // Sửa tài khoản
+                    tk.setEmail(email);
+                    tk.setMatkhau(password);
+                    String result = service.updateTaiKhoan(tk);
+                    panel.showMessage(result);
+                    if (result.contains("thành công")) {
+                        loadTableData();
+                        dialog.dispose();
+                    }
                 }
             }
         });
 
-        panel.getBtnCancel().addActionListener(e -> dialog.dispose());
+        // Sự kiện nút Hủy
+        panel.getBtnCancel().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
 
         dialog.setVisible(true);
     }
