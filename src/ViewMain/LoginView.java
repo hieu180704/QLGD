@@ -4,28 +4,45 @@ import DAO.TaiKhoanDAO;
 import View.Admin.QuanLyView;
 import javax.swing.JOptionPane;
 import Model.TaiKhoan;
+import Service.LoginService;
 import com.formdev.flatlaf.FlatLightLaf;
-import controller.LoginController;
+import Controller.LoginController;
 import java.io.IOException;
+import java.util.prefs.Preferences;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class LoginView extends javax.swing.JFrame {
-
-    // private javax.swing.JPasswordField txtPassword;
+ // private javax.swing.JPasswordField txtPassword;
     private QuanLyView quanLyView;
     private LoginController controller;
 
     private RegisterView registerView;
+    private Preferences prefs = Preferences.userRoot().node(this.getClass().getName());
 
     public LoginView() {
         initComponents();
+        // thêm btnDangnhap vào panel, setActionListener, ...
+        getRootPane().setDefaultButton(btnDangnhap);
         this.setLocationRelativeTo(null);
-        controller = new LoginController(new TaiKhoanDAO());
+        LoginService loginService = new LoginService();
+        controller = new LoginController(this, loginService);
+
+        // Load thông tin đăng nhập đã lưu từ LoginService
+        TaiKhoan savedCredentials = loginService.getSavedCredentials();
+        boolean remember = loginService.getRememberStatus();
+        txtUsername.setText(savedCredentials.getTendangnhap());
+        txtPassword.setText(savedCredentials.getMatkhau());
+        jCheckBox1.setSelected(remember);
+
     }
 
     @SuppressWarnings("unchecked")
@@ -87,7 +104,6 @@ public class LoginView extends javax.swing.JFrame {
         lbUsername.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbUsername.setText("Usernames");
 
-        txtUsername.setText("admin");
         txtUsername.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsernameActionPerformed(evt);
@@ -137,7 +153,6 @@ public class LoginView extends javax.swing.JFrame {
         lbPassword.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lbPassword.setText("Password:");
 
-        txtPassword.setText("admin");
         txtPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtPasswordActionPerformed(evt);
@@ -221,45 +236,50 @@ public class LoginView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDangnhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDangnhapActionPerformed
-        String username = txtUsername.getText();
-        String password = new String(txtPassword.getPassword());
-
-        TaiKhoan userAccount = controller.login(username, password);
-        if (userAccount != null) {
-            if (userAccount.getLoaitaikhoan() == 1) {
-                int maTaiKhoan = userAccount.getMataikhoan();
-                QuanLyView quanLyView = new QuanLyView(maTaiKhoan);
-                quanLyView.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Bạn không có quyền truy cập hệ thống quản lý.",
-                        "Thông báo",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "Tên đăng nhập hoặc mật khẩu không đúng.",
-                    "Lỗi đăng nhập",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        
     }//GEN-LAST:event_btnDangnhapActionPerformed
 
     private void lbRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegisterMouseClicked
-        // TODO add your handling code here:
-        this.setVisible(false);
-        new RegisterView().setVisible(true);
-        dispose();
+
     }//GEN-LAST:event_lbRegisterMouseClicked
 
     private void txtUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsernameActionPerformed
         // TODO add your handling code here:
+         btnDangnhap.doClick();
     }//GEN-LAST:event_txtUsernameActionPerformed
 
     private void txtPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPasswordActionPerformed
         // TODO add your handling code here:
+        btnDangnhap.doClick();
     }//GEN-LAST:event_txtPasswordActionPerformed
 
+    public JTextField getUsernameField() {
+        return txtUsername;
+    }
+
+    public JPasswordField getPasswordField() {
+        return txtPassword;
+    }
+
+    public JCheckBox getRememberCheckBox() {
+        return jCheckBox1;
+    }
+
+    public JButton getLoginButton() {
+        return btnDangnhap;
+    }
+
+    public JLabel getRegisterLabel() {
+        return lbRegister;
+    }
+
+    public JLabel getForgotPasswordLabel() {
+        return jLabel2;
+    }
+
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());

@@ -2,23 +2,23 @@ package View.Admin;
 
 import javax.swing.*;
 import java.awt.*;
+import static java.awt.Component.LEFT_ALIGNMENT;
 
 public class UserEditPanel extends JPanel {
-
     private JTextField txtUsername;
     private JTextField txtEmail;
-    private JPasswordField pfPassword;  // Thêm field mật khẩu
+    private JPasswordField pfPassword;
     private JButton btnSave, btnCancel;
 
     public UserEditPanel() {
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        setMaximumSize(new Dimension(300, 180)); // tăng chiều cao để chứa mật khẩu
+        setMaximumSize(new Dimension(300, 180));
         setPreferredSize(new Dimension(300, 180));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         JPanel formPanel = new JPanel(new GridBagLayout());
-        formPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90)); // tăng chiều cao
+        formPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
         formPanel.setAlignmentX(LEFT_ALIGNMENT);
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -34,7 +34,7 @@ public class UserEditPanel extends JPanel {
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         txtUsername = new JTextField();
-        txtUsername.setEditable(false); // KHÓA tên tài khoản
+        txtUsername.setEditable(false);
         formPanel.add(txtUsername, gbc);
 
         // Label và TextField Email

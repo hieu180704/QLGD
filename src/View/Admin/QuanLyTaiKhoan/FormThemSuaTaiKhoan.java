@@ -11,8 +11,8 @@ public class FormThemSuaTaiKhoan extends JPanel {
     private JButton btnCancel;
 
     public FormThemSuaTaiKhoan() {
-        setLayout(new BorderLayout(10,10));
-        JPanel form = new JPanel(new GridLayout(3,2,10,10));
+        setLayout(new BorderLayout(10, 10));
+        JPanel form = new JPanel(new GridLayout(3, 2, 10, 10));
 
         form.add(new JLabel("Tên đăng nhập:"));
         txtUsername = new JTextField();
@@ -40,9 +40,11 @@ public class FormThemSuaTaiKhoan extends JPanel {
     public String getUsername() {
         return txtUsername.getText().trim();
     }
+
     public String getEmail() {
         return txtEmail.getText().trim();
     }
+
     public String getPassword() {
         return new String(txtPassword.getPassword());
     }
@@ -54,12 +56,22 @@ public class FormThemSuaTaiKhoan extends JPanel {
         txtPassword.setText(password);
     }
 
-    // Cho phép khóa hoặc mở trường username (khi sửa thì khóa)
+    // Cho phép khóa hoặc mở trường username
     public void setUsernameEditable(boolean editable) {
         txtUsername.setEditable(editable);
     }
 
+    // Hiển thị thông báo
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
     // Getters cho nút xử lý
-    public JButton getBtnSave() { return btnSave; }
-    public JButton getBtnCancel() { return btnCancel; }
+    public JButton getBtnSave() {
+        return btnSave;
+    }
+
+    public JButton getBtnCancel() {
+        return btnCancel;
+    }
 }
