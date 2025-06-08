@@ -14,8 +14,8 @@ import java.util.List;
 public class ThemDoiBongDialog extends JDialog {
 
     private JTextField tfTenDoi;
-    private JComboBox<String> cbQuocGia;
-    private JComboBox<String> cbSVD;
+    private JComboBox<QuocGiaItem> cbQuocGia;
+    private JComboBox<SanVanDongItem> cbSVD;
     private JLabel lblLogo;
     private JButton btnUploadLogo;
     private byte[] logoBytes;
@@ -24,31 +24,41 @@ public class ThemDoiBongDialog extends JDialog {
 
     public ThemDoiBongDialog(Frame parent, List<QuocGiaItem> dsQuocGia, List<SanVanDongItem> dsSanVanDong) {
         super(parent, "Thêm Đội Bóng", true);
-        setSize(450, 350);  // Đặt kích thước hợp lý cho cửa sổ
+        setSize(420, 320);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
 
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                doiBong = null;
+                dispose();
+            }
+        });
+
         JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());  // Dùng GridBagLayout để có thể tùy chỉnh kích thước
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panel.setLayout(new GridBagLayout());
+        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 25);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(5, 5, 5, 5);  // Khoảng cách giữa các thành phần
+        gbc.anchor = GridBagConstraints.WEST;
 
         int row = 0;
 
         // Tên đội bóng
         JLabel lblTenDoi = new JLabel("Tên Đội Bóng:");
         gbc.gridx = 0;
-        gbc.gridy = row; 
+        gbc.gridy = row;
         gbc.gridwidth = 1;
         panel.add(lblTenDoi, gbc);
 
         tfTenDoi = new JTextField(20);
         gbc.gridx = 1;
-        gbc.gridy = row; 
+        gbc.gridy = row;
         gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
         panel.add(tfTenDoi, gbc);
 
         // Quốc gia
@@ -56,15 +66,18 @@ public class ThemDoiBongDialog extends JDialog {
         JLabel lblQuocGia = new JLabel("Chọn Quốc Gia:");
         gbc.gridx = 0;
         gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;
         panel.add(lblQuocGia, gbc);
 
         cbQuocGia = new JComboBox<>();
         for (QuocGiaItem qg : dsQuocGia) {
-            cbQuocGia.addItem(qg.getTenQuocGia());
+            cbQuocGia.addItem(qg);
         }
         gbc.gridx = 1;
-        gbc.gridy = row; 
+        gbc.gridy = row;
         gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
         panel.add(cbQuocGia, gbc);
 
         // Sân vận động
@@ -72,25 +85,30 @@ public class ThemDoiBongDialog extends JDialog {
         JLabel lblSVD = new JLabel("Chọn Sân Vận Động:");
         gbc.gridx = 0;
         gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;
         panel.add(lblSVD, gbc);
 
         cbSVD = new JComboBox<>();
         for (SanVanDongItem svd : dsSanVanDong) {
-            cbSVD.addItem(svd.getTenSVD());
+            cbSVD.addItem(svd);
         }
         gbc.gridx = 1;
-        gbc.gridy = row; 
+        gbc.gridy = row;
         gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
         panel.add(cbSVD, gbc);
 
         // Logo đội bóng
         row++;
         JLabel lblLogoText = new JLabel("Chọn Logo Đội:");
         gbc.gridx = 0;
-        gbc.gridy = row; 
+        gbc.gridy = row;
+        gbc.gridwidth = 1;
+        gbc.weightx = 0;
         panel.add(lblLogoText, gbc);
 
-        lblLogo = new JLabel("Chưa có logo");
+        lblLogo = new JLabel("Chưa có logo"); // Khởi tạo với text
         btnUploadLogo = new JButton("Tải Logo");
         btnUploadLogo.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -99,35 +117,40 @@ public class ThemDoiBongDialog extends JDialog {
             if (res == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try {
-                    logoBytes = Files.readAllBytes(file.toPath());  // Lưu trữ file ảnh vào mảng byte
-                    ImageIcon icon = new ImageIcon(new ImageIcon(logoBytes).getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH));  // Hiển thị ảnh preview
-                    lblLogo.setIcon(icon);  // Cập nhật icon cho JLabel
+                    logoBytes = Files.readAllBytes(file.toPath());
+                    ImageIcon icon = new ImageIcon(new ImageIcon(logoBytes).getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH));
+                    lblLogo.setIcon(icon); 
+                    lblLogo.setText(null); 
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(this, "Lỗi đọc file ảnh");
+                    lblLogo.setIcon(null); 
+                    lblLogo.setText("Chưa có logo");
                 }
             }
         });
 
         JPanel logoPanel = new JPanel();
-        logoPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        logoPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
         logoPanel.add(btnUploadLogo);
         logoPanel.add(lblLogo);
 
         gbc.gridx = 1;
-        gbc.gridy = row; 
+        gbc.gridy = row;
         gbc.gridwidth = 2;
+        gbc.weightx = 1.0;
         panel.add(logoPanel, gbc);
 
         // Nút thêm đội bóng
         row++;
         btnOk = new JButton("Thêm Đội Bóng");
         btnCancel = new JButton("Hủy");
-        JPanel pnlButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        JPanel pnlButton = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         pnlButton.add(btnOk);
         pnlButton.add(btnCancel);
         gbc.gridx = 0;
-        gbc.gridy = row; 
+        gbc.gridy = row;
         gbc.gridwidth = 3;
+        gbc.weightx = 0;
         panel.add(pnlButton, gbc);
 
         // Xử lý sự kiện nút Thêm
@@ -138,8 +161,19 @@ public class ThemDoiBongDialog extends JDialog {
                 return;
             }
 
-            QuocGiaItem qg = (QuocGiaItem) cbQuocGia.getSelectedItem();
-            SanVanDongItem svd = (SanVanDongItem) cbSVD.getSelectedItem();
+            Object selectedQuocGia = cbQuocGia.getSelectedItem();
+            if (!(selectedQuocGia instanceof QuocGiaItem)) {
+                JOptionPane.showMessageDialog(this, "Quốc gia không hợp lệ");
+                return;
+            }
+            QuocGiaItem qg = (QuocGiaItem) selectedQuocGia;
+
+            Object selectedSVD = cbSVD.getSelectedItem();
+            if (!(selectedSVD instanceof SanVanDongItem)) {
+                JOptionPane.showMessageDialog(this, "Sân vận động không hợp lệ");
+                return;
+            }
+            SanVanDongItem svd = (SanVanDongItem) selectedSVD;
 
             try {
                 doiBong = new DoiBong();
@@ -147,10 +181,7 @@ public class ThemDoiBongDialog extends JDialog {
                 doiBong.setMaQuocGia(qg.getMaQuocGia());
                 doiBong.setMaSVD(svd.getMaSVD());
                 doiBong.setLogoDoi(logoBytes);
-
-                // Đóng cửa sổ
                 dispose();
-
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "Dữ liệu nhập không hợp lệ");
             }
@@ -188,7 +219,7 @@ public class ThemDoiBongDialog extends JDialog {
 
         @Override
         public String toString() {
-            return tenSVD; // Dùng tên sân vận động để hiển thị trong JComboBox
+            return tenSVD;
         }
     }
 }
