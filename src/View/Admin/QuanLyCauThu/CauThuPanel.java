@@ -61,6 +61,8 @@ public class CauThuPanel extends JPanel {
         pnlThongTin.add(new JLabel(ct.getTenDoi() != null ? ct.getTenDoi() : "", JLabel.CENTER));
         add(pnlThongTin, BorderLayout.CENTER);
         
+        
+        
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
