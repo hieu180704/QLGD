@@ -55,6 +55,9 @@ public class QuanLyController implements ActionListener {
             case "Quản Lý Sân Đấu":
                 quanLyView.openQuanLySanDau();
                 break;
+            case "Quản Lý Sơ Đồ":
+                quanLyView.openQuanLySoDoPanel();
+                break;
             case "Đăng Xuất":
                 int choice = JOptionPane.showConfirmDialog(quanLyView,
                         "Bạn có chắc chắn muốn đăng xuất?",

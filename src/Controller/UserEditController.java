@@ -1,81 +1,84 @@
 package Controller;
 
-import DAO.TaiKhoanDAO;
 import Model.TaiKhoan;
+import Service.UserEditService;
 import View.Admin.QuanLyView;
 import View.Admin.UserEditPanel;
-//import com.sun.jdi.connect.spi.Connection;
-
-import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-//import java.sql.Connection;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 public class UserEditController {
-
     private QuanLyView view;
-    private TaiKhoanDAO taiKhoanDAO;
+    private UserEditService service;
 
     public UserEditController(QuanLyView view) {
         this.view = view;
-        this.taiKhoanDAO = new TaiKhoanDAO();
+        this.service = new UserEditService();
         attachEvents();
     }
 
     private void attachEvents() {
-        // Bắt sự kiện click vào label username
+        // Bắt sự kiện click vào label username để mở form chỉnh sửa
         view.getUsernameLabel().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 openUserEditDialog();
             }
         });
+
+        // Gán lại sự kiện cho nút Đăng Xuất (để chỉ đăng xuất)
+        view.getBtnDangXuat().removeActionListener(view.getBtnDangXuat().getActionListeners()[0]);
+        view.getBtnDangXuat().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(view,
+                        "Bạn có chắc muốn đăng xuất?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+                if (confirm == JOptionPane.YES_OPTION) {
+                    view.dispose();
+                    new ViewMain.LoginView().setVisible(true);
+                }
+            }
+        });
     }
 
     private void openUserEditDialog() {
-        TaiKhoan user = view.getUserCurrent();
-        if (user == null) {
+        TaiKhoan currentUser = view.getUserCurrent();
+        if (currentUser == null) {
             JOptionPane.showMessageDialog(view, "Chưa có thông tin tài khoản!");
             return;
         }
 
         UserEditPanel userEditPanel = new UserEditPanel();
-        // Đổ dữ liệu hiện tại vào form
-        userEditPanel.setUserData(user.getTendangnhap(), user.getEmail(), user.getMatkhau());
+        userEditPanel.setUserData(currentUser.getTendangnhap(), currentUser.getEmail(), currentUser.getMatkhau());
+        userEditPanel.setUsernameEditable(false);
 
-        // Tạo dialog modal chứa panel chỉnh sửa user
-        JDialog dialog = new JDialog(view, "Chỉnh sửa thông tin tài khoản", true);
+        JDialog dialog = new JDialog(view, "Chỉnh Sửa Thông Tin Tài Khoản", true);
         dialog.getContentPane().add(userEditPanel);
         dialog.pack();
         dialog.setLocationRelativeTo(view);
 
         // Xử lý nút Lưu
-        userEditPanel.getBtnSave().addActionListener(ev -> {
-            String newEmail = userEditPanel.getEmail();
-            String newPassword = userEditPanel.getPassword();
+        userEditPanel.getBtnSave().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentUser.setEmail(userEditPanel.getEmail());
+                currentUser.setMatkhau(userEditPanel.getPassword());
 
-            // Cập nhật model
-            user.setEmail(newEmail);
-            user.setMatkhau(newPassword);
-            
-             if (newEmail.isEmpty() || newPassword.isEmpty()) {
-                JOptionPane.showMessageDialog(dialog, "Email và mật khẩu không được để trống", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Cập nhật database qua DAO
-            boolean success = taiKhoanDAO.update(user);
-            if (success) {
-                view.updateUserInfoDisplay(user);
-                JOptionPane.showMessageDialog(dialog, "Cập nhật thành công!");
-                dialog.dispose();
-            } else {
-                JOptionPane.showMessageDialog(dialog, "Cập nhật thất bại!");
+                String result = service.updateUser(currentUser);
+                JOptionPane.showMessageDialog(dialog, result);
+                if (result.contains("thành công")) {
+                    view.updateUserInfoDisplay(currentUser);
+                    dialog.dispose();
+                }
             }
         });
 
         // Xử lý nút Hủy
-        userEditPanel.getBtnCancel().addActionListener(ev -> dialog.dispose());
+        userEditPanel.getBtnCancel().addActionListener(e -> dialog.dispose());
 
         dialog.setVisible(true);
     }
