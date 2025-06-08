@@ -33,7 +33,6 @@ public class DoiBongController {
         this.sanVanDongDAO = sanVanDongDAO;
 
         this.view.addBtnTimKiemListener(e -> {
-            System.out.println("Button clicked!");
             try {
                 timKiemVaHienThi();
             } catch (IOException ex) {
@@ -42,7 +41,6 @@ public class DoiBongController {
         });
 
         this.view.addBtnThemDoiBongListener(e -> {
-            System.out.println("Button clicked!");
             try {
                 showThemDialog();
             } catch (Exception ex) {
@@ -51,7 +49,6 @@ public class DoiBongController {
         });
 
         this.view.addBtnLamMoiListener(e -> {
-            System.out.println("Button clicked!");
             try {
                 lamMoiDanhSach();
             } catch (IOException ex) {
@@ -72,19 +69,26 @@ public class DoiBongController {
     }
 
     public void hienThiDoiBong(List<DoiBong> ds) throws IOException {
-        JPanel panel = view.getPanelDanhSachDoiBong();
-        panel.removeAll();
+    JPanel panel = view.getPanelDanhSachDoiBong();
+    panel.removeAll();
+    if (ds == null || ds.isEmpty()) {
+        JLabel noDataLabel = new JLabel("Không có đội bóng để hiển thị.");
+        panel.add(noDataLabel);
+    } else {
         for (DoiBong db : ds) {
             try {
                 DoiBongPanel dbPanel = new DoiBongPanel(db, this);
                 panel.add(dbPanel);
             } catch (Exception e) {
                 e.printStackTrace();
+                JLabel errorLabel = new JLabel("Lỗi khi hiển thị đội bóng: " + db.getTenDoi());
+                panel.add(errorLabel);
             }
         }
-        panel.revalidate();
-        panel.repaint();
     }
+    panel.revalidate();
+    panel.repaint();
+}
 
     public void timKiemVaHienThi() throws IOException {
         String key = view.getTimKiemText().toLowerCase().trim();
