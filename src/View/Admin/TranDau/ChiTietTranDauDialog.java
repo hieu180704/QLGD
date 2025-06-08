@@ -74,7 +74,7 @@ public class ChiTietTranDauDialog extends JDialog {
         add(pnlTime, BorderLayout.NORTH);
 
         String[] labels = {
-            "Số lần sút", "Số bàn thắng", "Sút trúng đích", "Kiểm soát bóng (%)",
+            "Số lần sút", "Số bàn thắng", "Sút trúng đích", "Cầm Bóng",
             "Lượt chuyền bóng", "Chuyền chính xác", "Phạm lỗi", "Việt vị", "Phạt góc"
         };
 
@@ -154,7 +154,7 @@ public class ChiTietTranDauDialog extends JDialog {
             map.get("Số lần sút").setValue(dbtd.getSoLanSut());
             map.get("Số bàn thắng").setValue(dbtd.getSoBanThang());
             map.get("Sút trúng đích").setValue(dbtd.getSutTrungDich());
-            map.get("Kiểm soát bóng (%)").setValue(dbtd.getKiemSoatBong());
+            map.get("Cầm Bóng").setValue(dbtd.getKiemSoatBong());
             map.get("Lượt chuyền bóng").setValue(dbtd.getLuotChuyenBong());
             map.get("Chuyền chính xác").setValue(dbtd.getChuyenChinhXac());
             map.get("Phạm lỗi").setValue(dbtd.getPhamLoi());

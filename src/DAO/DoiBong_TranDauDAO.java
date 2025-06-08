@@ -199,6 +199,41 @@ public class DoiBong_TranDauDAO implements GenericDAO<DoiBong_TranDau> {
         return list;
     }
 
+    public List<DoiBong_TranDau> findByMaDoiBong(int maDoiBong) {
+        List<DoiBong_TranDau> list = new ArrayList<>();
+        String sql = "SELECT * FROM doibong_trandau WHERE maDoiBong = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, maDoiBong);
+            ResultSet rs = ps.executeQuery();
+            DoiBongDAO doiBongDAO = new DoiBongDAO();
+            while (rs.next()) {
+                DoiBong_TranDau dbtd = new DoiBong_TranDau();
+
+                // Lấy tran dau (chỉ maTranDau)
+                TranDau td = new TranDau();
+                td.setMaTranDau(maDoiBong);
+                dbtd.setTranDau(td);
+
+                // Các trường khác
+                dbtd.setLaChuNha(rs.getInt("laChuNha"));
+                dbtd.setSoBanThang(rs.getInt("soBanThang"));
+                dbtd.setSoLanSut(rs.getInt("soLanSut"));
+                dbtd.setSutTrungDich(rs.getInt("sutTrungDich"));
+                dbtd.setKiemSoatBong(rs.getInt("kiemSoatBong"));
+                dbtd.setLuotChuyenBong(rs.getInt("luotChuyenBong"));
+                dbtd.setChuyenChinhXac(rs.getInt("chuyenChinhXac"));
+                dbtd.setPhamLoi(rs.getInt("phamLoi"));
+                dbtd.setVietVi(rs.getInt("vietVi"));
+                dbtd.setPhatGoc(rs.getInt("phatGoc"));
+
+                list.add(dbtd);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
     public boolean deleteByMaTranDau(int maTranDau) {
         String sql = "DELETE FROM doibong_trandau WHERE maTranDau = ?";
         try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {

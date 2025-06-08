@@ -1,8 +1,11 @@
 package View.Admin.TranDau;
 
 import Controller.TranDauController;
+import DAO.DoiBongDAO;
+import DAO.DoiBong_TranDauDAO;
 import DAO.GiaiDauDAO;
 import DAO.TranDauDAO;
+import Model.DoiBong;
 import Model.GiaiDau;
 import Model.TranDau;
 import View.CustomPanel.ItemTranDau;
@@ -18,8 +21,10 @@ import java.util.List;
 public class TranDauPanel extends JPanel {
 
     private JComboBox<GiaiDau> cbGiaiDauLoc;
+    private JComboBox<DoiBong> cbDoiBongLoc;
     private List<TranDau> danhSachTranDau;
     private List<GiaiDau> dsGiaiDauCache;
+    private List<DoiBong> dsDoiBong;
 
     // Phần danh sách trận đấu dưới dạng item
     private JPanel panelDanhSachTranDauContent;
@@ -44,6 +49,11 @@ public class TranDauPanel extends JPanel {
         cbGiaiDauLoc = new JComboBox<>();
         cbGiaiDauLoc.setPreferredSize(new Dimension(200, 25));
         panelLoc.add(cbGiaiDauLoc);
+
+        panelLoc.add(new JLabel("Đội Bóng:"));
+        cbDoiBongLoc = new JComboBox<>();
+        cbDoiBongLoc.setPreferredSize(new Dimension(200, 25));
+        panelLoc.add(cbDoiBongLoc);
         add(panelLoc, BorderLayout.NORTH);
 
         panelDanhSachTranDauContent = new JPanel();
@@ -68,8 +78,24 @@ public class TranDauPanel extends JPanel {
                 // Gọi hàm load trận đấu theo mã giải
                 if (maGiai == 0) {
                     loadTranDau(-1); // load tất cả
+                    loadDoiBongLoc(-1);
                 } else {
                     loadTranDau(maGiai);
+                    loadDoiBongLoc(maGiai);
+                }
+            }
+        });
+
+        cbDoiBongLoc.addActionListener(e -> {
+            DoiBong selectedDoiBong = (DoiBong) cbDoiBongLoc.getSelectedItem();
+            if (selectedDoiBong != null) {
+                int maDoiBong = selectedDoiBong.getMaDoiBong();
+
+                // Gọi hàm load trận đấu theo mã giải
+                if (maDoiBong == 0) {
+                    loadTranDauTheoDoi(-1); // load tất cả
+                } else {
+                    loadTranDauTheoDoi(maDoiBong);
                 }
             }
         });
@@ -83,6 +109,30 @@ public class TranDauPanel extends JPanel {
             danhSachTranDau = tranDauDAO.findAll();
         } else {
             danhSachTranDau = tranDauDAO.findByMaGiaiDau(maGiaiDau);
+        }
+
+        if (danhSachTranDau != null && !danhSachTranDau.isEmpty()) {
+            for (TranDau td : danhSachTranDau) {
+                addItemTranDau(td);
+            }
+        } else {
+            JLabel lblNoData = new JLabel("Không có dữ liệu trận đấu");
+            lblNoData.setForeground(Color.RED);
+            panelDanhSachTranDauContent.add(lblNoData);
+        }
+
+        panelDanhSachTranDauContent.revalidate();
+        panelDanhSachTranDauContent.repaint();
+    }
+
+    public void loadTranDauTheoDoi(int maDoiBong) {
+        DoiBong_TranDauDAO dbtd = new DoiBong_TranDauDAO();
+        panelDanhSachTranDauContent.removeAll();
+
+        if (maDoiBong < 0) {
+            danhSachTranDau = tranDauDAO.findAll();
+        } else {
+            danhSachTranDau = tranDauDAO.findByMaDoiBong(maDoiBong);
         }
 
         if (danhSachTranDau != null && !danhSachTranDau.isEmpty()) {
@@ -136,6 +186,19 @@ public class TranDauPanel extends JPanel {
         if (dsGiaiDauCache != null && !dsGiaiDauCache.isEmpty()) {
             for (GiaiDau gd : dsGiaiDauCache) {
                 cbGiaiDauLoc.addItem(gd);
+            }
+        }
+    }
+
+    public void loadDoiBongLoc(int maGiaiDau) {
+        DoiBongDAO doiBongDAO = new DoiBongDAO();
+        dsDoiBong = doiBongDAO.findByMaGiaiDau(maGiaiDau);
+
+        cbDoiBongLoc.removeAllItems();
+
+        if (dsDoiBong != null && !dsDoiBong.isEmpty()) {
+            for (DoiBong db : dsDoiBong) {
+                cbDoiBongLoc.addItem(db);
             }
         }
     }

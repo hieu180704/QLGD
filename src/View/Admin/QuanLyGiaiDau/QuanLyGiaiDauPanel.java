@@ -24,20 +24,24 @@ import javax.swing.event.DocumentListener;
 public class QuanLyGiaiDauPanel extends JPanel {
 
     private List<GiaiDau> danhSachGiaiDau;
-    private JPanel panelItems;
-    private JTextField txtTimKiem;
     private QuanLyGiaiDauController controller;
-
+    
     private GiaiDauDAO giaiDauDAO;
     private NhaTaiTroDAO nhaTaiTroDAO;
+
+    // Component
+    private JPanel panelItems;
+    private JTextField txtTimKiem;
+    private JButton btnThem;
 
     public QuanLyGiaiDauPanel() {
         giaiDauDAO = new GiaiDauDAO();
         nhaTaiTroDAO = new NhaTaiTroDAO();
         controller = new QuanLyGiaiDauController(this);
-        
+
         designPanel();
         loadData();
+        timKiem();
     }
 
     public void designPanel() {
@@ -73,7 +77,7 @@ public class QuanLyGiaiDauPanel extends JPanel {
         searchPanel.add(txtTimKiem, BorderLayout.CENTER);
 
         // ======= Thêm mới =========
-        JButton btnThem = new JButton("Thêm giải đấu");
+        btnThem = new JButton("Thêm giải đấu");
         btnThem.setPreferredSize(new Dimension(140, 38));
         btnThem.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnThem.setForeground(Color.WHITE);
@@ -97,7 +101,38 @@ public class QuanLyGiaiDauPanel extends JPanel {
         add(panelItems, BorderLayout.CENTER);
 
         setPreferredSize(new Dimension(1000, 700));
+    }
 
+    public void loadData() {
+        panelItems.removeAll();
+        giaiDauDAO = new GiaiDauDAO();
+        danhSachGiaiDau = giaiDauDAO.findAll();
+        if (danhSachGiaiDau != null && !danhSachGiaiDau.isEmpty()) {
+            for (GiaiDau gd : danhSachGiaiDau) {
+                addItemGiaiDau(gd);
+            }
+        } else {
+            JLabel lblNoData = new JLabel("Không có dữ liệu giải đấu");
+            lblNoData.setForeground(Color.RED);
+            panelItems.add(lblNoData);
+        }
+        panelItems.revalidate();
+        panelItems.repaint();
+    }
+
+    private void addItemGiaiDau(GiaiDau gd) {
+        ItemGiaiDau item = new ItemGiaiDau(gd, g -> {
+            controller.openDetailGiaiDauDialog(g);
+        });
+        item.setPreferredSize(new Dimension(320, 180));
+        panelItems.add(item);
+    }
+
+    public JButton getBtnThem() {
+        return btnThem;
+    }
+
+    public void timKiem() {
         txtTimKiem.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -135,32 +170,6 @@ public class QuanLyGiaiDauPanel extends JPanel {
             }
 
         });
-
-    }
-
-    public void loadData() {
-        panelItems.removeAll();
-        giaiDauDAO = new GiaiDauDAO();
-        danhSachGiaiDau = giaiDauDAO.findAll();
-        if (danhSachGiaiDau != null && !danhSachGiaiDau.isEmpty()) {
-            for (GiaiDau gd : danhSachGiaiDau) {
-                addItemGiaiDau(gd);
-            }
-        } else {
-            JLabel lblNoData = new JLabel("Không có dữ liệu giải đấu");
-            lblNoData.setForeground(Color.RED);
-            panelItems.add(lblNoData);
-        }
-        panelItems.revalidate();
-        panelItems.repaint();
-    }
-
-    private void addItemGiaiDau(GiaiDau gd) {
-        ItemGiaiDau item = new ItemGiaiDau(gd, g -> {
-            controller.openDetailGiaiDauDialog(g);
-        });
-        item.setPreferredSize(new Dimension(320, 180));
-        panelItems.add(item);
     }
 
     @SuppressWarnings("unchecked")

@@ -207,24 +207,26 @@ public class DetailGiaiDauDialog extends JDialog {
         return dpNgayBatDau.getDate();
     }
 
-    public void setNgayBatDau(Date date) {
+    public void setNgayBatDau(LocalDate date) {
         if (date == null) {
             dpNgayBatDau.clear();
             return;
         }
-        dpNgayBatDau.setDate(new java.sql.Date(date.getTime()).toLocalDate());
+        dpNgayBatDau.setDate(date);
     }
+
+
 
     public LocalDate getNgayKetThuc() {
         return dpNgayKetThuc.getDate();
     }
 
-    public void setNgayKetThuc(Date date) {
+    public void setNgayKetThuc(LocalDate date) {
         if (date == null) {
             dpNgayKetThuc.clear();
             return;
         }
-        dpNgayKetThuc.setDate(new java.sql.Date(date.getTime()).toLocalDate());
+        dpNgayKetThuc.setDate(date);
     }
 
     public byte[] getAnhGiaiDau() {
@@ -287,7 +289,6 @@ public class DetailGiaiDauDialog extends JDialog {
     public void setDoiChuaThamGia(List<DoiBong> doiList) {
         modelDoiChuaThamGia.clear();
         mapChuaThamGia.clear();
-        System.out.println("setDoiChuaThamGia called with size: " + doiList.size());
         for (DoiBong d : doiList) {
             String display = d.getTenDoi();
             modelDoiChuaThamGia.addElement(display);
@@ -298,7 +299,6 @@ public class DetailGiaiDauDialog extends JDialog {
     public void setDoiDaThamGia(List<DoiBong> doiList) {
         modelDoiDaThamGia.clear();
         mapDaThamGia.clear();
-        System.out.println("setDoiDaThamGia called with size: " + doiList.size());
         for (DoiBong d : doiList) {
             String display = d.getTenDoi();
             modelDoiDaThamGia.addElement(display);

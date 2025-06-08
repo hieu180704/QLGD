@@ -93,6 +93,11 @@ public class DoiBong {
     public String getTenSVD() {
         return sanVanDong != null ? sanVanDong.getTenSVD() : null;  
     }
+
+    @Override
+    public String toString() {
+        return tenDoi;
+    }
 }
 
 
