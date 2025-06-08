@@ -1,5 +1,6 @@
 package View.Admin;
 
+import Controller.DoiBongController;
 import View.Admin.QuanLyDoiBong.DanhSachDoiBongPanel;
 import Controller.QuanLyCauThuController;
 import View.Admin.QuanLyTaiKhoan.QuanLyTaiKhoanPanel;
@@ -14,6 +15,7 @@ import Controller.QuanLyTaiKhoanController;
 import DAO.CauThuDAO;
 import DAO.DoiBongDAO;
 import DAO.QuocGiaDAO;
+import DAO.SanVanDongDAO;
 import DAO.TaiKhoanDAO;
 
 import View.CustomButton.RoundBorder;
@@ -79,8 +81,10 @@ public class QuanLyView extends JFrame {
         CauThuDAO cauThuDAO = new CauThuDAO();
         DoiBongDAO doiBongDAO = new DoiBongDAO();
         QuocGiaDAO quocGiaDAO = new QuocGiaDAO();
+        SanVanDongDAO sanVanDongDAO = new SanVanDongDAO();
         
         QuanLyCauThuController cauThuController = new QuanLyCauThuController(quanLyCauThuView, cauThuDAO, quocGiaDAO, doiBongDAO);
+        DoiBongController doiBongController = new DoiBongController(danhSachDoiBongPanel, doiBongDAO, quocGiaDAO, sanVanDongDAO);
         nhaTaiTroPanel = new NhaTaiTroPanel();
 
         new UserEditController(this);
@@ -172,8 +176,6 @@ public class QuanLyView extends JFrame {
 
         Color sidebarBg = new Color(0, 51, 102);
         Color sidebarHover = new Color(0, 102, 204);
-//        Color logoutBg = new Color(255, 77, 77);
-//        Color logoutHover = new Color(255, 102, 102);
 
         btnTrangChu = rou.createSidebarButton("Trang Chủ", 20, sidebarBg, sidebarHover);
         ImageIcon anhTC1 = new ImageIcon(getClass().getResource("/Resources/home.png"));

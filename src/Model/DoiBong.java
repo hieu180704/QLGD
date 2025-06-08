@@ -1,5 +1,8 @@
 package Model;
 
+import Model.QuocGia;
+import Model.SanVanDong;
+
 public class DoiBong {
     private int maDoiBong;
     private String tenDoi;
@@ -59,13 +62,17 @@ public class DoiBong {
     public void setQuocGia(QuocGia quocGia) {
         this.quocGia = quocGia;
     }
-    
-     public String getTenQuocGia() {
-        return quocGia != null ? quocGia.getTenQuocGia() : null; 
+
+    public String getTenQuocGia() {
+        return quocGia != null ? quocGia.getTenQuocGia() : null;
     }
 
     public String getTenSanVanDong() {
-        return sanVanDong != null ? sanVanDong.getTenSVD() : null; 
+        return sanVanDong != null ? sanVanDong.getTenSVD() : null;
+    }
+
+    public String getTenSVD() { // Giữ lại để tương thích
+        return getTenSanVanDong();
     }
 
     public GiaiDau getGiaiDau() {
@@ -75,24 +82,26 @@ public class DoiBong {
     public void setGiaiDau(GiaiDau giaiDau) {
         this.giaiDau = giaiDau;
     }
-    
+
+    public int getMaQuocGia() {
+        return quocGia != null ? quocGia.getMaQuocGia() : 0;
+    }
+
     public void setMaQuocGia(int maQuocGia) {
         if (this.quocGia == null) {
-            this.quocGia = new QuocGia();  
+            this.quocGia = new QuocGia();
         }
-        this.quocGia.setMaQuocGia(maQuocGia);  
+        this.quocGia.setMaQuocGia(maQuocGia);
     }
-  
+
+    public int getMaSVD() {
+        return sanVanDong != null ? sanVanDong.getMaSVD() : 0;
+    }
+
     public void setMaSVD(int maSVD) {
         if (this.sanVanDong == null) {
-            this.sanVanDong = new SanVanDong();  
+            this.sanVanDong = new SanVanDong();
         }
-        this.sanVanDong.setMaSVD(maSVD);  
-    }
-    
-    public String getTenSVD() {
-        return sanVanDong != null ? sanVanDong.getTenSVD() : null;  
+        this.sanVanDong.setMaSVD(maSVD);
     }
 }
-
-

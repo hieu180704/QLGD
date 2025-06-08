@@ -1,7 +1,6 @@
 package DAO;
 
 import Model.DoiBong;
-import Model.GiaiDau;
 import Model.QuocGia;
 import Model.SanVanDong;
 import java.sql.*;
@@ -84,16 +83,18 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
 
     @Override
     public DoiBong findById(int id) {
-        String sql = "SELECT * FROM doibong WHERE maDoiBong = ?";
+        String sql = "SELECT d.*, q.tenQuocGia, s.tenSVD " +
+                     "FROM doibong d " +
+                     "LEFT JOIN QuocGia q ON d.maQuocGia = q.maQuocGia " +
+                     "LEFT JOIN SanVanDong s ON d.maSVD = s.maSVD " +
+                     "WHERE d.maDoiBong = ?";
         try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return map(rs);
+                    return mapWithDetails(rs);
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -103,28 +104,45 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     @Override
     public List<DoiBong> findAll() {
         List<DoiBong> list = new ArrayList<>();
-        String sql = "SELECT * FROM doibong";
-        try (Connection conn = ConnectDB.getConnection()) {
-            if (conn == null) {
-                System.out.println("Kết nối database thất bại!");
-                return list;
-            }
-            System.out.println("Kết nối database thành công, thực thi: " + sql);
-            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
-                while (rs.next()) {
-                    System.out.println("Tìm thấy đội bóng: maDoiBong=" + rs.getInt("maDoiBong") + ", tenDoi=" + rs.getString("tenDoi"));
-                    list.add(map(rs));
-                }
+        String sql = "SELECT d.*, q.tenQuocGia, s.tenSVD " +
+                     "FROM doibong d " +
+                     "LEFT JOIN QuocGia q ON d.maQuocGia = q.maQuocGia " +
+                     "LEFT JOIN SanVanDong s ON d.maSVD = s.maSVD";
+        try (Connection conn = ConnectDB.getConnection(); Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(mapWithDetails(rs));
             }
         } catch (SQLException e) {
-            System.out.println("Lỗi SQL trong findAll: " + e.getMessage());
             e.printStackTrace();
         }
-        System.out.println("Tổng số đội bóng tìm thấy: " + list.size());
         return list;
     }
 
-    // --- Các hàm mở rộng ---
+    private DoiBong mapWithDetails(ResultSet rs) throws SQLException {
+        DoiBong d = new DoiBong();
+        d.setMaDoiBong(rs.getInt("maDoiBong"));
+        d.setTenDoi(rs.getString("tenDoi"));
+        d.setLogoDoi(rs.getBytes("logoDoi"));
+
+        int maSVD = rs.getInt("maSVD");
+        if (!rs.wasNull()) {
+            SanVanDong svd = new SanVanDong();
+            svd.setMaSVD(maSVD);
+            svd.setTenSVD(rs.getString("tenSVD"));
+            d.setSanVanDong(svd);
+        }
+
+        int maQuocGia = rs.getInt("maQuocGia");
+        if (!rs.wasNull()) {
+            QuocGia qg = new QuocGia();
+            qg.setMaQuocGia(maQuocGia);
+            qg.setTenQuocGia(rs.getString("tenQuocGia"));
+            d.setQuocGia(qg);
+        }
+
+        return d;
+    }
+
     public List<DoiBong> findByMaGiaiDau(Integer maGiaiDau) {
         List<DoiBong> list = new ArrayList<>();
         String sql;
@@ -172,7 +190,6 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
     }
 
     private DoiBong map(ResultSet rs) throws SQLException {
-        System.out.println(" maDoiBong=" + rs.getInt("maDoiBong"));
         DoiBong d = new DoiBong();
         d.setMaDoiBong(rs.getInt("maDoiBong"));
         d.setTenDoi(rs.getString("tenDoi"));
@@ -182,6 +199,8 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
         if (!rs.wasNull()) {
             SanVanDong svd = new SanVanDong();
             svd.setMaSVD(maSVD);
+            // Giả sử bạn có phương thức để lấy tenSVD từ maSVD
+            svd.setTenSVD(getTenSanVanDongFromDB(maSVD)); // Cần triển khai phương thức này
             d.setSanVanDong(svd);
         }
 
@@ -189,11 +208,38 @@ public class DoiBongDAO implements GenericDAO<DoiBong> {
         if (!rs.wasNull()) {
             QuocGia qg = new QuocGia();
             qg.setMaQuocGia(maQuocGia);
+            // Giả sử bạn có phương thức để lấy tenQuocGia từ maQuocGia
+            qg.setTenQuocGia(getTenQuocGiaFromDB(maQuocGia)); // Cần triển khai phương thức này
             d.setQuocGia(qg);
         }
 
-        System.out.println("Đội bóng ánh xạ: " + d.getTenDoi());
         return d;
+    }
+
+    private String getTenSanVanDongFromDB(int maSVD) throws SQLException {
+        String sql = "SELECT tenSVD FROM SanVanDong WHERE maSVD = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, maSVD);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("tenSVD");
+                }
+            }
+        }
+        return null;
+    }
+
+    private String getTenQuocGiaFromDB(int maQuocGia) throws SQLException {
+        String sql = "SELECT tenQuocGia FROM QuocGia WHERE maQuocGia = ?";
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, maQuocGia);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("tenQuocGia");
+                }
+            }
+        }
+        return null;
     }
 
 
