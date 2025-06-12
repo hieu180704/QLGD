@@ -56,13 +56,19 @@ public class CauThuPanel extends JPanel {
 
         JPanel pnlThongTin = new JPanel(new GridLayout(3, 1));
         pnlThongTin.setOpaque(false);
-        pnlThongTin.add(new JLabel(ct.getTenCauThu() != null ? ct.getTenCauThu() : "", JLabel.CENTER));
-        pnlThongTin.add(new JLabel(ct.getTenQuocGia() != null ? ct.getTenQuocGia() : "", JLabel.CENTER));
-        pnlThongTin.add(new JLabel(ct.getTenDoi() != null ? ct.getTenDoi() : "", JLabel.CENTER));
+        JLabel tenCauThuLabel = new JLabel(ct.getTenCauThu() != null ? ct.getTenCauThu() : "", JLabel.CENTER);
+        tenCauThuLabel.setFont(new Font(tenCauThuLabel.getFont().getName(), Font.BOLD, tenCauThuLabel.getFont().getSize()));
+        pnlThongTin.add(tenCauThuLabel);
+
+        JLabel tenQuocGiaLabel = new JLabel(ct.getTenQuocGia() != null ? ct.getTenQuocGia() : "", JLabel.CENTER);
+        tenQuocGiaLabel.setFont(new Font(tenQuocGiaLabel.getFont().getName(), Font.BOLD, tenQuocGiaLabel.getFont().getSize()));
+        pnlThongTin.add(tenQuocGiaLabel);
+
+        JLabel tenDoiLabel = new JLabel(ct.getTenDoi() != null ? ct.getTenDoi() : "", JLabel.CENTER);
+        tenDoiLabel.setFont(new Font(tenDoiLabel.getFont().getName(), Font.BOLD, tenDoiLabel.getFont().getSize()));
+        pnlThongTin.add(tenDoiLabel);
         add(pnlThongTin, BorderLayout.CENTER);
-        
-        
-        
+
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
