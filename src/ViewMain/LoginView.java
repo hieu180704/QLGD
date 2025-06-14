@@ -1,24 +1,19 @@
 package ViewMain;
 
-import DAO.TaiKhoanDAO;
 import View.Admin.QuanLyView;
-import javax.swing.JOptionPane;
 import Model.TaiKhoan;
 import Service.LoginService;
 import com.formdev.flatlaf.FlatLightLaf;
 import Controller.LoginController;
-import java.io.IOException;
 import java.util.prefs.Preferences;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class LoginView extends javax.swing.JFrame {
  // private javax.swing.JPasswordField txtPassword;
@@ -58,7 +53,6 @@ public class LoginView extends javax.swing.JFrame {
         txtUsername = new javax.swing.JTextField();
         Under = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
         Password = new javax.swing.JPanel();
         lbPassword = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
@@ -140,11 +134,6 @@ public class LoginView extends javax.swing.JFrame {
 
         jCheckBox1.setText("Ghi nhớ đăng nhập");
         Under.add(jCheckBox1, java.awt.BorderLayout.WEST);
-
-        jLabel2.setFont(new java.awt.Font("Arial", 1, 10)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 102, 102));
-        jLabel2.setText("Quên Mật Khẩu?");
-        Under.add(jLabel2, java.awt.BorderLayout.EAST);
 
         LoginBot.add(Under, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, 230, 30));
 
@@ -273,9 +262,6 @@ public class LoginView extends javax.swing.JFrame {
         return lbRegister;
     }
 
-    public JLabel getForgotPasswordLabel() {
-        return jLabel2;
-    }
 
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
@@ -303,7 +289,6 @@ public class LoginView extends javax.swing.JFrame {
     private javax.swing.JButton btnDangnhap;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel lbPassword;
     private javax.swing.JLabel lbRegister;
