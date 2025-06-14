@@ -34,7 +34,7 @@ public class NhaTaiTroPanel extends javax.swing.JPanel {
     private JTable table;
     private DefaultTableModel model;
     private JTextField txtTen, txtEmail, txtSDT, txtDiaChi, txtTimKiem;
-    private JButton btnThem, btnSua, btnXoa, btnTim, btnChonAnh;
+    private JButton btnThem, btnSua, btnXoa, btnTim, btnChonAnh, btnExport, btnImport;
     private byte[] logoBytes = null;
 
     public NhaTaiTroPanel() {
@@ -72,9 +72,13 @@ public class NhaTaiTroPanel extends javax.swing.JPanel {
         btnThem = new JButton("Thêm");
         btnSua = new JButton("Sửa");
         btnXoa = new JButton("Xóa");
+        btnExport = new JButton("Xuất Excel");
+        btnImport = new JButton("Nhập Excel");
         buttonPanel.add(btnThem);
         buttonPanel.add(btnSua);
         buttonPanel.add(btnXoa);
+        buttonPanel.add(btnExport);
+        buttonPanel.add(btnImport);
 
         // Panel tìm kiếm
         JPanel searchPanel = new JPanel();
@@ -112,6 +116,8 @@ public class NhaTaiTroPanel extends javax.swing.JPanel {
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(searchPanel, BorderLayout.SOUTH);
+
+        loadData();
     }
 
     // Getters
@@ -161,6 +167,14 @@ public class NhaTaiTroPanel extends javax.swing.JPanel {
 
     public JButton getBtnChonAnh() {
         return btnChonAnh;
+    }
+
+    public JButton getBtnExport() {
+        return btnExport;
+    }
+
+    public JButton getBtnImport() {
+        return btnImport;
     }
 
     public byte[] getLogoBytes() {

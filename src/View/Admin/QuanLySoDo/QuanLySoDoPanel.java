@@ -32,12 +32,11 @@ import javax.swing.table.DefaultTableModel;
  * @author OS
  */
 public class QuanLySoDoPanel extends javax.swing.JPanel {
-
-    private JTable table;
+private JTable table;
     private DefaultTableModel model;
     private JTextField txtTenSoDo, txtLoaiSoDo, txtChienThuat, txtSearch;
     private JComboBox<DoiBong> cboMaDoiBong;
-    private JButton btnAdd, btnUpdate, btnDelete, btnSearch;
+    private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnExport, btnImport;
 
     public QuanLySoDoPanel() {
         initMyComponents();
@@ -71,9 +70,13 @@ public class QuanLySoDoPanel extends javax.swing.JPanel {
         btnAdd = new JButton("Thêm");
         btnUpdate = new JButton("Cập nhật");
         btnDelete = new JButton("Xóa");
+        btnExport = new JButton("Xuất Excel");
+        btnImport = new JButton("Nhập Excel");
         buttonPanel.add(btnAdd);
         buttonPanel.add(btnUpdate);
         buttonPanel.add(btnDelete);
+        buttonPanel.add(btnExport);
+        buttonPanel.add(btnImport);
 
         // Panel tìm kiếm
         JPanel searchPanel = new JPanel();
@@ -152,6 +155,14 @@ public class QuanLySoDoPanel extends javax.swing.JPanel {
         return btnSearch;
     }
 
+    public JButton getBtnExport() {
+        return btnExport;
+    }
+
+    public JButton getBtnImport() {
+        return btnImport;
+    }
+
     // Hiển thị thông báo
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
@@ -201,7 +212,6 @@ public class QuanLySoDoPanel extends javax.swing.JPanel {
             cboMaDoiBong.addItem(new DoiBong(0, "Chưa có đội bóng", null, null, null, null));
         }
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
