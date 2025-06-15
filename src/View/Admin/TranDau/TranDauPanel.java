@@ -1,7 +1,11 @@
 package View.Admin.TranDau;
 
+import Controller.TranDauController;
+import DAO.DoiBongDAO;
+import DAO.DoiBong_TranDauDAO;
 import DAO.GiaiDauDAO;
 import DAO.TranDauDAO;
+import Model.DoiBong;
 import Model.GiaiDau;
 import Model.TranDau;
 import View.CustomPanel.ItemTranDau;
@@ -17,8 +21,10 @@ import java.util.List;
 public class TranDauPanel extends JPanel {
 
     private JComboBox<GiaiDau> cbGiaiDauLoc;
+    private JComboBox<DoiBong> cbDoiBongLoc;
     private List<TranDau> danhSachTranDau;
     private List<GiaiDau> dsGiaiDauCache;
+    private List<DoiBong> dsDoiBong;
 
     // Phần danh sách trận đấu dưới dạng item
     private JPanel panelDanhSachTranDauContent;
@@ -43,6 +49,11 @@ public class TranDauPanel extends JPanel {
         cbGiaiDauLoc = new JComboBox<>();
         cbGiaiDauLoc.setPreferredSize(new Dimension(200, 25));
         panelLoc.add(cbGiaiDauLoc);
+
+        panelLoc.add(new JLabel("Đội Bóng:"));
+        cbDoiBongLoc = new JComboBox<>();
+        cbDoiBongLoc.setPreferredSize(new Dimension(200, 25));
+        panelLoc.add(cbDoiBongLoc);
         add(panelLoc, BorderLayout.NORTH);
 
         panelDanhSachTranDauContent = new JPanel();
@@ -67,8 +78,24 @@ public class TranDauPanel extends JPanel {
                 // Gọi hàm load trận đấu theo mã giải
                 if (maGiai == 0) {
                     loadTranDau(-1); // load tất cả
+                    loadDoiBongLoc(-1);
                 } else {
                     loadTranDau(maGiai);
+                    loadDoiBongLoc(maGiai);
+                }
+            }
+        });
+
+        cbDoiBongLoc.addActionListener(e -> {
+            DoiBong selectedDoiBong = (DoiBong) cbDoiBongLoc.getSelectedItem();
+            if (selectedDoiBong != null) {
+                int maDoiBong = selectedDoiBong.getMaDoiBong();
+
+                // Gọi hàm load trận đấu theo mã giải
+                if (maDoiBong == 0) {
+                    loadTranDauTheoDoi(-1); // load tất cả
+                } else {
+                    loadTranDauTheoDoi(maDoiBong);
                 }
             }
         });
@@ -98,6 +125,30 @@ public class TranDauPanel extends JPanel {
         panelDanhSachTranDauContent.repaint();
     }
 
+    public void loadTranDauTheoDoi(int maDoiBong) {
+        DoiBong_TranDauDAO dbtd = new DoiBong_TranDauDAO();
+        panelDanhSachTranDauContent.removeAll();
+
+        if (maDoiBong < 0) {
+            danhSachTranDau = tranDauDAO.findAll();
+        } else {
+            danhSachTranDau = tranDauDAO.findByMaDoiBong(maDoiBong);
+        }
+
+        if (danhSachTranDau != null && !danhSachTranDau.isEmpty()) {
+            for (TranDau td : danhSachTranDau) {
+                addItemTranDau(td);
+            }
+        } else {
+            JLabel lblNoData = new JLabel("Không có dữ liệu trận đấu");
+            lblNoData.setForeground(Color.RED);
+            panelDanhSachTranDauContent.add(lblNoData);
+        }
+
+        panelDanhSachTranDauContent.revalidate();
+        panelDanhSachTranDauContent.repaint();
+    }
+
     private void addItemTranDau(TranDau td) {
         ItemTranDau item = new ItemTranDau(td);
         item.setPreferredSize(new Dimension(240, 120));
@@ -105,14 +156,18 @@ public class TranDauPanel extends JPanel {
         item.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ChiTietTranDauDialog dialog = new ChiTietTranDauDialog(SwingUtilities.getWindowAncestor(item) instanceof Frame
-                        ? (Frame) SwingUtilities.getWindowAncestor(item) : null,TranDauPanel.this);
+                Window window = SwingUtilities.getWindowAncestor(item);
+                Frame owner = (window instanceof Frame) ? (Frame) window : null;
+
+                ChiTietTranDauDialog dialog = new ChiTietTranDauDialog(owner, TranDauPanel.this);
                 dialog.loadTranDau(td);
-                dialog.setSaveAction(td);
+
+                // Tạo controller cho dialog và truyền đối tượng TranDau
+                TranDauController controller = new TranDauController(dialog, td);
+
                 dialog.setVisible(true);
             }
         });
-
         panelDanhSachTranDauContent.add(item);
     }
 
@@ -131,6 +186,19 @@ public class TranDauPanel extends JPanel {
         if (dsGiaiDauCache != null && !dsGiaiDauCache.isEmpty()) {
             for (GiaiDau gd : dsGiaiDauCache) {
                 cbGiaiDauLoc.addItem(gd);
+            }
+        }
+    }
+
+    public void loadDoiBongLoc(int maGiaiDau) {
+        DoiBongDAO doiBongDAO = new DoiBongDAO();
+        dsDoiBong = doiBongDAO.findByMaGiaiDau(maGiaiDau);
+
+        cbDoiBongLoc.removeAllItems();
+
+        if (dsDoiBong != null && !dsDoiBong.isEmpty()) {
+            for (DoiBong db : dsDoiBong) {
+                cbDoiBongLoc.addItem(db);
             }
         }
     }

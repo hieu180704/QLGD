@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.function.Consumer;
 
 public class ItemGiaiDau extends JPanel {
@@ -70,51 +68,29 @@ public class ItemGiaiDau extends JPanel {
 
         // Ngày tạo
         String ngayTaoStr = "N/A";
-        Date ngayTao = giaiDau.getNgayTaoGiai();
-        if (ngayTao != null) {
-            ngayTaoStr = new java.text.SimpleDateFormat("dd/MM/yyyy").format(ngayTao);
-        }
-        lblNgayTao = new JLabel("Ngày tạo: " + ngayTaoStr);
+        LocalDate ngayTao = giaiDau.getNgayTaoGiai();
+        lblNgayTao = new JLabel("Ngày tạo: " + (ngayTao != null ? ngayTao.toString() : "N/A"));
         lblNgayTao.setFont(new Font("Segoe UI", Font.ITALIC, 12));
         lblNgayTao.setForeground(new Color(140, 140, 160));
 
         // Ngày bắt đầu
-        Date ngayBatDau = giaiDau.getNgayBatDau();
-        String ngayBatDauStr = "N/A";
-        if (ngayBatDau != null) {
-            ngayBatDauStr = new java.text.SimpleDateFormat("dd/MM/yyyy").format(ngayBatDau);
-        }
-        lblNgayBatDau = new JLabel("Ngày bắt đầu: " + ngayBatDauStr);
+        LocalDate ngayBatDau = giaiDau.getNgayBatDau();
+        lblNgayBatDau = new JLabel("Ngày bắt đầu: " + (ngayBatDau != null ? ngayBatDau.toString() : "N/A"));
         lblNgayBatDau.setFont(new Font("Segoe UI", Font.ITALIC, 12));
         lblNgayBatDau.setForeground(new Color(140, 140, 160));
 
         // Ngày kết thúc
-        Date ngayKetThuc = giaiDau.getNgayKetThuc();
-        String ngayKetThucStr = "N/A";
-        if (ngayKetThuc != null) {
-            ngayKetThucStr = new java.text.SimpleDateFormat("dd/MM/yyyy").format(ngayKetThuc);
-        }
-        lblNgayKetThuc = new JLabel("Ngày kết thúc: " + ngayKetThucStr);
+        LocalDate ngayKetThuc = giaiDau.getNgayKetThuc();
+        lblNgayKetThuc = new JLabel("Ngày kết thúc: " + (ngayKetThuc != null ? ngayKetThuc.toString() : "N/A"));
         lblNgayKetThuc.setFont(new Font("Segoe UI", Font.ITALIC, 12));
         lblNgayKetThuc.setForeground(new Color(140, 140, 160));
 
         // Trạng thái
+        LocalDate startDate = ngayBatDau;
+        LocalDate endDate = ngayKetThuc;
+
         String trangThai = "N/A";
         LocalDate now = LocalDate.now();
-        LocalDate startDate = null;
-        LocalDate endDate = null;
-
-        if (ngayBatDau instanceof java.sql.Date) {
-            startDate = ((java.sql.Date) ngayBatDau).toLocalDate();
-        } else if (ngayBatDau != null) {
-            startDate = ngayBatDau.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
-
-        if (ngayKetThuc instanceof java.sql.Date) {
-            endDate = ((java.sql.Date) ngayKetThuc).toLocalDate();
-        } else if (ngayKetThuc != null) {
-            endDate = ngayKetThuc.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        }
 
         if (startDate != null) {
             if (now.isBefore(startDate)) {
@@ -130,7 +106,7 @@ public class ItemGiaiDau extends JPanel {
         lblTrangThai.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblTrangThai.setForeground(
                 trangThai.equals("Đang Diễn Ra") ? new Color(0, 128, 0)
-                        : (trangThai.equals("Chưa Diễn Ra") ? Color.ORANGE : Color.RED));
+                : (trangThai.equals("Chưa Diễn Ra") ? Color.ORANGE : Color.RED));
 
         // Add vào infoPanel
         infoPanel.add(lblTenGiaiDau);

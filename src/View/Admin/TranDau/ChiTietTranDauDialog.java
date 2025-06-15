@@ -1,12 +1,9 @@
 package View.Admin.TranDau;
 
-import DAO.DoiBong_TranDauDAO;
-import DAO.TranDauDAO;
 import DAO.TrongTaiDAO;
 import Model.TranDau;
 import Model.DoiBong_TranDau;
 import Model.TrongTai;
-import View.Admin.TranDau.TranDauPanel;
 import com.github.lgooddatepicker.components.DatePicker;
 
 import javax.swing.*;
@@ -77,7 +74,7 @@ public class ChiTietTranDauDialog extends JDialog {
         add(pnlTime, BorderLayout.NORTH);
 
         String[] labels = {
-            "Số lần sút", "Số bàn thắng", "Sút trúng đích", "Kiểm soát bóng (%)",
+            "Số lần sút", "Số bàn thắng", "Sút trúng đích", "Cầm Bóng",
             "Lượt chuyền bóng", "Chuyền chính xác", "Phạm lỗi", "Việt vị", "Phạt góc"
         };
 
@@ -157,7 +154,7 @@ public class ChiTietTranDauDialog extends JDialog {
             map.get("Số lần sút").setValue(dbtd.getSoLanSut());
             map.get("Số bàn thắng").setValue(dbtd.getSoBanThang());
             map.get("Sút trúng đích").setValue(dbtd.getSutTrungDich());
-            map.get("Kiểm soát bóng (%)").setValue(dbtd.getKiemSoatBong());
+            map.get("Cầm Bóng").setValue(dbtd.getKiemSoatBong());
             map.get("Lượt chuyền bóng").setValue(dbtd.getLuotChuyenBong());
             map.get("Chuyền chính xác").setValue(dbtd.getChuyenChinhXac());
             map.get("Phạm lỗi").setValue(dbtd.getPhamLoi());
@@ -166,71 +163,39 @@ public class ChiTietTranDauDialog extends JDialog {
         }
     }
 
-    public void setSaveAction(TranDau tranDau) {
-        btnLuu.addActionListener(e -> {
-            try {
-                int hour = (Integer) cbHour.getSelectedItem();
-                int minute = (Integer) cbMinute.getSelectedItem();
+    public JButton getBtnLuu() {
+        return btnLuu;
+    }
 
-                if (datePicker.getDate() == null) {
-                    JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày trận đấu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
+    public JButton getBtnDong() {
+        return btnDong;
+    }
 
-                LocalDate selectedDate = datePicker.getDate();
-                LocalDate today = LocalDate.now();
+    public DatePicker getDatePicker() {
+        return datePicker;
+    }
 
-                // Kiểm tra ngày chọn có nhỏ hơn ngày hiện tại không
-                if (selectedDate.isBefore(today)) {
-                    JOptionPane.showMessageDialog(this, "Ngày thi đấu không được nhỏ hơn ngày hiện tại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+    public JComboBox<Integer> getCbHour() {
+        return cbHour;
+    }
 
-                tranDau.setThoiGian(selectedDate.atTime(hour, minute));
+    public JComboBox<Integer> getCbMinute() {
+        return cbMinute;
+    }
 
-                TrongTai selectedReferee = (TrongTai) cbTrongTai.getSelectedItem();
-                tranDau.setTrongTai(selectedReferee);
+    public JComboBox<TrongTai> getCbTrongTai() {
+        return cbTrongTai;
+    }
 
-                TranDauDAO tranDauDAO = new TranDauDAO();
-                DoiBong_TranDauDAO dbtdDAO = new DoiBong_TranDauDAO();
+    public Map<String, JSpinner> getSpnTeam1Stats() {
+        return spnTeam1Stats;
+    }
 
-                boolean success = tranDauDAO.update(tranDau);
-                if (!success) {
-                    JOptionPane.showMessageDialog(this, "Lỗi lưu thời gian trận đấu", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+    public Map<String, JSpinner> getSpnTeam2Stats() {
+        return spnTeam2Stats;
+    }
 
-                for (DoiBong_TranDau dbtd : tranDau.getDoiBongTranDauList()) {
-                    Map<String, JSpinner> map = dbtd.getLaChuNha() == 1 ? spnTeam1Stats : spnTeam2Stats;
-
-                    dbtd.setSoLanSut((Integer) map.get("Số lần sút").getValue());
-                    dbtd.setSoBanThang((Integer) map.get("Số bàn thắng").getValue());
-                    dbtd.setSutTrungDich((Integer) map.get("Sút trúng đích").getValue());
-                    dbtd.setKiemSoatBong((Integer) map.get("Kiểm soát bóng (%)").getValue());
-                    dbtd.setLuotChuyenBong((Integer) map.get("Lượt chuyền bóng").getValue());
-                    dbtd.setChuyenChinhXac((Integer) map.get("Chuyền chính xác").getValue());
-                    dbtd.setPhamLoi((Integer) map.get("Phạm lỗi").getValue());
-                    dbtd.setVietVi((Integer) map.get("Việt vị").getValue());
-                    dbtd.setPhatGoc((Integer) map.get("Phạt góc").getValue());
-
-                    boolean dbtdSuccess = dbtdDAO.update(dbtd);
-                    if (!dbtdSuccess) {
-                        JOptionPane.showMessageDialog(this, "Lỗi lưu thông số đội bóng", "Lỗi", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                }
-
-                JOptionPane.showMessageDialog(this, "Lưu dữ liệu thành công!");
-                if (tranDauPanel != null) {
-                    tranDauPanel.loadTranDau(-1);
-                }
-                dispose();
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + ex.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-
+    public TranDauPanel getTranDauPanel() {
+        return tranDauPanel;
     }
 }

@@ -17,9 +17,9 @@ public class GiaiDauDAO implements GenericDAO<GiaiDau> {
             ps.setString(1, obj.getTenGiaiDau());
             ps.setBytes(2, obj.getAnhGiaiDau());
             ps.setInt(3, obj.getTheThuc().getMaTheThuc());
-            ps.setDate(4, obj.getNgayTaoGiai() != null ? new java.sql.Date(obj.getNgayTaoGiai().getTime()) : null);
-            ps.setDate(5, obj.getNgayBatDau() != null ? new java.sql.Date(obj.getNgayBatDau().getTime()) : null);
-            ps.setDate(6, obj.getNgayKetThuc() != null ? new java.sql.Date(obj.getNgayKetThuc().getTime()) : null);
+            ps.setDate(4, obj.getNgayTaoGiai() != null ? Date.valueOf(obj.getNgayTaoGiai()) : null);
+            ps.setDate(5, obj.getNgayBatDau() != null ? Date.valueOf(obj.getNgayBatDau()) : null);
+            ps.setDate(6, obj.getNgayKetThuc() != null ? Date.valueOf(obj.getNgayKetThuc()) : null);
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -47,9 +47,9 @@ public class GiaiDauDAO implements GenericDAO<GiaiDau> {
             ps.setString(1, obj.getTenGiaiDau());
             ps.setBytes(2, obj.getAnhGiaiDau());
             ps.setInt(3, obj.getTheThuc().getMaTheThuc());
-            ps.setDate(4, obj.getNgayTaoGiai() != null ? new java.sql.Date(obj.getNgayTaoGiai().getTime()) : null);
-            ps.setDate(5, obj.getNgayBatDau() != null ? new java.sql.Date(obj.getNgayBatDau().getTime()) : null);
-            ps.setDate(6, obj.getNgayKetThuc() != null ? new java.sql.Date(obj.getNgayKetThuc().getTime()) : null);
+            ps.setDate(4, obj.getNgayTaoGiai() != null ? Date.valueOf(obj.getNgayTaoGiai()) : null);
+            ps.setDate(5, obj.getNgayBatDau() != null ? Date.valueOf(obj.getNgayBatDau()) : null);
+            ps.setDate(6, obj.getNgayKetThuc() != null ? Date.valueOf(obj.getNgayKetThuc()) : null);
             ps.setInt(7, obj.getMaGiaiDau());
 
             return ps.executeUpdate() > 0;
@@ -128,9 +128,13 @@ public class GiaiDauDAO implements GenericDAO<GiaiDau> {
         theThuc.setMaTheThuc(maTheThuc);
         gd.setTheThuc(theThuc);
 
-        gd.setNgayTaoGiai(rs.getDate("ngayTaoGiai"));
-        gd.setNgayBatDau(rs.getDate("ngayBatDau"));
-        
+        Date ngayTaoGiaiSql = rs.getDate("ngayTaoGiai");
+        Date ngayBatDauSql = rs.getDate("ngayBatDau");
+        Date ngayKetThucSql = rs.getDate("ngayKetThuc");
+
+        gd.setNgayTaoGiai(ngayTaoGiaiSql.toLocalDate());
+        gd.setNgayBatDau(ngayBatDauSql.toLocalDate());
+        gd.setNgayKetThuc(ngayKetThucSql.toLocalDate());
 
         return gd;
     }

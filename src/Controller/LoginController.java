@@ -32,13 +32,6 @@ public class LoginController {
                 view.dispose();
             }
         });
-
-        view.getForgotPasswordLabel().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                view.showMessage("Liên hệ quản trị viên để đặt lại mật khẩu!");
-            }
-        });
     }
 
     private void login() {
