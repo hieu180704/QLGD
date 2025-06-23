@@ -6,16 +6,22 @@ package View.Admin.QuanLyTaiKhoan;
 
 import Controller.QuanLyTaiKhoanController;
 import Model.TaiKhoan;
+import Service.TaiKhoanService;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
 import java.util.List;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,10 +30,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class QuanLyTaiKhoanPanel extends javax.swing.JPanel {
 
-    private JTable tableTaiKhoan;
-    private DefaultTableModel tableModel;
-    private JTextField txtTimKiem;
-    private JButton btnThem, btnSua, btnXoa, btnTimKiem;
+    private JTable table;
+    private DefaultTableModel model;
+    private JTextField txtTenDangNhap, txtMatKhau, txtEmail, txtSearch;
+    private JComboBox<String> cboLoaiTaiKhoan;
+    private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnExport, btnImport;
 
     public QuanLyTaiKhoanPanel() {
         initMyComponents();
@@ -36,95 +43,174 @@ public class QuanLyTaiKhoanPanel extends javax.swing.JPanel {
 
     private void initMyComponents() {
         setLayout(new BorderLayout());
+        setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Panel trên cùng: tìm kiếm
-        JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelTop.add(new JLabel("Tìm kiếm:"));
-        txtTimKiem = new JTextField(20);
-        btnTimKiem = new JButton("Tìm kiếm");
-        panelTop.add(txtTimKiem);
-        panelTop.add(btnTimKiem);
-        add(panelTop, BorderLayout.NORTH);
+        JPanel inputPanel = new JPanel(new GridLayout(5, 2, 10, 10));
+        inputPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Bảng tài khoản
-        String[] columns = {"Mã TK", "Tên đăng nhập", "Email", "Loại TK"};
-        tableModel = new DefaultTableModel(columns, 0) {
+        JLabel lblTenDangNhap = new JLabel("Tên Đăng Nhập:");
+        lblTenDangNhap.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(lblTenDangNhap);
+        txtTenDangNhap = new JTextField();
+        txtTenDangNhap.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(txtTenDangNhap);
+
+        JLabel lblMatKhau = new JLabel("Mật Khẩu:");
+        lblMatKhau.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(lblMatKhau);
+        txtMatKhau = new JTextField();
+        txtMatKhau.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(txtMatKhau);
+
+        JLabel lblEmail = new JLabel("Email:");
+        lblEmail.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(lblEmail);
+        txtEmail = new JTextField();
+        txtEmail.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(txtEmail);
+
+        JLabel lblLoaiTaiKhoan = new JLabel("Loại Tài Khoản:");
+        lblLoaiTaiKhoan.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(lblLoaiTaiKhoan);
+        cboLoaiTaiKhoan = new JComboBox<>(new String[]{"1 - Admin"});
+        cboLoaiTaiKhoan.setFont(new Font("Arial", Font.PLAIN, 14));
+        inputPanel.add(cboLoaiTaiKhoan);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+        btnAdd = new JButton("Thêm");
+        btnAdd.setFont(new Font("Arial", Font.BOLD, 14));
+        btnUpdate = new JButton("Cập nhật");
+        btnUpdate.setFont(new Font("Arial", Font.BOLD, 14));
+        btnDelete = new JButton("Xóa");
+        btnDelete.setFont(new Font("Arial", Font.BOLD, 14));
+        btnExport = new JButton("Xuất Excel");
+        btnExport.setFont(new Font("Arial", Font.BOLD, 14));
+        btnImport = new JButton("Nhập Excel");
+        btnImport.setFont(new Font("Arial", Font.BOLD, 14));
+        buttonPanel.add(btnAdd);
+        buttonPanel.add(btnUpdate);
+        buttonPanel.add(btnDelete);
+        buttonPanel.add(btnExport);
+        buttonPanel.add(btnImport);
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        JLabel lblSearch = new JLabel("Tìm kiếm (Tên Đăng Nhập):");
+        lblSearch.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtSearch = new JTextField(20);
+        txtSearch.setFont(new Font("Arial", Font.PLAIN, 14));
+        btnSearch = new JButton("Tìm kiếm");
+        btnSearch.setFont(new Font("Arial", Font.BOLD, 14));
+        searchPanel.add(lblSearch);
+        searchPanel.add(txtSearch);
+        searchPanel.add(btnSearch);
+
+        model = new DefaultTableModel(new String[]{"Mã Tài Khoản", "Tên Đăng Nhập", "Mật Khẩu", "Email", "Loại Tài Khoản"}, 0) {
             @Override
-            public boolean isCellEditable(int row, int col) {
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        tableTaiKhoan = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(tableTaiKhoan);
+        table = new JTable(model);
+        table.setRowHeight(25);
+        table.setFont(new Font("Arial", Font.PLAIN, 14));
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); // Cho phép chọn một dòng
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(inputPanel, BorderLayout.CENTER);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
+        add(searchPanel, BorderLayout.SOUTH);
 
-        // Panel nút chức năng dưới
-        JPanel panelBottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnThem = new JButton("Thêm");
-        btnSua = new JButton("Sửa");
-        btnXoa = new JButton("Xóa");
-        panelBottom.add(btnThem);
-        panelBottom.add(btnSua);
-        panelBottom.add(btnXoa);
-        add(panelBottom, BorderLayout.SOUTH);
+        loadData();
     }
 
-    // Đổ dữ liệu lên bảng
-    public void loadData(List<TaiKhoan> list) {
-        tableModel.setRowCount(0);
-        for (TaiKhoan tk : list) {
-            tableModel.addRow(new Object[]{
-                tk.getMataikhoan(),
-                tk.getTendangnhap(),
-                tk.getEmail(),
-                tk.getLoaitaikhoan()
-            });
-        }
+    public JTable getTable() {
+        return table;
     }
 
-    // Hiển thị thông báo
+    public DefaultTableModel getModel() {
+        return model;
+    }
+
+    public JTextField getTxtTenDangNhap() {
+        return txtTenDangNhap;
+    }
+
+    public JTextField getTxtMatKhau() {
+        return txtMatKhau;
+    }
+
+    public JTextField getTxtEmail() {
+        return txtEmail;
+    }
+
+    public JTextField getTxtSearch() {
+        return txtSearch;
+    }
+
+    public JComboBox<String> getCboLoaiTaiKhoan() {
+        return cboLoaiTaiKhoan;
+    }
+
+    public JButton getBtnAdd() {
+        return btnAdd;
+    }
+
+    public JButton getBtnUpdate() {
+        return btnUpdate;
+    }
+
+    public JButton getBtnDelete() {
+        return btnDelete;
+    }
+
+    public JButton getBtnSearch() {
+        return btnSearch;
+    }
+
+    public JButton getBtnExport() {
+        return btnExport;
+    }
+
+    public JButton getBtnImport() {
+        return btnImport;
+    }
+
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
 
-    // Lấy ID tài khoản được chọn
-    public Integer getSelectedTaiKhoanId() {
-        int row = tableTaiKhoan.getSelectedRow();
-        if (row == -1) {
-            return null;
+    public void loadData() {
+        List<TaiKhoan> list = new TaiKhoanService().getAllTaiKhoan();
+        displayData(list);
+    }
+
+    public void displayData(List<TaiKhoan> list) {
+        model.setRowCount(0);
+        for (TaiKhoan tk : list) {
+            model.addRow(new Object[]{
+                tk.getMataikhoan(),
+                tk.getTendangnhap(),
+                tk.getMatkhau(),
+                tk.getEmail(),
+                tk.getLoaitaikhoan() == 1 ? "Admin" : "User"
+            });
         }
-        Object val = tableModel.getValueAt(row, 0);
-        if (val instanceof Integer) {
-            return (Integer) val;
-        }
-        if (val instanceof Long) {
-            return ((Long) val).intValue();
-        }
-        if (val instanceof String) {
-            return Integer.parseInt((String) val);
-        }
-        return null;
     }
 
-    // Getters cho controller
-    public JButton getBtnThem() {
-        return btnThem;
-    }
-
-    public JButton getBtnSua() {
-        return btnSua;
-    }
-
-    public JButton getBtnXoa() {
-        return btnXoa;
-    }
-
-    public JButton getBtnTimKiem() {
-        return btnTimKiem;
-    }
-
-    public JTextField getTxtTimKiem() {
-        return txtTimKiem;
+    public void clearInput() {
+        txtTenDangNhap.setText("");
+        txtTenDangNhap.setEnabled(true);
+        txtMatKhau.setText("");
+        txtEmail.setText("");
+        txtSearch.setText("");
+        cboLoaiTaiKhoan.setSelectedIndex(0);
     }
 
     @SuppressWarnings("unchecked")

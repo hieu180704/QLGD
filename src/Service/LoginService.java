@@ -51,7 +51,11 @@ public class LoginService {
         // Sử dụng TaiKhoanDAO để kiểm tra đăng nhập
         TaiKhoan taiKhoan = taiKhoanDAO.findByUsernameAndPassword(username, password);
         if (taiKhoan != null) {
-            return "Đăng nhập thành công!";
+            if (taiKhoan.getLoaitaikhoan() == 1) { // Chỉ cho phép Admin
+                return "Đăng nhập thành công!";
+            } else {
+                return "Chỉ tài khoản Admin được phép đăng nhập!";
+            }
         }
         return "Tài khoản hoặc mật khẩu không đúng!";
     }

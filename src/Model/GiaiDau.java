@@ -1,6 +1,6 @@
 package Model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class GiaiDau {
 
@@ -8,16 +8,15 @@ public class GiaiDau {
     private String tenGiaiDau;
     private byte[] anhGiaiDau;
     private TheThuc theThuc; // tham chiếu tới TheThuc
-    private Date ngayTaoGiai;
-    private Date ngayBatDau;
-    private Date ngayKetThuc;
+    private LocalDate ngayTaoGiai;
+    private LocalDate ngayBatDau;
+    private LocalDate ngayKetThuc;
 
     // Constructor
     public GiaiDau() {
     }
 
-    public GiaiDau(int maGiaiDau, String tenGiaiDau, byte[] anhGiaiDau, TheThuc theThuc,
-            Date ngayTaoGiai, Date ngayBatDau, Date ngayKetThuc) {
+    public GiaiDau(int maGiaiDau, String tenGiaiDau, byte[] anhGiaiDau, TheThuc theThuc, LocalDate ngayTaoGiai, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
         this.maGiaiDau = maGiaiDau;
         this.tenGiaiDau = tenGiaiDau;
         this.anhGiaiDau = anhGiaiDau;
@@ -27,7 +26,6 @@ public class GiaiDau {
         this.ngayKetThuc = ngayKetThuc;
     }
 
-    // Getters & Setters
     public int getMaGiaiDau() {
         return maGiaiDau;
     }
@@ -60,29 +58,31 @@ public class GiaiDau {
         this.theThuc = theThuc;
     }
 
-    public Date getNgayTaoGiai() {
+    public LocalDate getNgayTaoGiai() {
         return ngayTaoGiai;
     }
 
-    public void setNgayTaoGiai(Date ngayTaoGiai) {
+    public void setNgayTaoGiai(LocalDate ngayTaoGiai) {
         this.ngayTaoGiai = ngayTaoGiai;
     }
 
-    public Date getNgayBatDau() {
+    public LocalDate getNgayBatDau() {
         return ngayBatDau;
     }
 
-    public void setNgayBatDau(Date ngayBatDau) {
+    public void setNgayBatDau(LocalDate ngayBatDau) {
         this.ngayBatDau = ngayBatDau;
     }
 
-    public Date getNgayKetThuc() {
+    public LocalDate getNgayKetThuc() {
         return ngayKetThuc;
     }
 
-    public void setNgayKetThuc(Date ngayKetThuc) {
+    public void setNgayKetThuc(LocalDate ngayKetThuc) {
         this.ngayKetThuc = ngayKetThuc;
     }
+
+
 
     @Override
     public String toString() {

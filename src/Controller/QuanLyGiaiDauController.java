@@ -19,8 +19,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
 public class QuanLyGiaiDauController implements ActionListener {
@@ -47,14 +45,9 @@ public class QuanLyGiaiDauController implements ActionListener {
         Object source = e.getSource();
 
         // Xử lý từ QuanLyGiaiDauPanel
-        if (source instanceof JButton) {
-            JButton btn = (JButton) source;
-            String cmd = btn.getActionCommand();
-            if ("Thêm giải đấu".equals(cmd)) {
-                openThemGiaiDauDialog();
-                return;
-            }
-            // Bạn có thể thêm xử lý các nút khác ở panel chính ở đây
+        if (source == quanLyGiaiDauPanel.getBtnThem()) {
+            openThemGiaiDauDialog();
+            return;
         }
 
         // Xử lý từ ThemGiaiDauDialog
@@ -104,6 +97,7 @@ public class QuanLyGiaiDauController implements ActionListener {
         var tt = themGiaiDauDialog.getTheThuc();
         LocalDate ngayBatDauLocal = themGiaiDauDialog.getNgayBatDau();
         LocalDate ngayKetThucLocal = themGiaiDauDialog.getNgayKetThuc();
+        LocalDate ngayHienTai = LocalDate.now();
         byte[] anhGiaiDau = themGiaiDauDialog.getAnhGiaiDau();
 
         if (ten.isEmpty() || tt == null || ngayBatDauLocal == null || ngayKetThucLocal == null || anhGiaiDau == null) {
@@ -115,22 +109,27 @@ public class QuanLyGiaiDauController implements ActionListener {
             JOptionPane.showMessageDialog(themGiaiDauDialog, "Ngày kết thúc phải sau hoặc bằng ngày bắt đầu!");
             return;
         }
+        if (ngayBatDauLocal.isBefore(ngayHienTai)) {
+            JOptionPane.showMessageDialog(themGiaiDauDialog, "Ngày bắt đầu không hợp lệ (Quá ngày hiện tại)");
+            return;
+        }
 
         GiaiDau gd = new GiaiDau();
         gd.setTenGiaiDau(ten);
         gd.setAnhGiaiDau(anhGiaiDau);
         gd.setTheThuc(tt);
-        gd.setNgayTaoGiai(new Date());
-        gd.setNgayBatDau(Date.from(ngayBatDauLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        gd.setNgayKetThuc(Date.from(ngayKetThucLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        gd.setNgayTaoGiai(LocalDate.now());
+        gd.setNgayBatDau(ngayBatDauLocal);
+        gd.setNgayKetThuc(ngayKetThucLocal);
+        
+        
 
         boolean ok = giaiDauDAO.insert(gd);
+        
         if (ok) {
             JOptionPane.showMessageDialog(themGiaiDauDialog, "Thêm giải đấu thành công!");
             themGiaiDauDialog.clearForm();
-            if (quanLyGiaiDauPanel != null) {
-                quanLyGiaiDauPanel.loadData();
-            }
+            quanLyGiaiDauPanel.loadData();
         } else {
             JOptionPane.showMessageDialog(themGiaiDauDialog, "Thêm giải đấu thất bại!");
         }
@@ -177,8 +176,6 @@ public class QuanLyGiaiDauController implements ActionListener {
         System.out.println("Loading teams for GiaiDau ma: " + maGiaiDau);
         List<DoiBong> listChuaThamGia = doiBongDAO.findByMaGiaiDau(null);
         List<DoiBong> listDaThamGia = doiBongDAO.findByMaGiaiDau(maGiaiDau);
-        System.out.println("Teams not joined: " + (listChuaThamGia == null ? "null" : listChuaThamGia.size()));
-        System.out.println("Teams joined: " + (listDaThamGia == null ? "null" : listDaThamGia.size()));
 
         detailGiaiDauDialog.setDoiChuaThamGia(listChuaThamGia);
         detailGiaiDauDialog.setDoiDaThamGia(listDaThamGia);
@@ -264,17 +261,20 @@ public class QuanLyGiaiDauController implements ActionListener {
 
         LocalDate ngayBatDauLocal = detailGiaiDauDialog.getNgayBatDau();
         LocalDate ngayKetThucLocal = detailGiaiDauDialog.getNgayKetThuc();
+        LocalDate ngayHienTai = LocalDate.now();
 
         if (ngayBatDauLocal == null || ngayKetThucLocal == null) {
             JOptionPane.showMessageDialog(detailGiaiDauDialog, "Vui lòng chọn đầy đủ ngày bắt đầu và ngày kết thúc!");
             return;
         }
 
-        Date ngayBatDau = Date.from(ngayBatDauLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Date ngayKetThuc = Date.from(ngayKetThucLocal.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-        if (ngayBatDau.after(ngayKetThuc)) {
+        if (ngayBatDauLocal.isAfter(ngayKetThucLocal)) {
             JOptionPane.showMessageDialog(detailGiaiDauDialog, "Ngày bắt đầu không được sau ngày kết thúc!");
+            return;
+        }
+
+        if (ngayBatDauLocal.isBefore(ngayHienTai)) {
+            JOptionPane.showMessageDialog(themGiaiDauDialog, "Ngày bắt đầu không hợp lệ (Quá ngày hiện tại)");
             return;
         }
 
@@ -289,8 +289,8 @@ public class QuanLyGiaiDauController implements ActionListener {
         }
 
         gd.setTenGiaiDau(ten);
-        gd.setNgayBatDau(ngayBatDau);
-        gd.setNgayKetThuc(ngayKetThuc);
+        gd.setNgayBatDau(ngayBatDauLocal);
+        gd.setNgayKetThuc(ngayKetThucLocal);
         gd.setAnhGiaiDau(anh);
 
         boolean ok = giaiDauDAO.update(gd);

@@ -416,7 +416,6 @@ public class QuanLyView extends JFrame {
     }
 
     public void openQuanLyTaiKhoan() {
-        taiKhoanController.loadTableData();
         showPanel("QuanLyTaiKhoanPanel");
     }
 

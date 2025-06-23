@@ -3,6 +3,8 @@ package Service;
 import DAO.SoDoDAO;
 import DAO.DoiBongDAO;
 import Model.SoDo;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +22,18 @@ public class SoDoService {
             soDo.getLoaiSoDo() == null || soDo.getLoaiSoDo().trim().isEmpty() ||
             soDo.getChienThuat() == null || soDo.getChienThuat().trim().isEmpty() ||
             soDo.getMaDoiBong() <= 0) {
+            System.out.println("Lỗi: Dữ liệu không hợp lệ - TenSoDo: " + soDo.getTenSoDo() + ", MaDoiBong: " + soDo.getMaDoiBong());
             return false;
         }
 
         if (soDo.getTenSoDo().length() > 50 || soDo.getLoaiSoDo().length() > 50 || soDo.getChienThuat().length() > 50) {
+            System.out.println("Lỗi: Độ dài vượt quá 50 ký tự - TenSoDo: " + soDo.getTenSoDo());
             return false;
         }
 
         // Kiểm tra maDoiBong có tồn tại trong bảng doibong
         if (doiBongDAO.findById(soDo.getMaDoiBong()) == null) {
+            System.out.println("Lỗi: MaDoiBong " + soDo.getMaDoiBong() + " không tồn tại");
             return false;
         }
 
@@ -36,11 +41,31 @@ public class SoDoService {
         for (SoDo existingSoDo : existingSoDoList) {
             if (existingSoDo.getTenSoDo().equalsIgnoreCase(soDo.getTenSoDo()) &&
                 existingSoDo.getMaDoiBong() == soDo.getMaDoiBong()) {
+                System.out.println("Lỗi: Trùng tên và MaDoiBong - TenSoDo: " + soDo.getTenSoDo());
                 return false; // Trùng lặp tên cho cùng đội bóng
             }
         }
 
-        return soDoDAO.insert(soDo);
+        boolean result = soDoDAO.insert(soDo);
+        if (result) {
+            // Lấy maSoDo vừa được tạo tự động
+            try {
+                String sql = "SELECT LAST_INSERT_ID() as maSoDo";
+                java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:mysql://localhost:3306/quanlygiaidau", "root", "");
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql);
+                if (rs.next()) {
+                    soDo.setMaSoDo(rs.getInt("maSoDo"));
+                    System.out.println("Thêm thành công: " + soDo.getTenSoDo() + " với MaSoDo: " + soDo.getMaSoDo());
+                }
+                rs.close();
+                stmt.close();
+                conn.close();
+            } catch (Exception e) {
+                System.out.println("Lỗi khi lấy MaSoDo: " + e.getMessage());
+            }
+        }
+        return result;
     }
 
     public boolean updateSoDoRaSan(SoDo soDo) {

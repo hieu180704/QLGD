@@ -271,4 +271,56 @@ public class TranDauDAO implements GenericDAO<TranDau> {
         return list;
     }
 
+    public List<TranDau> findByMaDoiBong(int maDoiBong) {
+        List<TranDau> list = new ArrayList<>();
+        String sql = "SELECT *"
+                + "FROM trandau td "
+                + "JOIN doibong_trandau dbtd ON td.maTranDau = dbtd.maTranDau "
+                + "JOIN giaidau gd ON td.maGiaiDau = gd.maGiaiDau "
+                + "WHERE maDoiBong = ?";
+
+        try (Connection conn = ConnectDB.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maDoiBong);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                DoiBongDAO doiBongDAO = new DoiBongDAO();
+
+                while (rs.next()) {
+                    TranDau td = new TranDau();
+                    td.setMaTranDau(rs.getInt("maTranDau"));
+
+                    Timestamp timestamp = rs.getTimestamp("thoiGian");
+                    if (timestamp != null) {
+                        td.setThoiGian(timestamp.toLocalDateTime());
+                    } else {
+                        td.setThoiGian(null);
+                    }
+
+                    GiaiDau gd = new GiaiDau();
+                    gd.setMaGiaiDau(rs.getInt("maGiaiDau"));
+                    gd.setTenGiaiDau(rs.getString("tenGiaiDau"));
+                    td.setGiaiDau(gd);
+
+                    // Lấy danh sách DoiBong_TranDau
+                    List<DoiBong_TranDau> doiBongList = doiBongTranDauDAO.findByMaTranDau(td.getMaTranDau());
+                    td.setDoiBongTranDauList(doiBongList);
+
+                    // SET team1 và team2 dựa trên doiBongList (laChuNha = 1 là home, 0 là guest)
+                    for (DoiBong_TranDau dbtd : doiBongList) {
+                        if (dbtd.getLaChuNha() == 1) {
+                            td.setTeam1(dbtd.getDoiBong());
+                        } else if (dbtd.getLaChuNha() == 0) {
+                            td.setTeam2(dbtd.getDoiBong());
+                        }
+                    }
+
+                    list.add(td);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

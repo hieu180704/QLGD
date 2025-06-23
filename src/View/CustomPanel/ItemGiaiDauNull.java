@@ -7,7 +7,6 @@ import Model.DoiBong;
 import Model.DoiBong_TranDau;
 import Model.GiaiDau;
 import Model.TranDau;
-import View.Admin.TranDau.TranDauPanel;
 import View.Admin.TranDau.XepLichThiDauPanel;
 
 import javax.swing.*;

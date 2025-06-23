@@ -2,91 +2,82 @@ package Service;
 
 import DAO.TaiKhoanDAO;
 import Model.TaiKhoan;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TaiKhoanService {
-    private TaiKhoanDAO dao;
+    private TaiKhoanDAO taiKhoanDAO;
 
     public TaiKhoanService() {
-        this.dao = new TaiKhoanDAO();
+        this.taiKhoanDAO = new TaiKhoanDAO();
     }
 
-    // Lấy tất cả tài khoản
+    public boolean addTaiKhoan(TaiKhoan tk) {
+        if (tk == null || tk.getTendangnhap() == null || tk.getTendangnhap().trim().isEmpty() ||
+            tk.getMatkhau() == null || tk.getMatkhau().trim().isEmpty() ||
+            tk.getEmail() == null || tk.getEmail().trim().isEmpty() ||
+            tk.getLoaitaikhoan() != 1) {
+            return false;
+        }
+
+        if (tk.getTendangnhap().length() > 50 || tk.getMatkhau().length() > 50 || tk.getEmail().length() > 100) {
+            return false;
+        }
+
+        if (taiKhoanDAO.kiemTraTenDangNhap(tk.getTendangnhap())) {
+            return false;
+        }
+
+        return taiKhoanDAO.insert(tk);
+    }
+
+    public boolean updateTaiKhoan(TaiKhoan tk) {
+        if (tk == null || tk.getMataikhoan() <= 0 ||
+            tk.getMatkhau() == null || tk.getMatkhau().trim().isEmpty() ||
+            tk.getEmail() == null || tk.getEmail().trim().isEmpty() ||
+            tk.getLoaitaikhoan() != 1) {
+            return false;
+        }
+
+        if (tk.getMatkhau().length() > 50 || tk.getEmail().length() > 100) {
+            return false;
+        }
+
+        return taiKhoanDAO.update(tk);
+    }
+
+    public boolean deleteTaiKhoan(int maTaiKhoan) {
+        if (maTaiKhoan <= 0) {
+            return false;
+        }
+        return taiKhoanDAO.delete(maTaiKhoan);
+    }
+
+    public TaiKhoan getTaiKhoanById(int maTaiKhoan) {
+        if (maTaiKhoan <= 0) {
+            return null;
+        }
+        return taiKhoanDAO.findById(maTaiKhoan);
+    }
+
     public List<TaiKhoan> getAllTaiKhoan() {
-        return dao.findAll();
+        return taiKhoanDAO.findAll();
     }
 
-    // Thêm tài khoản mới
-    public String addTaiKhoan(TaiKhoan tk) {
-        // Kiểm tra đầu vào
-        if (tk.getTendangnhap() == null || tk.getTendangnhap().trim().isEmpty()) {
-            return "Tên đăng nhập không được để trống!";
+    public List<TaiKhoan> findTaiKhoanByUsername(String tenDangNhap) {
+        System.out.println("Tìm kiếm với: " + tenDangNhap); // Log
+        if (tenDangNhap == null || tenDangNhap.trim().isEmpty()) {
+            return getAllTaiKhoan();
         }
-        if (tk.getEmail() == null || tk.getEmail().trim().isEmpty()) {
-            return "Email không được để trống!";
+        List<TaiKhoan> allTaiKhoan = taiKhoanDAO.findAll();
+        List<TaiKhoan> result = new ArrayList<>();
+        for (TaiKhoan tk : allTaiKhoan) {
+            if (tk.getTendangnhap() != null && tk.getTendangnhap().toLowerCase().contains(tenDangNhap.toLowerCase())) {
+                result.add(tk);
+                System.out.println("Tìm thấy: " + tk.getTendangnhap()); // Log
+            }
         }
-        if (tk.getMatkhau() == null || tk.getMatkhau().trim().isEmpty()) {
-            return "Mật khẩu không được để trống!";
-        }
-
-        // Kiểm tra tên đăng nhập đã tồn tại
-        if (dao.kiemTraTenDangNhap(tk.getTendangnhap())) {
-            return "Tên đăng nhập đã tồn tại!";
-        }
-
-        // Gọi DAO để thêm
-        boolean success = dao.insert(tk);
-        if (success) {
-            return "Thêm tài khoản thành công!";
-        } else {
-            return "Thêm tài khoản thất bại.";
-        }
-    }
-
-    // Cập nhật tài khoản
-    public String updateTaiKhoan(TaiKhoan tk) {
-        // Kiểm tra đầu vào
-        if (tk.getEmail() == null || tk.getEmail().trim().isEmpty()) {
-            return "Email không được để trống!";
-        }
-        if (tk.getMatkhau() == null || tk.getMatkhau().trim().isEmpty()) {
-            return "Mật khẩu không được để trống!";
-        }
-
-        // Gọi DAO để cập nhật
-        boolean success = dao.update(tk);
-        if (success) {
-            return "Cập nhật tài khoản thành công!";
-        } else {
-            return "Cập nhật tài khoản thất bại.";
-        }
-    }
-
-    // Xóa tài khoản
-    public String deleteTaiKhoan(int maTaiKhoan) {
-        boolean success = dao.delete(maTaiKhoan);
-        if (success) {
-            return "Xóa tài khoản thành công!";
-        } else {
-            return "Xóa tài khoản thất bại.";
-        }
-    }
-
-    // Tìm kiếm tài khoản theo từ khóa
-    public List<TaiKhoan> searchTaiKhoan(String keyword) {
-        List<TaiKhoan> list = dao.findAll();
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return list;
-        }
-        return list.stream()
-                .filter(tk -> tk.getTendangnhap().toLowerCase().contains(keyword.toLowerCase())
-                        || tk.getEmail().toLowerCase().contains(keyword.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
-    // Tìm tài khoản theo mã
-    public TaiKhoan findById(int maTaiKhoan) {
-        return dao.findById(maTaiKhoan);
+        System.out.println("Kết quả tìm kiếm: " + result.size() + " tài khoản"); // Log
+        return result;
     }
 }

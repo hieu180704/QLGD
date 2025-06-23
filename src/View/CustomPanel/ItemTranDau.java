@@ -1,13 +1,11 @@
 package View.CustomPanel;
 
 import Model.TranDau;
-import Model.DoiBong;
 import Model.DoiBong_TranDau;
 import Model.GiaiDau;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
