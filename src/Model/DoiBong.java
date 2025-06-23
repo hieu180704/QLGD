@@ -107,8 +107,6 @@ public class DoiBong {
 //    public String getTenSVD() {
 //        return sanVanDong != null ? sanVanDong.getTenSVD() : null;  
 //    }
-    
-
     @Override
     public String toString() {
         return tenDoi + " (Mã: " + maDoiBong + ")"; // Hiển thị tên đội bóng và mã trong JComboBox

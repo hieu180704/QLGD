@@ -68,26 +68,11 @@ public class LoginView extends javax.swing.JFrame {
         LoginPanel.setLayout(new java.awt.BorderLayout());
 
         LoginTop.setPreferredSize(new java.awt.Dimension(0, 70));
+        LoginTop.setLayout(new java.awt.BorderLayout());
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
         jLabel1.setText("Đăng Nhập ");
-
-        javax.swing.GroupLayout LoginTopLayout = new javax.swing.GroupLayout(LoginTop);
-        LoginTop.setLayout(LoginTopLayout);
-        LoginTopLayout.setHorizontalGroup(
-            LoginTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(LoginTopLayout.createSequentialGroup()
-                .addGap(105, 105, 105)
-                .addComponent(jLabel1)
-                .addContainerGap(112, Short.MAX_VALUE))
-        );
-        LoginTopLayout.setVerticalGroup(
-            LoginTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(LoginTopLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(jLabel1)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
+        LoginTop.add(jLabel1, java.awt.BorderLayout.CENTER);
 
         LoginPanel.add(LoginTop, java.awt.BorderLayout.NORTH);
 
