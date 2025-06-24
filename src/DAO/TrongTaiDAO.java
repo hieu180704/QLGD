@@ -7,193 +7,94 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrongTaiDAO {
-
     public List<TrongTai> getAllTrongTai() {
-        List<TrongTai> list = new ArrayList<TrongTai>();
-        String sql = "SELECT tt.maTrongTai, tt.tenTrongTai, tt.ngaySinh, tt.maQuocGia, qg.tenQuocGia "
-                + "FROM trongtai tt LEFT JOIN quocgia qg ON tt.maQuocGia = qg.maQuocGia";
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            conn = ConnectDB.getConnection();
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
+        List<TrongTai> list = new ArrayList<>();
+        String sql = "SELECT t.*, q.maQuocGia, q.tenQuocGia FROM trongtai t LEFT JOIN quocgia q ON t.maQuocGia = q.maQuocGia";
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                QuocGia qg = new QuocGia(rs.getInt("maQuocGia"), rs.getString("tenQuocGia"));
-                TrongTai tt = new TrongTai(
-                        rs.getInt("maTrongTai"),
-                        rs.getString("tenTrongTai"),
-                        rs.getDate("ngaySinh"),
-                        qg
-                );
+                TrongTai tt = new TrongTai();
+                tt.setMaTrongTai(rs.getInt("maTrongTai"));
+                tt.setTenTrongTai(rs.getString("tenTrongTai"));
+                tt.setNgaySinh(rs.getDate("ngaySinh"));
+                QuocGia qg = new QuocGia();
+                qg.setMaQuocGia(rs.getInt("maQuocGia"));
+                qg.setTenQuocGia(rs.getString("tenQuocGia"));
+                tt.setQuocGia(qg);
                 list.add(tt);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            }
+        } catch (Exception e) {
+            System.out.println("Lỗi lấy danh sách trọng tài: " + e.getMessage());
         }
         return list;
     }
 
-    public List<TrongTai> searchTrongTaiByName(String name) {
-        List<TrongTai> list = new ArrayList<TrongTai>();
-        String sql = "SELECT tt.maTrongTai, tt.tenTrongTai, tt.ngaySinh, tt.maQuocGia, qg.tenQuocGia "
-                + "FROM trongtai tt LEFT JOIN quocgia qg ON tt.maQuocGia = qg.maQuocGia "
-                + "WHERE tt.tenTrongTai LIKE ?";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = ConnectDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + name + "%");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                QuocGia qg = new QuocGia(rs.getInt("maQuocGia"), rs.getString("tenQuocGia"));
-                TrongTai tt = new TrongTai(
-                        rs.getInt("maTrongTai"),
-                        rs.getString("tenTrongTai"),
-                        rs.getDate("ngaySinh"),
-                        qg
-                );
-                list.add(tt);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            }
-        }
-        return list;
-    }
-
-    public boolean insertTrongTai(TrongTai tt) {
+    public boolean addTrongTai(TrongTai tt) {
         String sql = "INSERT INTO trongtai (tenTrongTai, ngaySinh, maQuocGia) VALUES (?, ?, ?)";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = ConnectDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, tt.getTenTrongTai());
-            ps.setDate(2, tt.getNgaySinh());
-            ps.setInt(3, tt.getQuocGia().getMaQuocGia());
-            int rows = ps.executeUpdate();
-            return rows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, tt.getTenTrongTai());
+            stmt.setDate(2, new java.sql.Date(tt.getNgaySinh().getTime()));
+            stmt.setInt(3, tt.getQuocGia().getMaQuocGia());
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Lỗi thêm trọng tài: " + e.getMessage());
             return false;
-        } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            }
         }
     }
 
     public boolean updateTrongTai(TrongTai tt) {
         String sql = "UPDATE trongtai SET tenTrongTai = ?, ngaySinh = ?, maQuocGia = ? WHERE maTrongTai = ?";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = ConnectDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setString(1, tt.getTenTrongTai());
-            ps.setDate(2, tt.getNgaySinh());
-            ps.setInt(3, tt.getQuocGia().getMaQuocGia());
-            ps.setInt(4, tt.getMaTrongTai());
-            int rows = ps.executeUpdate();
-            return rows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, tt.getTenTrongTai());
+            stmt.setDate(2, new java.sql.Date(tt.getNgaySinh().getTime()));
+            stmt.setInt(3, tt.getQuocGia().getMaQuocGia());
+            stmt.setInt(4, tt.getMaTrongTai());
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Lỗi sửa trọng tài: " + e.getMessage());
             return false;
-        } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            }
         }
     }
 
     public boolean deleteTrongTai(int maTrongTai) {
         String sql = "DELETE FROM trongtai WHERE maTrongTai = ?";
-        Connection conn = null;
-        PreparedStatement ps = null;
-        try {
-            conn = ConnectDB.getConnection();
-            ps = conn.prepareStatement(sql);
-            ps.setInt(1, maTrongTai);
-            int rows = ps.executeUpdate();
-            return rows > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, maTrongTai);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            System.out.println("Lỗi xóa trọng tài: " + e.getMessage());
             return false;
-        } finally {
-            try {
-                if (ps != null) {
-                    ps.close();
-                }
-            } catch (Exception e) {
-            }
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-            }
         }
     }
 
+    public List<TrongTai> searchTrongTai(String keyword) {
+        List<TrongTai> list = new ArrayList<>();
+        String sql = "SELECT t.*, q.maQuocGia, q.tenQuocGia FROM trongtai t LEFT JOIN quocgia q ON t.maQuocGia = q.maQuocGia WHERE t.tenTrongTai LIKE ?";
+        try (Connection conn = ConnectDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, "%" + keyword + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                TrongTai tt = new TrongTai();
+                tt.setMaTrongTai(rs.getInt("maTrongTai"));
+                tt.setTenTrongTai(rs.getString("tenTrongTai"));
+                tt.setNgaySinh(rs.getDate("ngaySinh"));
+                QuocGia qg = new QuocGia();
+                qg.setMaQuocGia(rs.getInt("maQuocGia"));
+                qg.setTenQuocGia(rs.getString("tenQuocGia"));
+                tt.setQuocGia(qg);
+                list.add(tt);
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi tìm kiếm trọng tài: " + e.getMessage());
+        }
+        return list;
+    }
+    
     public List<TrongTai> findAll() {
         List<TrongTai> list = new ArrayList<>();
         String sql = "SELECT * FROM trongtai";
@@ -212,4 +113,5 @@ public class TrongTaiDAO {
         }
         return list;
     }
+
 }
