@@ -1,86 +1,37 @@
-package View.Admin.QuanLyCauThu;
+package View.Admin.QuanLyHLV;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import Model.CauThu;
+import Model.HLV;
+import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
+import View.Admin.QuanLyCauThu.ThemCauThuDialog.DoiBongItem;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Calendar;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class ThemCauThuDialog extends JDialog {
+public class ThemHLVDialog extends JDialog {
 
-    private JTextField txtTen;
+    private JTextField txtTenHLV;
     private JComboBox<Integer> cbNgay;
     private JComboBox<Integer> cbThang;
     private JComboBox<Integer> cbNam;
     private JComboBox<QuocGiaItem> cbQuocGia;
     private JComboBox<DoiBongItem> cbDoiBong;
-    private JTextField txtChieuCao;
-    private JTextField txtCanNang;
-    private JTextField txtSoAo;
-
     private JButton btnChonAnh;
     private JLabel lblAnhPreview;
-    private byte[] anhCauThuBytes;
-
+    private byte[] anhHLVBytes;
     private JButton btnOk, btnCancel;
-    private CauThu cauThu;
+    private HLV hlv;
 
-    // Các lớp inner để giữ id và tên cho combobox
-    public static class QuocGiaItem {
-        public final int maQuocGia;
-        public final String tenQuocGia;
-
-        public QuocGiaItem(int maQuocGia, String tenQuocGia) {
-            this.maQuocGia = maQuocGia;
-            this.tenQuocGia = tenQuocGia;
-        }
-
-        @Override
-        public String toString() {
-            return tenQuocGia;
-        }
-
-        public String getTenQuocGia() {
-            return this.tenQuocGia; 
-        }
-
-        public int getMaQuocGia() {
-            return this.maQuocGia; 
-        }
-    }
-
-    public static class DoiBongItem {
-        public final int maDoi;
-        public final String tenDoi;
-
-        public DoiBongItem(int maDoi, String tenDoi) {
-            this.maDoi = maDoi;
-            this.tenDoi = tenDoi;
-        }
-
-        @Override
-        public String toString() {
-            return tenDoi;
-        }
-
-        public String getTenDoiBong() {
-            return this.tenDoi;
-        }
-
-        public int getMaDoiBong() {
-            return this.maDoi;
-        }
-    }
-
-    public ThemCauThuDialog(JFrame parent, List<QuocGiaItem> dsQuocGia, List<DoiBongItem> dsDoiBong) {
-        super(parent, "Thêm cầu thủ", true);
-        setSize(450, 480);
+    public ThemHLVDialog(JFrame parent, List<QuocGiaItem> dsQuocGia, List<DoiBongItem> dsDoiBong) {
+        super(parent, "Thêm huấn luyện viên", true);
+        setSize(450, 350);
         setLocationRelativeTo(parent);
 
         // Sắp xếp danh sách theo thứ tự A-Z
@@ -98,34 +49,30 @@ public class ThemCauThuDialog extends JDialog {
 
         int row = 0;
 
-        // Tên cầu thủ
+        // Tên huấn luyện viên
         gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1;
-        contentPane.add(new JLabel("Tên cầu thủ:"), gbc);
-        txtTen = new JTextField();
+        contentPane.add(new JLabel("Tên huấn luyện viên:"), gbc);
+        txtTenHLV = new JTextField();
         gbc.gridx = 1; gbc.gridy = row; gbc.gridwidth = 2;
-        contentPane.add(txtTen, gbc);
+        contentPane.add(txtTenHLV, gbc);
 
-        // Ngày sinh (3 combobox ngang hàng)
+        // Ngày sinh
         row++;
         gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1;
         contentPane.add(new JLabel("Ngày sinh:"), gbc);
-
         JPanel pnlNgaySinh = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         cbNgay = new JComboBox<>();
         cbThang = new JComboBox<>();
         cbNam = new JComboBox<>();
-
         for (int i = 1; i <= 31; i++) cbNgay.addItem(i);
         for (int i = 1; i <= 12; i++) cbThang.addItem(i);
-        int currentYear = LocalDate.now().getYear();
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         for (int i = currentYear; i >= 1950; i--) cbNam.addItem(i);
-
         pnlNgaySinh.add(cbNgay);
         pnlNgaySinh.add(new JLabel("/"));
         pnlNgaySinh.add(cbThang);
         pnlNgaySinh.add(new JLabel("/"));
         pnlNgaySinh.add(cbNam);
-
         gbc.gridx = 1; gbc.gridy = row; gbc.gridwidth = 2;
         contentPane.add(pnlNgaySinh, gbc);
 
@@ -147,44 +94,17 @@ public class ThemCauThuDialog extends JDialog {
         gbc.gridx = 1; gbc.gridy = row; gbc.gridwidth = 2;
         contentPane.add(cbDoiBong, gbc);
 
-        // Chiều cao
-        row++;
-        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1;
-        contentPane.add(new JLabel("Chiều cao (cm):"), gbc);
-        txtChieuCao = new JTextField();
-        gbc.gridx = 1; gbc.gridy = row; gbc.gridwidth = 2;
-        contentPane.add(txtChieuCao, gbc);
-
-        // Cân nặng
-        row++;
-        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1;
-        contentPane.add(new JLabel("Cân nặng (kg):"), gbc);
-        txtCanNang = new JTextField();
-        gbc.gridx = 1; gbc.gridy = row; gbc.gridwidth = 2;
-        contentPane.add(txtCanNang, gbc);
-
-        // Số áo
-        row++;
-        gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1;
-        contentPane.add(new JLabel("Số áo:"), gbc);
-        txtSoAo = new JTextField();
-        gbc.gridx = 1; gbc.gridy = row; gbc.gridwidth = 2;
-        contentPane.add(txtSoAo, gbc);
-
         // Chọn ảnh
         row++;
         gbc.gridx = 0; gbc.gridy = row; gbc.gridwidth = 1;
-        contentPane.add(new JLabel("Ảnh cầu thủ:"), gbc);
+        contentPane.add(new JLabel("Ảnh huấn luyện viên:"), gbc);
         JPanel pnlAnh = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-
         btnChonAnh = new JButton("Chọn ảnh");
         pnlAnh.add(btnChonAnh);
-
         lblAnhPreview = new JLabel();
         lblAnhPreview.setPreferredSize(new Dimension(90, 90));
         lblAnhPreview.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         pnlAnh.add(lblAnhPreview);
-
         gbc.gridx = 1; gbc.gridy = row; gbc.gridwidth = 2;
         contentPane.add(pnlAnh, gbc);
 
@@ -201,12 +121,13 @@ public class ThemCauThuDialog extends JDialog {
         // Xử lý sự kiện chọn ảnh
         btnChonAnh.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileFilter(new FileNameExtensionFilter("Image Files (PNG, JPG, JPEG)", "jpg", "jpeg", "png"));
             int res = fileChooser.showOpenDialog(this);
             if (res == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
                 try {
-                    anhCauThuBytes = Files.readAllBytes(file.toPath());
-                    ImageIcon icon = new ImageIcon(new ImageIcon(anhCauThuBytes).getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH));
+                    anhHLVBytes = Files.readAllBytes(file.toPath());
+                    ImageIcon icon = new ImageIcon(new ImageIcon(anhHLVBytes).getImage().getScaledInstance(90, 90, Image.SCALE_SMOOTH));
                     lblAnhPreview.setIcon(icon);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(this, "Lỗi đọc file ảnh");
@@ -216,9 +137,9 @@ public class ThemCauThuDialog extends JDialog {
 
         // Xử lý nút Thêm
         btnOk.addActionListener(e -> {
-            String ten = txtTen.getText().trim();
+            String ten = txtTenHLV.getText().trim();
             if (ten.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Tên cầu thủ không được để trống");
+                JOptionPane.showMessageDialog(this, "Tên huấn luyện viên không được để trống");
                 return;
             }
 
@@ -235,43 +156,39 @@ public class ThemCauThuDialog extends JDialog {
             DoiBongItem db = (DoiBongItem) cbDoiBong.getSelectedItem();
 
             try {
-                int chieuCao = Integer.parseInt(txtChieuCao.getText().trim());
-                int canNang = Integer.parseInt(txtCanNang.getText().trim());
-                int soAo = Integer.parseInt(txtSoAo.getText().trim());
-
-                cauThu = new CauThu();
-                cauThu.setTenCauThu(ten);
-                cauThu.setNgaySinh(java.sql.Date.valueOf(String.format("%04d-%02d-%02d", nam, thang, ngay)));
-                cauThu.setMaQuocGia(qg.maQuocGia);
-                cauThu.setMaDoi(db.maDoi);
-                cauThu.setChieuCao(chieuCao);
-                cauThu.setCanNang(canNang);
-                cauThu.setSoAo(soAo);
-                cauThu.setAnhCauThu(anhCauThuBytes); // set ảnh
+                hlv = new HLV();
+                hlv.setTenHLV(ten);
+                hlv.setNgaySinh(java.sql.Date.valueOf(String.format("%04d-%02d-%02d", nam, thang, ngay)));
+                hlv.setMaQuocGia(qg.getMaQuocGia());
+                hlv.setMaDoi(db.getMaDoiBong());
+                hlv.setAnhHLV(anhHLVBytes);
 
                 dispose();
-
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Chiều cao, cân nặng và số áo phải là số nguyên");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Dữ liệu nhập không hợp lệ");
             }
         });
 
+        // Xử lý nút Hủy
         btnCancel.addActionListener(e -> {
-            cauThu = null;
+            hlv = null;
             dispose();
         });
     }
 
     private boolean isValidDate(int year, int month, int day) {
         try {
-            LocalDate.of(year, month, day);
+            Calendar cal = Calendar.getInstance();
+            cal.setLenient(false);
+            cal.set(year, month - 1, day);
+            cal.getTime(); // Kiểm tra ngày hợp lệ
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public CauThu getCauThu() {
-        return cauThu;
+    public HLV getHLV() {
+        return hlv;
     }
 }
