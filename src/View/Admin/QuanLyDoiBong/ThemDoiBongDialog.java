@@ -9,7 +9,11 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 public class ThemDoiBongDialog extends JDialog {
 
@@ -35,6 +39,13 @@ public class ThemDoiBongDialog extends JDialog {
                 dispose();
             }
         });
+
+        // Sắp xếp danh sách theo thứ tự A-Z
+        List<QuocGiaItem> sortedQuocGia = new ArrayList<>(dsQuocGia);
+        Collections.sort(sortedQuocGia, Comparator.comparing(QuocGiaItem::getTenQuocGia));
+        
+        List<SanVanDongItem> sortedSanVanDong = new ArrayList<>(dsSanVanDong);
+        Collections.sort(sortedSanVanDong, Comparator.comparing(SanVanDongItem::getTenSVD));
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -71,9 +82,8 @@ public class ThemDoiBongDialog extends JDialog {
         panel.add(lblQuocGia, gbc);
 
         cbQuocGia = new JComboBox<>();
-        for (QuocGiaItem qg : dsQuocGia) {
-            cbQuocGia.addItem(qg);
-        }
+        DefaultComboBoxModel<QuocGiaItem> quocGiaModel = new DefaultComboBoxModel<>(sortedQuocGia.toArray(new QuocGiaItem[0]));
+        cbQuocGia.setModel(quocGiaModel);
         gbc.gridx = 1;
         gbc.gridy = row;
         gbc.gridwidth = 2;
@@ -90,9 +100,8 @@ public class ThemDoiBongDialog extends JDialog {
         panel.add(lblSVD, gbc);
 
         cbSVD = new JComboBox<>();
-        for (SanVanDongItem svd : dsSanVanDong) {
-            cbSVD.addItem(svd);
-        }
+        DefaultComboBoxModel<SanVanDongItem> svdModel = new DefaultComboBoxModel<>(sortedSanVanDong.toArray(new SanVanDongItem[0]));
+        cbSVD.setModel(svdModel);
         gbc.gridx = 1;
         gbc.gridy = row;
         gbc.gridwidth = 2;
