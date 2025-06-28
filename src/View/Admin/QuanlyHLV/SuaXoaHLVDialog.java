@@ -1,45 +1,53 @@
-package View.Admin.QuanLyCauThu;
+package View.Admin.QuanLyHLV;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import Model.CauThu;
+import java.util.Calendar;
+import java.util.stream.Collectors;
+import Model.HLV;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.DoiBongItem;
 import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
-public class SuaXoaCauThuDialog extends JDialog {
-    private JTextField txtTen;
+public class SuaXoaHLVDialog extends JDialog {
+    private JTextField txtTenHLV;
     private JComboBox<Integer> cbNgay, cbThang, cbNam;
-    private JComboBox<QuocGiaItem> cbQuocGia;
-    private JComboBox<DoiBongItem> cbDoiBong;
-    private JTextField txtChieuCao, txtCanNang, txtSoAo;
+    private JComboBox<String> cbQuocGia, cbDoiBong;
+    private JButton btnLuu, btnXoa, btnHuy;
     private JButton btnChonAnh;
-    private JLabel lblAnhPreview;
+    private JLabel lblAnh;
     private ImageIcon selectedImage = null;
     private File selectedImageFile = null;
     private boolean isUpdated = false;
     private boolean isDeleted = false;
-    private int maCauThu;
+    private int maHLV;
     private List<QuocGiaItem> dsQuocGia;
     private List<DoiBongItem> dsDoiBong;
-    private byte[] originalAnhCauThu;
+    private byte[] originalAnhHLV;
 
-    public SuaXoaCauThuDialog(JFrame parent, CauThu ct, List<QuocGiaItem> dsQuocGia, List<DoiBongItem> dsDoiBong) {
-        super(parent, "Sửa/Xóa Cầu Thủ", true);
-        this.maCauThu = ct.getMaCauThu();
+    public SuaXoaHLVDialog(JFrame parent, HLV hlv, List<QuocGiaItem> dsQuocGia, List<DoiBongItem> dsDoiBong) {
+        super(parent, "Sửa/Xóa Huấn Luyện Viên", true);
+        this.maHLV = hlv.getMaHLV();
         this.dsQuocGia = dsQuocGia;
         this.dsDoiBong = dsDoiBong;
-        this.originalAnhCauThu = ct.getAnhCauThu();
+        this.originalAnhHLV = hlv.getAnhHLV();
 
-        Collections.sort(dsQuocGia, Comparator.comparing(QuocGiaItem::getTenQuocGia));
-        Collections.sort(dsDoiBong, Comparator.comparing(DoiBongItem::getTenDoiBong));
+        List<String> tenQuocGiaList = dsQuocGia.stream()
+            .map(QuocGiaItem::getTenQuocGia)
+            .collect(Collectors.toList());
+        Collections.sort(tenQuocGiaList);
+
+        List<String> tenDoiBongList = dsDoiBong.stream()
+            .map(DoiBongItem::getTenDoiBong)
+            .collect(Collectors.toList());
+        Collections.sort(tenDoiBongList);
 
         setSize(450, 500);
         setLocationRelativeTo(parent);
@@ -49,10 +57,10 @@ public class SuaXoaCauThuDialog extends JDialog {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0;
-        add(new JLabel("Tên cầu thủ:"), gbc);
-        txtTen = new JTextField(ct.getTenCauThu());
+        add(new JLabel("Tên huấn luyện viên:"), gbc);
+        txtTenHLV = new JTextField(hlv.getTenHLV());
         gbc.gridx = 1; gbc.weightx = 1;
-        add(txtTen, gbc);
+        add(txtTenHLV, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
         gbc.weightx = 0;
@@ -64,10 +72,10 @@ public class SuaXoaCauThuDialog extends JDialog {
         for (int i = 1; i <= 12; i++) cbThang.addItem(i);
         cbNam = new JComboBox<>();
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = currentYear; i >= 1950; i--) cbNam.addItem(i);
-        if (ct.getNgaySinh() != null) {
+        for (int i = currentYear; i >= 1900; i--) cbNam.addItem(i);
+        if (hlv.getNgaySinh() != null) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime(ct.getNgaySinh());
+            cal.setTime(hlv.getNgaySinh());
             cbNgay.setSelectedItem(cal.get(Calendar.DAY_OF_MONTH));
             cbThang.setSelectedItem(cal.get(Calendar.MONTH) + 1);
             cbNam.setSelectedItem(cal.get(Calendar.YEAR));
@@ -83,67 +91,46 @@ public class SuaXoaCauThuDialog extends JDialog {
         gbc.gridx = 0; gbc.gridy++;
         gbc.weightx = 0;
         add(new JLabel("Quốc gia:"), gbc);
-        cbQuocGia = new JComboBox<>(dsQuocGia.toArray(new QuocGiaItem[0]));
-        cbQuocGia.setSelectedItem(dsQuocGia.stream().filter(qg -> qg.getMaQuocGia() == ct.getMaQuocGia()).findFirst().orElse(null));
+        cbQuocGia = new JComboBox<>(tenQuocGiaList.toArray(new String[0]));
+        cbQuocGia.setSelectedItem(hlv.getTenQuocGia());
         gbc.gridx = 1; gbc.weightx = 1;
         add(cbQuocGia, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
         gbc.weightx = 0;
         add(new JLabel("Đội bóng:"), gbc);
-        cbDoiBong = new JComboBox<>(dsDoiBong.toArray(new DoiBongItem[0]));
-        cbDoiBong.setSelectedItem(dsDoiBong.stream().filter(db -> db.getMaDoiBong() == ct.getMaDoi()).findFirst().orElse(null));
+        cbDoiBong = new JComboBox<>(tenDoiBongList.toArray(new String[0]));
+        cbDoiBong.setSelectedItem(hlv.getTenDoi());
         gbc.gridx = 1; gbc.weightx = 1;
         add(cbDoiBong, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
         gbc.weightx = 0;
-        add(new JLabel("Chiều cao (cm):"), gbc);
-        txtChieuCao = new JTextField(String.valueOf(ct.getChieuCao()));
-        gbc.gridx = 1; gbc.weightx = 1;
-        add(txtChieuCao, gbc);
-
-        gbc.gridx = 0; gbc.gridy++;
-        gbc.weightx = 0;
-        add(new JLabel("Cân nặng (kg):"), gbc);
-        txtCanNang = new JTextField(String.valueOf(ct.getCanNang()));
-        gbc.gridx = 1; gbc.weightx = 1;
-        add(txtCanNang, gbc);
-
-        gbc.gridx = 0; gbc.gridy++;
-        gbc.weightx = 0;
-        add(new JLabel("Số áo:"), gbc);
-        txtSoAo = new JTextField(String.valueOf(ct.getSoAo()));
-        gbc.gridx = 1; gbc.weightx = 1;
-        add(txtSoAo, gbc);
-
-        gbc.gridx = 0; gbc.gridy++;
-        gbc.weightx = 0;
         gbc.anchor = GridBagConstraints.NORTHWEST;
-        add(new JLabel("Ảnh cầu thủ:"), gbc);
+        add(new JLabel("Ảnh huấn luyện viên:"), gbc);
 
         JPanel pnlAnh = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         btnChonAnh = new JButton("Chọn ảnh");
         btnChonAnh.setPreferredSize(new Dimension(80, 30));
         pnlAnh.add(btnChonAnh);
 
-        lblAnhPreview = new JLabel();
-        lblAnhPreview.setPreferredSize(new Dimension(80, 80));
-        lblAnhPreview.setMaximumSize(new Dimension(80, 80));
-        lblAnhPreview.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        if (ct.getAnhCauThu() != null) {
-            selectedImage = new ImageIcon(ct.getAnhCauThu());
-            lblAnhPreview.setIcon(resizeImageIcon(selectedImage, 80, 80));
+        lblAnh = new JLabel();
+        lblAnh.setPreferredSize(new Dimension(80, 80));
+        lblAnh.setMaximumSize(new Dimension(80, 80));
+        lblAnh.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        if (hlv.getAnhHLV() != null) {
+            selectedImage = new ImageIcon(hlv.getAnhHLV());
+            lblAnh.setIcon(resizeImageIcon(selectedImage, 80, 80));
         }
-        pnlAnh.add(lblAnhPreview);
+        pnlAnh.add(lblAnh);
 
         gbc.gridx = 1; gbc.weightx = 1; gbc.anchor = GridBagConstraints.CENTER;
         add(pnlAnh, gbc);
 
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        JButton btnLuu = new JButton("Lưu");
-        JButton btnXoa = new JButton("Xóa");
-        JButton btnHuy = new JButton("Hủy");
+        btnLuu = new JButton("Lưu");
+        btnXoa = new JButton("Xóa");
+        btnHuy = new JButton("Hủy");
         pnlButtons.add(btnLuu);
         pnlButtons.add(btnXoa);
         pnlButtons.add(btnHuy);
@@ -161,13 +148,13 @@ public class SuaXoaCauThuDialog extends JDialog {
             if (result == JFileChooser.APPROVE_OPTION) {
                 selectedImageFile = fileChooser.getSelectedFile();
                 selectedImage = new ImageIcon(selectedImageFile.getAbsolutePath());
-                lblAnhPreview.setIcon(resizeImageIcon(selectedImage, 80, 80));
+                lblAnh.setIcon(resizeImageIcon(selectedImage, 80, 80));
             }
         });
 
         btnLuu.addActionListener(e -> {
-            if (txtTen.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Tên cầu thủ không được để trống!");
+            if (txtTenHLV.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Tên huấn luyện viên không được để trống!");
                 return;
             }
             try {
@@ -179,7 +166,7 @@ public class SuaXoaCauThuDialog extends JDialog {
         });
 
         btnXoa.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa cầu thủ này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+            int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa huấn luyện viên này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 isDeleted = true;
                 dispose();
@@ -189,44 +176,69 @@ public class SuaXoaCauThuDialog extends JDialog {
         btnHuy.addActionListener(e -> dispose());
     }
 
-    public CauThu getCauThuSuaXoa() {
-        CauThu ct = new CauThu();
-        ct.setMaCauThu(maCauThu);
-        ct.setTenCauThu(txtTen.getText().trim());
+    public HLV getHLV() {
+        HLV hlv = new HLV();
+        hlv.setMaHLV(this.maHLV);
+        hlv.setTenHLV(txtTenHLV.getText().trim());
+        hlv.setTenQuocGia((String) cbQuocGia.getSelectedItem());
+        hlv.setTenDoi((String) cbDoiBong.getSelectedItem());
 
         try {
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.YEAR, (Integer) cbNam.getSelectedItem());
             cal.set(Calendar.MONTH, (Integer) cbThang.getSelectedItem() - 1);
             cal.set(Calendar.DAY_OF_MONTH, (Integer) cbNgay.getSelectedItem());
-            ct.setNgaySinh(cal.getTime());
+            hlv.setNgaySinh(cal.getTime());
         } catch (Exception e) {
         }
 
-        QuocGiaItem qg = (QuocGiaItem) cbQuocGia.getSelectedItem();
-        ct.setMaQuocGia(qg.getMaQuocGia());
-
-        DoiBongItem db = (DoiBongItem) cbDoiBong.getSelectedItem();
-        ct.setMaDoi(db.getMaDoiBong());
-
-        try {
-            ct.setChieuCao(Integer.parseInt(txtChieuCao.getText().trim()));
-            ct.setCanNang(Integer.parseInt(txtCanNang.getText().trim()));
-            ct.setSoAo(Integer.parseInt(txtSoAo.getText().trim()));
-        } catch (NumberFormatException e) {
-        }
-
         if (selectedImage != null) {
-            try {
-                ct.setAnhCauThu(Files.readAllBytes(selectedImageFile.toPath()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            hlv.setAnhHLV(imageIconToBytes(selectedImage));
         } else {
-            ct.setAnhCauThu(originalAnhCauThu);
+            hlv.setAnhHLV(originalAnhHLV);
         }
 
-        return ct;
+        String tenQuocGia = (String) cbQuocGia.getSelectedItem();
+        for (QuocGiaItem qg : dsQuocGia) {
+            if (qg.getTenQuocGia().equals(tenQuocGia)) {
+                hlv.setMaQuocGia(qg.getMaQuocGia());
+                break;
+            }
+        }
+
+        String tenDoi = (String) cbDoiBong.getSelectedItem();
+        for (DoiBongItem db : dsDoiBong) {
+            if (db.getTenDoiBong().equals(tenDoi)) {
+                hlv.setMaDoi(db.getMaDoiBong());
+                break;
+            }
+        }
+
+        return hlv;
+    }
+
+    private byte[] imageIconToBytes(ImageIcon icon) {
+        try {
+            Image img = icon.getImage();
+            BufferedImage buffered = new BufferedImage(
+                img.getWidth(null),
+                img.getHeight(null),
+                BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D g2 = buffered.createGraphics();
+            g2.drawImage(img, 0, 0, null);
+            g2.dispose();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(buffered, "png", baos);
+            baos.flush();
+            byte[] imageInBytes = baos.toByteArray();
+            baos.close();
+            return imageInBytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private ImageIcon resizeImageIcon(ImageIcon icon, int width, int height) {
