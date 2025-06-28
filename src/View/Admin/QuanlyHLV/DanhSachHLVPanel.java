@@ -15,7 +15,7 @@ public class DanhSachHLVPanel extends JPanel {
     private JPanel panelDanhSachHLV;
 
     public DanhSachHLVPanel() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout()); 
 
         JPanel panelTop = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         panelTop.setBorder(new EmptyBorder(5, 10, 5, 10)); // Thêm padding cho panelTop
