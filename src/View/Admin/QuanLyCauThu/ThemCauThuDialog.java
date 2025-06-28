@@ -8,8 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ThemCauThuDialog extends JDialog {
@@ -69,11 +67,11 @@ public class ThemCauThuDialog extends JDialog {
             return tenDoi;
         }
 
-        public String getTenDoiBong() {
+        String getTenDoiBong() {
             return this.tenDoi;
         }
 
-        public int getMaDoiBong() {
+        int getMaDoiBong() {
             return this.maDoi;
         }
     }
@@ -82,10 +80,6 @@ public class ThemCauThuDialog extends JDialog {
         super(parent, "Thêm cầu thủ", true);
         setSize(450, 480);
         setLocationRelativeTo(parent);
-
-        // Sắp xếp danh sách theo thứ tự A-Z
-        Collections.sort(dsQuocGia, Comparator.comparing(QuocGiaItem::getTenQuocGia));
-        Collections.sort(dsDoiBong, Comparator.comparing(DoiBongItem::getTenDoiBong));
 
         // Set margin toàn bộ dialog
         JPanel contentPane = new JPanel(new GridBagLayout());
