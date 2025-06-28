@@ -2,7 +2,6 @@ package View.Admin;
 
 import View.Admin.QuanLySoDo.QuanLySoDoPanel;
 import Controller.DoiBongController;
-import Controller.HLVController;
 import View.Admin.QuanLyDoiBong.DanhSachDoiBongPanel;
 import Controller.QuanLyCauThuController;
 import View.Admin.QuanLyTaiKhoan.QuanLyTaiKhoanPanel;
@@ -19,14 +18,13 @@ import DAO.DoiBongDAO;
 import DAO.QuocGiaDAO;
 import DAO.SanVanDongDAO;
 import DAO.TaiKhoanDAO;
-import DAO.HLVDAO;
 
 import View.CustomButton.RoundBorder;
 import com.formdev.flatlaf.FlatLightLaf;
 import Model.TaiKhoan;
 import View.Admin.NhaTaiTroPanel.NhaTaiTroPanel;
 import View.Admin.QuanLyCauThu.QuanLyCauThuView;
-import View.Admin.QuanLyHLV.DanhSachHLVPanel;
+import View.Admin.QuanlyHLV.DanhSachHLVPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,11 +84,9 @@ public class QuanLyView extends JFrame {
         DoiBongDAO doiBongDAO = new DoiBongDAO();
         QuocGiaDAO quocGiaDAO = new QuocGiaDAO();
         SanVanDongDAO sanVanDongDAO = new SanVanDongDAO();
-        HLVDAO hlvDAO = new HLVDAO();
         
         QuanLyCauThuController cauThuController = new QuanLyCauThuController(quanLyCauThuView, cauThuDAO, quocGiaDAO, doiBongDAO);
         DoiBongController doiBongController = new DoiBongController(danhSachDoiBongPanel, doiBongDAO, quocGiaDAO, sanVanDongDAO);
-        HLVController hLVController = new HLVController(danhSachHLVPanel, hlvDAO, quocGiaDAO, doiBongDAO);
         nhaTaiTroPanel = new NhaTaiTroPanel();
 
         new UserEditController(this);

@@ -2,7 +2,6 @@ package View.Admin.QuanLyHLV;
 
 import Controller.HLVController;
 import DAO.DoiBongDAO;
-import DAO.QuocGiaDAO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -10,20 +9,14 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import javax.imageio.ImageIO;
 import Model.HLV;
-import View.Admin.QuanLyCauThu.ImageCircleLabel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import View.Admin.QuanLyCauThu.ThemCauThuDialog.QuocGiaItem;
-import View.Admin.QuanLyCauThu.ThemCauThuDialog.DoiBongItem;
 
 public class HLVPanel extends JPanel {
 
-    private QuocGiaDAO quocGiaDAO = new QuocGiaDAO();
     private DoiBongDAO doiBongDAO = new DoiBongDAO();
 
     public HLVPanel(HLV hlv, HLVController controller) throws IOException {
@@ -55,17 +48,14 @@ public class HLVPanel extends JPanel {
 
         add(pnlAnhWrapper, BorderLayout.NORTH);
 
-        JPanel pnlThongTin = new JPanel(new GridLayout(3, 1));
+        JPanel pnlThongTin = new JPanel(new GridLayout(2, 1));
         pnlThongTin.setOpaque(false);
         JLabel tenHLVLabel = new JLabel(hlv.getTenHLV() != null ? hlv.getTenHLV() : "", JLabel.CENTER);
         tenHLVLabel.setFont(new Font(tenHLVLabel.getFont().getName(), Font.BOLD, tenHLVLabel.getFont().getSize()));
         pnlThongTin.add(tenHLVLabel);
 
-        JLabel tenQuocGiaLabel = new JLabel(hlv.getTenQuocGia() != null ? hlv.getTenQuocGia() : "", JLabel.CENTER);
-        tenQuocGiaLabel.setFont(new Font(tenQuocGiaLabel.getFont().getName(), Font.BOLD, tenQuocGiaLabel.getFont().getSize()));
-        pnlThongTin.add(tenQuocGiaLabel);
-
-        JLabel tenDoiLabel = new JLabel(hlv.getTenDoi() != null ? hlv.getTenDoi() : "", JLabel.CENTER);
+        String tenDoi = doiBongDAO.findById(hlv.getMaDoiBong()).getTenDoi();
+        JLabel tenDoiLabel = new JLabel(tenDoi != null ? tenDoi : "", JLabel.CENTER);
         tenDoiLabel.setFont(new Font(tenDoiLabel.getFont().getName(), Font.BOLD, tenDoiLabel.getFont().getSize()));
         pnlThongTin.add(tenDoiLabel);
 
@@ -74,15 +64,7 @@ public class HLVPanel extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                List<QuocGiaItem> dsQuocGia = quocGiaDAO.findAll().stream()
-                    .map(qg -> new QuocGiaItem(qg.getMaQuocGia(), qg.getTenQuocGia()))
-                    .collect(Collectors.toList());
-
-                List<DoiBongItem> dsDoiBong = doiBongDAO.findAll().stream()
-                    .map(db -> new DoiBongItem(db.getMaDoiBong(), db.getTenDoi()))
-                    .collect(Collectors.toList());
-
-                SuaXoaHLVDialog dialog = new SuaXoaHLVDialog(null, hlv, dsQuocGia, dsDoiBong);
+                SuaXoaHLVDialog dialog = new SuaXoaHLVDialog(null, hlv);
                 dialog.setVisible(true);
 
                 if (dialog.isUpdated()) {
