@@ -1,6 +1,6 @@
 package Model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class TrongTai {
     private int maTrongTai;
@@ -8,9 +8,8 @@ public class TrongTai {
     private Date ngaySinh;
     private QuocGia quocGia;
 
-    public TrongTai() {
-    }
-    
+    public TrongTai() {}
+
     public TrongTai(int maTrongTai, String tenTrongTai, Date ngaySinh, QuocGia quocGia) {
         this.maTrongTai = maTrongTai;
         this.tenTrongTai = tenTrongTai;
@@ -18,19 +17,36 @@ public class TrongTai {
         this.quocGia = quocGia;
     }
 
-    public int getMaTrongTai() { return maTrongTai; }
-    public void setMaTrongTai(int maTrongTai) { this.maTrongTai = maTrongTai; }
-    public String getTenTrongTai() { return tenTrongTai; }
-    public void setTenTrongTai(String tenTrongTai) { this.tenTrongTai = tenTrongTai; }
-    public Date getNgaySinh() { return ngaySinh; }
-    public void setNgaySinh(Date ngaySinh) { this.ngaySinh = ngaySinh; }
-    public QuocGia getQuocGia() { return quocGia; }
-    public void setQuocGia(QuocGia quocGia) { this.quocGia = quocGia; }
+    // Getters and Setters
+    public int getMaTrongTai() {
+        return maTrongTai;
+    }
 
-    @Override
-    public String toString() {
+    public void setMaTrongTai(int maTrongTai) {
+        this.maTrongTai = maTrongTai;
+    }
+
+    public String getTenTrongTai() {
         return tenTrongTai;
     }
-    
-    
+
+    public void setTenTrongTai(String tenTrongTai) {
+        this.tenTrongTai = tenTrongTai;
+    }
+
+    public Date getNgaySinh() {
+        return ngaySinh;
+    }
+
+    public void setNgaySinh(Date ngaySinh) {
+        this.ngaySinh = ngaySinh;
+    }
+
+    public QuocGia getQuocGia() {
+        return quocGia;
+    }
+
+    public void setQuocGia(QuocGia quocGia) {
+        this.quocGia = quocGia;
+    }
 }

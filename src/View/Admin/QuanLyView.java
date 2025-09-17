@@ -9,7 +9,7 @@ import View.Admin.QuanLyTaiKhoan.QuanLyTaiKhoanPanel;
 import View.Admin.TranDau.TranDauPanel;
 import View.Admin.TranDau.XepLichThiDauPanel;
 import View.Admin.QuanLySanVanDong.SanVanDongPanel;
-import View.Admin.QuanLyTrongTai.TrongTaiPanel;
+import View.Admin.QuanLyTrongTai.TrongTaiView;
 import View.Admin.QuanLyGiaiDau.QuanLyGiaiDauPanel;
 import Controller.QuanLyController;
 import Controller.UserEditController;
@@ -38,7 +38,7 @@ public class QuanLyView extends JFrame {
     private DanhSachDoiBongPanel danhSachDoiBongPanel = new DanhSachDoiBongPanel();
     private QuanLyCauThuView quanLyCauThuView = new QuanLyCauThuView();
     private DanhSachHLVPanel danhSachHLVPanel = new DanhSachHLVPanel();
-    private TrongTaiPanel trongTaiPanel = new TrongTaiPanel();
+    private TrongTaiView trongTaiPanel = new TrongTaiView();
     private SanVanDongPanel sanVanDongPanel = new SanVanDongPanel();
     private QuanLyTaiKhoanPanel quanLyTaiKhoanPanel = new QuanLyTaiKhoanPanel();
     private TranDauPanel tranDauPanel = new TranDauPanel();
@@ -117,7 +117,7 @@ public class QuanLyView extends JFrame {
         layerPanel.add(danhSachDoiBongPanel, "DanhSachDoiBongPanel");
         layerPanel.add(quanLyCauThuView, "QuanLyCauThuView");
         layerPanel.add(danhSachHLVPanel, "DanhSachHLVPanel");
-        layerPanel.add(trongTaiPanel, "TrongTaiPanel");
+        layerPanel.add(trongTaiPanel, "TrongTaiView");
         layerPanel.add(sanVanDongPanel, "SanVanDongPanel");
         layerPanel.add(quanLyTaiKhoanPanel, "QuanLyTaiKhoanPanel");
         layerPanel.add(nhaTaiTroPanel, "NhaTaiTroPanel");
@@ -412,7 +412,7 @@ public class QuanLyView extends JFrame {
     }
 
     public void openDanhSachTrongTai() {
-        showPanel("TrongTaiPanel");
+        showPanel("TrongTaiView");
     }
 
     public void openQuanLySanDau() {

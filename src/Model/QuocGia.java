@@ -8,20 +8,34 @@ public class QuocGia {
     private int maQuocGia;
     private String tenQuocGia;
 
-    public QuocGia() {
-    }
+    public QuocGia() {}
 
     public QuocGia(int maQuocGia, String tenQuocGia) {
         this.maQuocGia = maQuocGia;
         this.tenQuocGia = tenQuocGia;
     }
 
-    public int getMaQuocGia() { return maQuocGia; }
-    public void setMaQuocGia(int maQuocGia) { this.maQuocGia = maQuocGia; }
-    public String getTenQuocGia() { return tenQuocGia; }
-    public void setTenQuocGia(String tenQuocGia) { this.tenQuocGia = tenQuocGia; }
+    // Getters and Setters
+    public int getMaQuocGia() {
+        return maQuocGia;
+    }
+
+    public void setMaQuocGia(int maQuocGia) {
+        this.maQuocGia = maQuocGia;
+    }
+
+    public String getTenQuocGia() {
+        return tenQuocGia;
+    }
+
+    public void setTenQuocGia(String tenQuocGia) {
+        this.tenQuocGia = tenQuocGia;
+    }
+
     @Override
-    public String toString() { return tenQuocGia; }
+    public String toString() {
+        return tenQuocGia;
+    }
 }
 
 
